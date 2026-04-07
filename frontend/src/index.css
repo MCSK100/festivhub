@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.premium-section { @apply py-40 px-8 lg:px-16 max-w-7xl mx-auto; }
+.air-hero { @apply font-serif text-8xl md:text-9xl lg:text-[10rem] leading-none tracking-tight mb-12 max-w-5xl mx-auto; }
+
+/* Navy-Gold Glassmorphism System */
+.navy-glass {
+  background: rgba(11, 15, 25, 0.8);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(200, 169, 106, 0.2);
+}
+.gold-glass {
+  background: rgba(200, 169, 106, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(200, 169, 106, 0.3);
+}
+.purple-glass {
+  background: rgba(124, 92, 252, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(124, 92, 252, 0.3);
+}
+.floating-card {
+  box-shadow: 0 25px 50px -12px rgba(11,15,25,0.5), 0 0 20px rgba(200,169,106,0.2);
+  transform: translateY(-4px);
+}
+
+/* New Theme Utilities */
+.navy-bg { @apply bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900/80; }
+.gold-surface { 
+  @apply bg-gradient-to-br from-gold-500/10 to-purple-500/5 border-gold-500/30 shadow-gold-glow backdrop-blur-xl text-slate-100;
+}
+.animate-gold-float { animation: goldFloat 6s ease-in-out infinite; }
+@keyframes goldFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.btn-gold {
+  @apply relative px-8 py-4 font-bold text-navy-900 transition-all duration-500 bg-gradient-to-r from-gold-500 to-gold-400 rounded-3xl shadow-gold-glow-lg hover:shadow-gold-glow hover:scale-105 active:scale-95 font-serif tracking-wide;
+}
+.btn-gold::after {
+  content: '→';
+  @apply ml-3 inline-block transition-all group-hover:translate-x-2 duration-300;
+}
+.btn-purple {
+  @apply relative px-8 py-4 font-bold text-white transition-all duration-500 bg-gradient-to-r from-purple-500 to-purple-400 rounded-3xl shadow-purple-glow hover:shadow-purple-glow-lg hover:scale-105 active:scale-95 font-serif tracking-wide;
+}
+
+@layer utilities {
+  .shadow-purple-glow-xl { box-shadow: 0 0 80px rgba(124,92,252,0.8); }
+  .shadow-gold-glow-xl { box-shadow: 0 0 80px rgba(200,169,106,0.8); }
+}
+
+/* Enhanced Blob Animations */
+@keyframes blobFloat1 {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  33% { transform: translateY(-25px) rotate(120deg) scale(1.05); }
+  66% { transform: translateY(-10px) rotate(240deg) scale(0.95); }
+}
+@keyframes blobFloat2 {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-40px) scale(1.08); }
+}
+@keyframes blobFloat3 {
+  0%, 100% { transform: translateX(0) scale(1); }
+  50% { transform: translateX(20px) scale(1.05); }
+}
+.animate-blob1 { animation: blobFloat1 20s ease-in-out infinite; }
+.animate-blob2 { animation: blobFloat2 24s ease-in-out infinite reverse; }
+.animate-blob3 { animation: blobFloat3 28s ease-in-out infinite alternate; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(60px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.doodle-glow { filter: drop-shadow(0 0 8px currentColor); }
