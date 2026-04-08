@@ -7,6 +7,8 @@ import FAQ from './pages/FAQ'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import RoleSelection from './pages/RoleSelection'
+import VendorDashboard from './pages/VendorDashboard'
+import CustomerDashboard from './pages/CustomerDashboard'
 import ProviderDashboard from './pages/ProviderDashboard'
 import PrivateRoute from './components/PrivateRoute'
 import { ThemeProvider } from './utils/ThemeContext'
@@ -26,6 +28,22 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/role-select" element={<RoleSelection />} />
               <Route path="/signup" element={<Signup />} />
+              <Route 
+                path="/vendor-dashboard" 
+                element={
+                  <PrivateRoute requiredRole="vendor">
+                    <VendorDashboard />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/customer-dashboard" 
+                element={
+                  <PrivateRoute requiredRole="customer">
+                    <CustomerDashboard />
+                  </PrivateRoute>
+                } 
+              />
               <Route 
                 path="/dashboard" 
                 element={

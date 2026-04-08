@@ -24,7 +24,15 @@ const Login = () => {
     const result = await login(email, password)
     if (result.success) {
       setSuccess('Login successful! Redirecting...')
-      setTimeout(() => navigate('/dashboard'), 1500)
+      setTimeout(() => {
+        // Get user from localStorage to check role
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        if (user.role === 'vendor') {
+          navigate('/vendor-dashboard')
+        } else {
+          navigate('/customer-dashboard')
+        }
+      }, 1500)
     } else {
       setError(result.error || 'Login failed. Please try again.')
     }

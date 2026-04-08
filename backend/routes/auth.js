@@ -8,7 +8,7 @@ const router = express.Router()
 // @desc    Register new user
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, role = 'user' } = req.body
+    const { email, password, name = '', role = 'customer' } = req.body
 
     // Check if user exists
     let user = await User.findOne({ email })
@@ -16,22 +16,33 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'User already exists' })
     }
 
-    // Create user
-    user = new User({ email, password, role })
+    // Create user with 30-day trial
+    const trialExpiration = new Date()
+    trialExpiration.setDate(trialExpiration.getDate() + 30)
+
+    user = new User({ 
+      email, 
+      password, 
+      name,
+      role,
+      trialExpiration
+    })
     await user.save()
 
     // Generate JWT
     const payload = {
       id: user._id
     }
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' })
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' })
 
     res.status(201).json({
       token,
       user: {
         id: user._id,
         email: user.email,
-        role: user.role
+        name: user.name,
+        role: user.role,
+        trialExpiration: user.trialExpiration
       }
     })
   } catch (err) {
@@ -56,14 +67,16 @@ router.post('/login', async (req, res) => {
     const payload = {
       id: user._id
     }
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' })
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' })
 
     res.json({
       token,
       user: {
         id: user._id,
         email: user.email,
-        role: user.role
+        name: user.name,
+        role: user.role,
+        trialExpiration: user.trialExpiration
       }
     })
   } catch (err) {

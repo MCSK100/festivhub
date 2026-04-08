@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: false,
+    trim: true
+  },
   email: {
     type: String,
     required: true,
@@ -14,15 +19,22 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password is required'],
     minlength: 6
   },
-
   role: {
     type: String,
-    enum: ['user', 'provider', 'admin'],
-    default: 'user'
+    enum: ['customer', 'vendor'],
+    default: 'customer'
   },
   isActive: {
     type: Boolean,
     default: true
+  },
+  trialExpiration: {
+    type: Date,
+    default: () => {
+      const date = new Date()
+      date.setDate(date.getDate() + 30)
+      return date
+    }
   },
   providerProfile: {
     type: mongoose.Schema.Types.ObjectId,

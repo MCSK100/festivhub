@@ -58,7 +58,13 @@ const Signup = () => {
     const result = await register(email, password, role, name)
     if (result.success) {
       setSuccess('Account created successfully! Redirecting...')
-      setTimeout(() => navigate('/dashboard'), 1500)
+      setTimeout(() => {
+        if (role === 'vendor') {
+          navigate('/vendor-dashboard')
+        } else {
+          navigate('/customer-dashboard')
+        }
+      }, 1500)
     } else {
       setError(result.error || 'Registration failed. Please try again.')
     }
