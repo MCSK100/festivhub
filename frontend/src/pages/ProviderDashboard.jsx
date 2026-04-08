@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import { useAuth } from '@clerk/clerk-react'
+import { motion } from 'framer-motion'
+import api from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
 
 const categories = ['Photography', 'Catering', 'DJ & Music', 'Decorations', 'Makeup & Beauty', 'Event Planning', 'Lighting']
 
@@ -17,17 +18,16 @@ const ProviderDashboard = () => {
   const [uploadPreview, setUploadPreview] = useState([])
   const [analytics, setAnalytics] = useState({ views: 124, leads: 8, bookings: 3 })
 
-  const { getToken } = useAuth()
+  const { fetchUser } = useAuth()
+
+  useEffect(() => {
+    fetchUser()
+  }, [fetchUser])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const token = await getToken()
-      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/providers`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+      await api.post('/providers', formData)
       alert('✅ Profile created successfully!')
     } catch (error) {
       console.error(error)

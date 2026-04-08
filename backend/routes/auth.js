@@ -72,5 +72,15 @@ router.post('/login', async (req, res) => {
   }
 })
 
+// @route   GET api/auth/me
+// @desc    Get current user profile
+router.get('/me', authMiddleware, async (req, res) => {
+  try {
+    res.json(req.user)
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
 module.exports = router
 

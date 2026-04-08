@@ -14,11 +14,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password is required'],
     minlength: 6
   },
-  clerkId: {
-    type: String,
-    unique: true,
-    sparse: true // Allow multiple null values
-  },
+
   role: {
     type: String,
     enum: ['user', 'provider', 'admin'],

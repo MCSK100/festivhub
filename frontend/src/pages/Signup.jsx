@@ -1,9 +1,35 @@
-import { SignUp } from '@clerk/clerk-react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import FreeTrialTimer from '../components/FreeTrialTimer'
 
 const Signup = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [role, setRole] = useState('user')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const { register } = useAuth()
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    const result = await register(email, password, role)
+    if (result.success) {
+      setSuccess('Account created successfully!')
+      setTimeout(() => navigate('/dashboard'), 1500)
+    } else {
+      setError(result.error)
+    }
+    setLoading(false)
+  }
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -86,24 +112,82 @@ const Signup = () => {
               </motion.p>
             </div>
 
-            {/* Clerk SignUp Component */}
-            <div className="space-y-6">
-              <SignUp 
-                routing="path"
-                path="/signup"
-                signInUrl="/login"
-                forceRedirectUrl="/dashboard"
-                afterSignUpUrl="/dashboard"
-                appearance={{
-                  elements: {
-                    formButtonPrimary: 'btn-purple text-xl lg:text-2xl py-6 lg:py-8 rounded-[3rem] shadow-purple-glow-lg hover:shadow-hero-glow font-serif tracking-wide h-[70px]',
-                    socialButtonsBlockButton: 'bg-navy-glass border-purple-400/50 hover:border-gold-500/70 backdrop-blur-xl rounded-3xl font-medium text-slate-200 hover:text-purple-300 shadow-purple-glow',
-                    formFieldLabel: 'text-slate-300 font-serif text-xl font-light',
-                    formFieldInput: 'bg-navy-800/50 border-purple-400/30 backdrop-blur-xl rounded-3xl text-xl placeholder-slate-400 font-light h-16 lg:h-20 focus:ring-purple-500/50 focus:border-purple-500/70',
-                  }
-                }}
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 rounded-3xl bg-red-500/20 border border-red-400/50 text-red-100 text-xl text-center font-light shadow-red-glow"
+                >
+                  {error}
+                </motion.div>
+              )}
+              {success && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 rounded-3xl bg-green-500/20 border border-green-400/50 text-green-100 text-xl text-center font-light shadow-green-glow"
+                >
+                  {success}
+                </motion.div>
+              )}
+
+              <div>
+                <label className="block text-slate-300 font-serif text-xl font-light mb-4">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full bg-navy-800/50 border-purple-400/30 backdrop-blur-xl rounded-3xl text-xl placeholder-slate-400 font-light h-16 lg:h-20 focus:ring-purple-500/50 focus:border-purple-500/70 p-6 transition-all duration-300"
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-300 font-serif text-xl font-light mb-4">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-navy-800/50 border-purple-400/30 backdrop-blur-xl rounded-3xl text-xl placeholder-slate-400 font-light h-16 lg:h-20 focus:ring-purple-500/50 focus:border-purple-500/70 p-6 transition-all duration-300"
+                  required
+                  disabled={loading}
+                  minLength={6}
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-300 font-serif text-xl font-light mb-4">
+                  Role
+                </label>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="w-full bg-navy-800/50 border-purple-400/30 backdrop-blur-xl rounded-3xl text-xl font-light h-16 lg:h-20 focus:ring-purple-500/50 focus:border-purple-500/70 p-6 transition-all duration-300"
+                  disabled={loading}
+                >
+                  <option value="user">Event Organizer (Customer)</option>
+                  <option value="provider">Service Provider (Vendor)</option>
+                </select>
+              </div>
+
+              <motion.button 
+                type="submit"
+                disabled={loading}
+                className="w-full btn-purple text-xl lg:text-2xl py-6 lg:py-8 rounded-[3rem] shadow-purple-glow-lg hover:shadow-hero-glow font-serif tracking-wide h-[70px] disabled:opacity-50 disabled:cursor-not-allowed"
+                whileHover={{ scale: loading ? 1 : 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {loading ? 'Creating Account...' : 'Create Account'}
+              </motion.button>
+            </form>
 
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -129,4 +213,3 @@ const Signup = () => {
 }
 
 export default Signup
-

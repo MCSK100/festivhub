@@ -1,13 +1,17 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Sun, Moon } from 'lucide-react'
-import { useUser, SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { useTheme } from '../utils/ThemeContext'
+import { useAuth } from '../contexts/AuthContext'
 import FreeTrialTimer from './FreeTrialTimer'
 
 const NavBar = () => {
-  const { isSignedIn } = useUser()
+  const { user, logout } = useAuth()
   const { darkMode, setDarkMode } = useTheme()
+
+  const handleLogout = () => {
+    logout()
+  }
 
   return (
     <motion.nav 
@@ -42,7 +46,7 @@ const NavBar = () => {
             </div>
 
             {/* Auth Buttons */}
-            <SignedOut>
+            {!user ? (
               <div className="flex items-center space-x-3 lg:space-x-4">
                 <Link 
                   to="/login"
@@ -57,8 +61,7 @@ const NavBar = () => {
                   Get Started
                 </Link>
               </div>
-            </SignedOut>
-            <SignedIn>
+            ) : (
               <div className="flex items-center space-x-3 lg:space-x-4">
                 <Link 
                   to="/dashboard"
@@ -66,9 +69,16 @@ const NavBar = () => {
                 >
                   Dashboard
                 </Link>
-                <UserButton afterSignOutUrl="/" />
+                <motion.button 
+                  onClick={handleLogout}
+                  className="px-6 lg:px-8 py-3 lg:py-4 bg-red-500/90 hover:bg-red-600 text-white rounded-2xl font-medium tracking-wide shadow-lg hover:shadow-red-500/50 transition-all duration-300 backdrop-blur-xl"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Logout
+                </motion.button>
               </div>
-            </SignedIn>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -87,4 +97,3 @@ const NavBar = () => {
 }
 
 export default NavBar
-

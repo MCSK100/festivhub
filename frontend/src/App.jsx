@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { ClerkProvider, SignedIn } from '@clerk/clerk-react'
 import { Navigate } from 'react-router-dom'
 import NavBar from './components/NavBar'
 import LandingPage from './pages/LandingPage'
@@ -10,15 +8,13 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import RoleSelection from './pages/RoleSelection'
 import ProviderDashboard from './pages/ProviderDashboard'
+import PrivateRoute from './components/PrivateRoute'
 import { ThemeProvider } from './utils/ThemeContext'
+import { AuthProvider } from './contexts/AuthContext'
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-if (!PUBLISHABLE_KEY) {
-  console.error("DEBUG: Clerk Key is missing! Check your .env.local file.")
-}
 function App() {
   return (
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+    <AuthProvider>
       <ThemeProvider>
         <Router>
           <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
@@ -28,14 +24,14 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/login" element={<Login />} />
-<Route path="/role-select" element={<RoleSelection />} />
-<Route path="/signup" element={<Signup />} />
+              <Route path="/role-select" element={<RoleSelection />} />
+              <Route path="/signup" element={<Signup />} />
               <Route 
                 path="/dashboard" 
                 element={
-                  <SignedIn>
+                  <PrivateRoute>
                     <ProviderDashboard />
-                  </SignedIn>
+                  </PrivateRoute>
                 } 
               />
               <Route path="*" element={<Navigate to="/" replace />} />
@@ -43,7 +39,7 @@ function App() {
           </div>
         </Router>
       </ThemeProvider>
-    </ClerkProvider>
+    </AuthProvider>
   )
 }
 
