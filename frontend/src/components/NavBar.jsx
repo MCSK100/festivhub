@@ -1,96 +1,178 @@
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { Sun, Moon } from 'lucide-react'
-import { useTheme } from '../utils/ThemeContext'
+import { Link, useLocation } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
+import { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import FreeTrialTimer from './FreeTrialTimer'
 
 const NavBar = () => {
   const { user, logout } = useAuth()
-  const { darkMode, setDarkMode } = useTheme()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const location = useLocation()
 
   const handleLogout = () => {
     logout()
   }
 
+  const isActive = (path) => {
+    return location.pathname === path
+  }
+
+  const navLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/about', label: 'About' },
+    { href: '/faq', label: 'FAQ' },
+  ]
+
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed top-0 z-50 w-full backdrop-blur-xl bg-white/70 border-b border-gray-200/50 shadow-sm"
+      className="fixed top-0 z-50 w-full glass-dark border-b border-blue-500/20 backdrop-blur-xl"
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 xl:px-24">
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-4 lg:gap-0 h-20 lg:h-28">
+      <div className="max-w-7xl mx-auto px-6 lg:px-20">
+        <div className="flex justify-between items-center h-20 lg:h-24">
           {/* Logo */}
-          <Link 
-            to="/" 
-            className="text-4xl lg:text-5xl font-serif font-light italic bg-gradient-to-r from-sky-400 via-sky-300 to-sky-500 bg-clip-text text-transparent hover:scale-110 hover:shadow-sky-500/50 transition-all duration-500 group"
+          <Link
+            to="/"
+            className="text-3xl lg:text-4xl font-serif font-light italic gradient-gold-text hover:scale-110 transition-transform duration-300"
           >
-            FestivLink
+            EventHub
           </Link>
-          
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center space-x-4 lg:space-x-6">
-            <FreeTrialTimer />
-            
-            {/* Theme Toggle */}
-            <div className="flex items-center space-x-2">
-              <motion.button 
-                whileHover={{ scale: 1.1, rotate: 360 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setDarkMode(!darkMode)}
-                className="p-3 lg:p-4 rounded-3xl bg-white/80 backdrop-blur-2xl shadow-md border border-gray-200 hover:shadow-lg hover:border-sky-400 hover:bg-sky-50 transition-all duration-500 text-slate-900 hover:text-sky-500"
-              >
-                {darkMode ? <Sun className="w-6 h-6 lg:w-7 lg:h-7" /> : <Moon className="w-6 h-6 lg:w-7 lg:h-7" />}
-              </motion.button>
-            </div>
 
-            {/* Auth Buttons */}
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className={`text-sm font-medium transition-all duration-300 pb-2 border-b-2 ${
+                  isActive(link.href)
+                    ? 'text-blue-600 border-blue-500'
+                    : 'text-slate-700 border-transparent hover:text-blue-600 hover:border-blue-500/50'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop Auth Buttons */}
+          <div className="hidden lg:flex items-center gap-4">
             {!user ? (
-              <div className="flex items-center space-x-3 lg:space-x-4">
-                <Link 
+              <>
+                <Link
                   to="/login"
-                  className="px-6 lg:px-8 py-3 lg:py-4 bg-white/90 text-slate-900 rounded-3xl font-light shadow-sm border border-gray-200 hover:bg-gray-50 hover:border-sky-400 hover:shadow-md hover:text-sky-600 transition-all duration-400 backdrop-blur-xl"
+                  className="px-6 py-3 text-slate-700 hover:text-blue-600 font-medium transition-colors duration-300 text-sm"
                 >
                   Sign In
                 </Link>
-                <Link 
-                  to="/signup"
-                  className="bg-gradient-to-r from-sky-500 to-sky-400 hover:from-sky-600 hover:to-sky-500 px-6 lg:px-8 py-3 lg:py-4 shadow-lg hover:shadow-sky-500/50 text-white rounded-2xl font-medium tracking-wide transition-all duration-300"
+                <button
+                  onClick={() => (window.location.href = '/signup')}
+                  className="btn-premium-gold px-7 py-3 text-sm font-semibold"
                 >
                   Get Started
-                </Link>
-              </div>
+                </button>
+              </>
             ) : (
-              <div className="flex items-center space-x-3 lg:space-x-4">
-                <Link 
+              <>
+                <Link
                   to="/dashboard"
-                  className="px-6 lg:px-8 py-3 lg:py-4 bg-white/90 text-slate-800 border border-gray-200 backdrop-blur-xl rounded-3xl font-light shadow-sm hover:bg-sky-50 hover:shadow-md hover:border-sky-400 hover:text-sky-600 transition-all duration-400"
+                  className="px-6 py-3 rounded-xl text-slate-700 hover:text-blue-600 font-medium transition-colors duration-300 text-sm"
                 >
                   Dashboard
                 </Link>
-                <motion.button 
+                <motion.button
                   onClick={handleLogout}
-                  className="px-6 lg:px-8 py-3 lg:py-4 bg-red-500/90 hover:bg-red-600 text-white rounded-2xl font-medium tracking-wide shadow-lg hover:shadow-red-500/50 transition-all duration-300 backdrop-blur-xl"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  className="px-6 py-3 bg-red-500/80 hover:bg-red-600 text-white rounded-xl font-medium text-sm transition-all duration-300"
                 >
                   Logout
                 </motion.button>
-              </div>
+              </>
             )}
           </div>
 
           {/* Mobile Menu Button */}
-          <motion.button 
-            className="lg:hidden p-3 rounded-3xl bg-white/80 backdrop-blur-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-sky-400 hover:bg-sky-50 transition-all text-slate-900 hover:text-sky-500"
+          <motion.button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-lg glass-accent border border-blue-500/30 text-blue-600 hover:text-blue-500 transition-colors"
             whileTap={{ scale: 0.95 }}
           >
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </motion.button>
         </div>
+
+        {/* Mobile Menu */}
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{
+            opacity: mobileMenuOpen ? 1 : 0,
+            height: mobileMenuOpen ? 'auto' : 0,
+          }}
+          className="lg:hidden overflow-hidden pb-6"
+        >
+          <div className="flex flex-col gap-4 bg-white/40 rounded-xl p-4 mt-4 border border-blue-500/20">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`text-sm font-medium py-2 px-3 rounded-lg transition-all duration-300 ${
+                  isActive(link.href)
+                    ? 'text-blue-600 bg-blue-500/20'
+                    : 'text-slate-700 hover:text-blue-600 hover:bg-blue-500/10'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            <div className="border-t border-blue-500/20 pt-4 mt-4 flex flex-col gap-3">
+              {!user ? (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-6 py-3 text-center text-slate-700 hover:text-blue-600 font-medium transition-colors duration-300 text-sm"
+                  >
+                    Sign In
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false)
+                      window.location.href = '/signup'
+                    }}
+                    className="btn-premium-gold px-6 py-3 text-sm font-semibold w-full"
+                  >
+                    Get Started
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-6 py-3 text-center text-slate-700 hover:text-blue-600 font-medium transition-colors duration-300 text-sm"
+                  >
+                    Dashboard
+                  </Link>
+                  <motion.button
+                    onClick={() => {
+                      setMobileMenuOpen(false)
+                      handleLogout()
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-3 bg-red-500/80 hover:bg-red-600 text-white rounded-xl font-medium text-sm transition-all duration-300 w-full"
+                  >
+                    Logout
+                  </motion.button>
+                </>
+              )}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </motion.nav>
   )

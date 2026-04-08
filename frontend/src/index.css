@@ -7,31 +7,31 @@
 .premium-section { @apply py-40 px-8 lg:px-16 max-w-7xl mx-auto; }
 .air-hero { @apply font-serif text-8xl md:text-9xl lg:text-[10rem] leading-none tracking-tight mb-12 max-w-5xl mx-auto; }
 
-/* Navy-Gold Glassmorphism System */
+/* Light/Blue Glassmorphism System */
 .navy-glass {
-  background: rgba(11, 15, 25, 0.8);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(40px);
-  border: 1px solid rgba(200, 169, 106, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.15);
 }
 .gold-glass {
-  background: rgba(200, 169, 106, 0.1);
+  background: rgba(59, 130, 246, 0.08);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(200, 169, 106, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.25);
 }
 .purple-glass {
-  background: rgba(124, 92, 252, 0.15);
+  background: rgba(99, 102, 241, 0.08);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(124, 92, 252, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.25);
 }
 .floating-card {
-  box-shadow: 0 25px 50px -12px rgba(11,15,25,0.5), 0 0 20px rgba(200,169,106,0.2);
+  box-shadow: 0 25px 50px -12px rgba(59,130,246,0.1), 0 0 20px rgba(59,130,246,0.1);
   transform: translateY(-4px);
 }
 
 /* New Theme Utilities */
-.navy-bg { @apply bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900/80; }
+.navy-bg { @apply bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50; }
 .gold-surface { 
-  @apply bg-gradient-to-br from-gold-500/10 to-purple-500/5 border-gold-500/30 shadow-gold-glow backdrop-blur-xl text-slate-100;
+  @apply bg-gradient-to-br from-blue-50 to-blue-100/50 border-blue-300/40 shadow-gold-glow backdrop-blur-xl text-slate-900;
 }
 .animate-gold-float { animation: goldFloat 6s ease-in-out infinite; }
 @keyframes goldFloat {
@@ -39,19 +39,19 @@
   50% { transform: translateY(-10px); }
 }
 .btn-gold {
-  @apply relative px-8 py-4 font-bold text-navy-900 transition-all duration-500 bg-gradient-to-r from-gold-500 to-gold-400 rounded-3xl shadow-gold-glow-lg hover:shadow-gold-glow hover:scale-105 active:scale-95 font-serif tracking-wide;
+  @apply relative px-8 py-4 font-bold text-white transition-all duration-500 bg-gradient-to-r from-blue-600 to-blue-500 rounded-3xl shadow-gold-glow-lg hover:shadow-gold-glow-xl hover:scale-105 active:scale-95 font-serif tracking-wide;
 }
 .btn-gold::after {
   content: '→';
   @apply ml-3 inline-block transition-all group-hover:translate-x-2 duration-300;
 }
 .btn-purple {
-  @apply relative px-8 py-4 font-bold text-white transition-all duration-500 bg-gradient-to-r from-purple-500 to-purple-400 rounded-3xl shadow-purple-glow hover:shadow-purple-glow-lg hover:scale-105 active:scale-95 font-serif tracking-wide;
+  @apply relative px-8 py-4 font-bold text-white transition-all duration-500 bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-3xl shadow-purple-glow hover:shadow-purple-glow-lg hover:scale-105 active:scale-95 font-serif tracking-wide;
 }
 
 @layer utilities {
-  .shadow-purple-glow-xl { box-shadow: 0 0 80px rgba(124,92,252,0.8); }
-  .shadow-gold-glow-xl { box-shadow: 0 0 80px rgba(200,169,106,0.8); }
+  .shadow-purple-glow-xl { box-shadow: 0 0 80px rgba(99,102,241,0.4); }
+  .shadow-gold-glow-xl { box-shadow: 0 0 80px rgba(59,130,246,0.4); }
 }
 
 /* Enhanced Blob Animations */
@@ -78,3 +78,66 @@
 }
 
 .doodle-glow { filter: drop-shadow(0 0 8px currentColor); }
+
+/* Premium Glass Morphism Enhancements */
+.glass-dark {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(60px);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+}
+
+.glass-accent {
+  background: rgba(59, 130, 246, 0.06);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.08);
+}
+
+/* Gradient Text */
+.gradient-gold-text {
+  background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #1E40AF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-purple-text {
+  background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Premium Button System */
+.btn-premium-gold {
+  @apply relative inline-block px-8 py-4 font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl shadow-gold-glow-lg hover:shadow-gold-glow-xl hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden;
+}
+
+.btn-premium-gold::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-blue-700 to-blue-600 opacity-0 hover:opacity-20 transition-opacity duration-300;
+}
+
+.btn-premium-purple {
+  @apply relative inline-block px-8 py-4 font-semibold text-white bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-2xl shadow-purple-glow-lg hover:shadow-purple-glow-lg hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden;
+}
+
+/* Floating Animation */
+@keyframes floating {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(3deg); }
+}
+
+.animate-floating {
+  animation: floating 6s ease-in-out infinite;
+}
+
+/* Glow Animations */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(59,130,246,0.3), 0 0 60px rgba(59,130,246,0.15); }
+  50% { box-shadow: 0 0 50px rgba(59,130,246,0.4), 0 0 80px rgba(59,130,246,0.2); }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}

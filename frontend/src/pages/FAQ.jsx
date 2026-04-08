@@ -42,10 +42,10 @@ const FAQ = () => (
         transition={{ duration: 0.8 }}
         className="text-center mb-24 lg:mb-36"
       >
-        <h2 className="text-7xl lg:text-[8rem] xl:text-[9rem] font-serif font-light italic bg-gradient-to-r from-gold-400 via-purple-500 to-gold-500 bg-clip-text text-transparent mb-12 leading-none shadow-hero-glow">
+        <h2 className="text-7xl lg:text-[8rem] xl:text-[9rem] font-serif font-light italic bg-gradient-to-r from-blue-500 via-indigo-600 to-blue-600 bg-clip-text text-transparent mb-12 leading-none shadow-hero-glow">
           Questions?
         </h2>
-        <p className="text-2xl lg:text-3xl xl:text-4xl font-light text-slate-200/90 max-w-4xl mx-auto leading-[1.6] backdrop-blur-xl">
+        <p className="text-2xl lg:text-3xl xl:text-4xl font-light text-slate-700 max-w-4xl mx-auto leading-[1.6] backdrop-blur-xl">
           Everything you need to know before joining thousands of successful events
         </p>
       </motion.div>
@@ -56,7 +56,7 @@ e-y-10">
         {faqs.map((faq, index) => (
           <motion.div 
             key={index}
-            className="group navy-glass backdrop-blur-3xl rounded-[3rem] p-10 lg:p-14 xl:p-16 border border-gold-400/30 hover:border-purple-500/60 hover:shadow-hero-glow hover:-translate-y-4 transition-all duration-700 cursor-pointer overflow-hidden"
+            className="group glass-dark backdrop-blur-3xl rounded-[3rem] p-10 lg:p-14 xl:p-16 border border-blue-500/30 hover:border-indigo-500/60 hover:shadow-hero-glow hover:-translate-y-4 transition-all duration-700 cursor-pointer overflow-hidden"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -64,11 +64,11 @@ e-y-10">
             whileHover={{ scale: 1.02 }}
           >
             {/* Glow Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-gold-500/10 opacity-0 group-hover:opacity-100 blur-xl rounded-[3rem] transition-all duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/8 to-blue-500/8 opacity-0 group-hover:opacity-100 blur-xl rounded-[3rem] transition-all duration-700" />
             
             {/* Question */}
             <motion.h3 
-              className="text-2xl lg:text-3xl xl:text-4xl font-serif font-bold mb-6 text-slate-100 group-hover:text-gold-300 transition-all duration-700 leading-tight relative z-10"
+              className="text-2xl lg:text-3xl xl:text-4xl font-serif font-bold mb-6 text-slate-900 group-hover:text-blue-600 transition-all duration-700 leading-tight relative z-10"
               whileHover={{ x: 12 }}
             >
               {faq.q}
@@ -76,7 +76,7 @@ e-y-10">
             
             {/* Answer */}
             <motion.p 
-              className="text-xl lg:text-2xl text-slate-300/90 leading-[1.7] font-light relative z-10 opacity-0 group-hover:opacity-100 transition-all duration-700 max-w-4xl"
+              className="text-xl lg:text-2xl text-slate-700 leading-[1.7] font-light relative z-10 opacity-0 group-hover:opacity-100 transition-all duration-700 max-w-4xl"
               initial={{ height: 0 }}
               animate={{ height: 'auto' }}
             >

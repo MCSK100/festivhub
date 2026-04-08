@@ -1,166 +1,192 @@
 import { motion } from 'framer-motion'
+import { Star } from 'lucide-react'
 
 const reviews = [
-  { 
-    name: 'Priya S.', 
-    role: 'Bride, Mumbai', 
-    quote: "Found our dream photographer through FestivLink. The portfolios made our choice effortless – wedding was flawless!", 
+  {
+    name: 'Priya S.',
+    role: 'Bride, Mumbai',
+    quote: 'Found our dream photographer through EventHub. The portfolios made our choice effortless – wedding was flawless!',
     rating: 5,
-    avatarColor: 'from-sky-500 to-sky-400'
+    accentColor: 'blue',
   },
-  { 
-    name: 'Rohan K.', 
-    role: 'Event Manager', 
-    quote: "Expanded my catering business to 50+ cities. Quality leads, seamless payments, incredible ROI.", 
+  {
+    name: 'Rohan K.',
+    role: 'Event Manager',
+    quote: 'Expanded my catering business to 50+ cities. Quality leads, seamless payments, incredible ROI.',
     rating: 5,
-    avatarColor: 'from-sky-400 to-sky-500'
+    accentColor: 'indigo',
   },
-  { 
-    name: 'Aisha M.', 
-    role: 'Corporate Planner', 
-    quote: "Venue, DJ, decor – everything booked seamlessly. Most professional platform I've used.", 
+  {
+    name: 'Aisha M.',
+    role: 'Corporate Planner',
+    quote: 'Venue, DJ, decor – everything booked seamlessly. Most professional platform I\'ve used.',
     rating: 5,
-    avatarColor: 'from-sky-500 to-sky-300'
+    accentColor: 'blue',
   },
-  { 
-    name: 'Vikram S.', 
-    role: 'Photographer', 
-    quote: "High-quality inquiries transformed my bookings. 3x growth in 6 months.", 
+  {
+    name: 'Vikram S.',
+    role: 'Photographer',
+    quote: 'High-quality inquiries transformed my bookings. 3x growth in 6 months.',
     rating: 5,
-    avatarColor: 'from-sky-300 to-sky-500'
+    accentColor: 'indigo',
   },
-  { 
-    name: 'Neha P.', 
-    role: 'Destination Wedding', 
-    quote: "Decorators from Delhi to Goa. Perfect execution, stress-free planning.", 
+  {
+    name: 'Neha P.',
+    role: 'Destination Wedding',
+    quote: 'Decorators from Delhi to Goa. Perfect execution, stress-free planning.',
     rating: 5,
-    avatarColor: 'from-sky-500 to-sky-400'
+    accentColor: 'blue',
   },
-  { 
-    name: 'Arjun M.', 
-    role: 'Birthday Organizer', 
-    quote: "Caterers, entertainers, photographers – saved weeks of coordination!", 
+  {
+    name: 'Arjun M.',
+    role: 'Birthday Organizer',
+    quote: 'Caterers, entertainers, photographers – saved weeks of coordination!',
     rating: 5,
-    avatarColor: 'from-sky-400 to-sky-300'
+    accentColor: 'indigo',
   },
 ]
 
-const Testimonials = () => (
-  <motion.section 
-    initial={{ opacity: 0, y: 60 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-100px" }}
-    transition={{ duration: 0.8 }}
-    className="py-32 lg:py-48 bg-gradient-to-b from-white to-gray-50"
-  >
-    <div className="max-w-7xl mx-auto px-8 lg:px-20 xl:px-32">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95, y: 30 }}
-        whileInView={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="text-center mb-20 lg:mb-28 xl:mb-36"
-      >
-        <h2 className="text-6xl lg:text-[7.5rem] xl:text-[8.5rem] 2xl:text-[9.5rem] font-serif font-light italic bg-gradient-to-r from-sky-400 via-sky-300 to-sky-500 bg-clip-text text-transparent mb-12 leading-none shadow-lg">
-          Voices of Success
-        </h2>
-        <p className="text-2xl lg:text-3xl xl:text-4xl font-light text-slate-600 max-w-5xl mx-auto leading-relaxed">
-          Real professionals, real results
-        </p>
-      </motion.div>
-      
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14 xl:gap-20">
-        {reviews.map((review, index) => (
-          <motion.div 
-            key={index}
-            className="group relative p-10 lg:p-14 xl:p-16 rounded-[3rem] bg-white backdrop-blur-xl shadow-lg hover:shadow-2xl hover:-translate-y-10 transition-all duration-1000 border border-gray-200 hover:border-sky-300 cursor-pointer overflow-hidden"
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: index * 0.1 }}
-            whileHover={{ scale: 1.04 }}
-          >
-            {/* Glow Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-sky-400/20 via-sky-300/10 to-sky-400/20 opacity-0 group-hover:opacity-100 blur-xl rounded-[3rem] transition-all duration-700" />
-            
-            {/* Stars */}
-            <div className="flex justify-center mb-10 gap-1">
-              {[...Array(review.rating)].map((_, starIndex) => (
-                <motion.span 
-                  key={starIndex}
-                  className="text-4xl lg:text-5xl xl:text-6xl text-sky-400 drop-shadow-lg group-hover:scale-125"
-                  initial={{ rotate: 180 }}
-                  animate={{ rotate: 0 }}
-                  whileHover={{ 
-                    scale: [1, 1.4, 1.2], 
-                    rotate: [0, 360], 
-                    y: [-8, 0]
-                  }}
-                  transition={{ 
-                    type: "spring", 
-                    stiffness: 400, 
-                    damping: 12 
-                  }}
-                >
-                  ★
-                </motion.span>
-              ))}
-            </div>
-            
-            {/* Quote */}
-            <motion.blockquote 
-              className="text-2xl lg:text-3xl xl:text-[1.75rem] 2xl:text-4xl text-slate-800 font-serif font-light italic leading-[1.4] mb-14 group-hover:text-slate-900 transition-all duration-700 text-center px-4 lg:px-8"
-              whileHover={{ y: -6 }}
-            >
-              &ldquo;{review.quote}&rdquo;
-            </motion.blockquote>
-            
-            {/* Author */}
-            <div className="flex items-center justify-center">
-              <motion.div 
-                className={`w-20 h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 bg-gradient-to-br ${review.avatarColor} rounded-[2.5rem] flex items-center justify-center mr-6 lg:mr-8 shadow-lg ring-2 ring-white/50 group-hover:rotate-360 group-hover:scale-125 transition-all duration-1000 flex-shrink-0 backdrop-blur-xl`}
-                whileHover={{ scale: 1.2, rotate: 360 }}
-                transition={{ duration: 0.8, type: 'spring' }}
-              >
-                <span className="text-white font-serif text-2xl lg:text-3xl xl:text-4xl font-bold drop-shadow-lg">
-                  {review.name.split(' ')[0][0]}{review.name.split(' ')[1]?.[0] || ''}
-                </span>
-              </motion.div>
-              <div className="text-right">
-                <motion.p 
-                  className="font-serif text-3xl lg:text-4xl xl:text-5xl font-light text-slate-900 group-hover:text-sky-500 transition-colors shadow-lg leading-tight"
-                  whileHover={{ x: 8 }}
-                >
-                  {review.name}
-                </motion.p>
-                <motion.p 
-                  className="text-xl lg:text-2xl text-slate-500 font-light mt-2 group-hover:text-slate-600 transition-colors"
-                  whileHover={{ x: 4 }}
-                >
-                  {review.role}
-                </motion.p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+const Testimonials = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: 'easeOut' },
+    },
+  }
+
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-100px' }}
+      variants={containerVariants}
+      className="relative py-32 lg:py-48 navy-bg overflow-hidden"
+    >
+      {/* Background Decorative Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full blur-3xl"
+          animate={{ y: [0, 100, 0], x: [-50, 50, -50] }}
+          transition={{ duration: 20, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-tl from-gold-500/10 to-transparent rounded-full blur-3xl"
+          animate={{ y: [0, -100, 0], x: [50, -50, 50] }}
+          transition={{ duration: 25, repeat: Infinity, delay: 2 }}
+        />
       </div>
 
-      {/* CTA Button */}
-      <motion.div 
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        className="text-center mt-24 lg:mt-36"
-      >
-        <motion.button 
-          whileHover={{ scale: 1.1, y: -8 }}
-          className="bg-gradient-to-r from-sky-500 to-sky-400 hover:from-sky-600 hover:to-sky-500 px-20 lg:px-28 py-10 lg:py-12 text-3xl lg:text-4xl xl:text-5xl shadow-xl hover:shadow-2xl font-light tracking-wide rounded-3xl text-white"
+      <div className="max-w-7xl mx-auto px-6 lg:px-20 relative z-10">
+        {/* Header */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="text-center mb-16 lg:mb-24"
         >
-          See More Success Stories
-        </motion.button>
-      </motion.div>
-    </div>
-  </motion.section>
-)
+          <motion.h2
+            variants={itemVariants}
+            className="text-4xl md:text-5xl lg:text-7xl font-serif font-light text-slate-900 mb-6"
+          >
+            Voices of <span className="gradient-purple-text font-semibold">Success</span>
+          </motion.h2>
+          <motion.p
+            variants={itemVariants}
+            className="text-lg md:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed"
+          >
+            Real professionals, real results
+          </motion.p>
+        </motion.div>
+
+        {/* Testimonials Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+        >
+          {reviews.map((review, index) => (
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="group"
+            >
+              <div
+                className={`glass-accent rounded-2xl p-8 lg:p-10 border h-full flex flex-col transition-all duration-300 ${
+                  review.accentColor === 'blue'
+                    ? 'border-blue-500/30 group-hover:border-blue-500/60 group-hover:shadow-gold-glow'
+                    : 'border-indigo-500/30 group-hover:border-indigo-500/60 group-hover:shadow-purple-glow'
+                }`}
+              >
+                {/* Stars */}
+                <div className="flex justify-start gap-1 mb-6">
+                  {[...Array(review.rating)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.1,
+                      }}
+                    >
+                      <Star
+                        className={`w-5 h-5 fill-current ${
+                          review.accentColor === 'blue'
+                            ? 'text-blue-500'
+                            : 'text-indigo-500'
+                        }`}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <motion.blockquote className="text-lg lg:text-xl text-slate-800 font-light leading-relaxed mb-8 flex-grow italic">
+                  &ldquo;{review.quote}&rdquo;
+                </motion.blockquote>
+
+                {/* Author Info */}
+                <div className="flex items-center gap-4 pt-6 border-t border-blue-500/20">
+                  <motion.div
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${
+                      review.accentColor === 'blue'
+                        ? 'from-blue-500 to-blue-400'
+                        : 'from-indigo-500 to-indigo-400'
+                    } flex items-center justify-center flex-shrink-0 font-semibold text-white text-lg`}
+                  >
+                    {review.name[0]}
+                  </motion.div>
+                  <div>
+                    <p className="font-semibold text-slate-900 text-sm lg:text-base">
+                      {review.name}
+                    </p>
+                    <p className="text-xs lg:text-sm text-slate-700">{review.role}</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </motion.section>
+  )
+}
 
 export default Testimonials
-

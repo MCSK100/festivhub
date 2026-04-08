@@ -45,10 +45,10 @@ const FreeTrialTimer = () => {
         className="w-6 h-6 bg-gold-400 rounded-full shadow-gold-glow"
       />
       <div className="flex items-baseline space-x-1 text-sm font-bold">
-        <span className="text-gold-400 drop-shadow-lg">🎉 Free for 30 Days</span>
-        <span className="text-xs text-slate-300">– Limited Offer</span>
+        <span className="text-blue-600 drop-shadow-lg">🎉 Free for 30 Days</span>
+        <span className="text-xs text-slate-600">– Limited Offer</span>
       </div>
-      <div className="text-xs font-mono text-slate-200 ml-2 space-x-1">
+      <div className="text-xs font-mono text-slate-700 ml-2 space-x-1">
         <span>{timeLeft.days.toString().padStart(2, '0')}d</span>
         <span>:</span>
         <span>{timeLeft.hours.toString().padStart(2, '0')}h</span>

@@ -26,7 +26,7 @@ const RoleSelection = () => {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-2xl lg:text-4xl xl:text-5xl font-light text-slate-200/90 mb-24 lg:mb-32 leading-[1.6] backdrop-blur-xl max-w-3xl mx-auto px-4"
+          className="text-2xl lg:text-4xl xl:text-5xl font-light text-slate-800 mb-24 lg:mb-32 leading-[1.6] backdrop-blur-xl max-w-3xl mx-auto px-4"
         >
           Whether hiring top talent or showcasing your expertise – 
           <span className="block mt-6 text-gold-300 font-serif italic bg-gradient-to-r from-gold-400 via-purple-400 to-gold-500 bg-clip-text text-transparent shadow-purple-glow">
@@ -51,12 +51,12 @@ const RoleSelection = () => {
               </svg>
             </div>
             <motion.h3 
-              className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-8 text-slate-100 group-hover:text-gold-300 transition-all duration-700 leading-tight shadow-2xl"
+              className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-8 text-slate-900 group-hover:text-blue-600 transition-all duration-700 leading-tight shadow-2xl"
               whileHover={{ y: -4 }}
             >
               Hire Talent
             </motion.h3>
-            <p className="text-xl lg:text-2xl text-slate-300/90 mb-12 lg:mb-16 leading-relaxed font-light max-w-lg mx-auto group-hover:text-slate-200/95">
+            <p className="text-xl lg:text-2xl text-slate-700 mb-12 lg:mb-16 leading-relaxed font-light max-w-lg mx-auto group-hover:text-slate-800">
               Find & book verified photographers, caterers, decorators and more for your perfect event.
             </p>
             <Link 
@@ -82,12 +82,12 @@ const RoleSelection = () => {
               </svg>
             </div>
             <motion.h3 
-              className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-8 text-slate-100 group-hover:text-purple-300 transition-all duration-700 leading-tight shadow-2xl"
+              className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-8 text-slate-900 group-hover:text-indigo-600 transition-all duration-700 leading-tight shadow-2xl"
               whileHover={{ y: -4 }}
             >
               Showcase Work
             </motion.h3>
-            <p className="text-xl lg:text-2xl text-slate-300/90 mb-12 lg:mb-16 leading-relaxed font-light max-w-lg mx-auto group-hover:text-slate-200/95">
+            <p className="text-xl lg:text-2xl text-slate-700 mb-12 lg:mb-16 leading-relaxed font-light max-w-lg mx-auto group-hover:text-slate-800">
               Build your portfolio and connect with thousands of event organizers looking for professionals like you.
             </p>
             <Link 
@@ -116,7 +116,7 @@ const RoleSelection = () => {
           className="mt-20 text-lg lg:text-xl text-slate-400 font-light backdrop-blur-xl"
         >
           Already registered?{' '}
-          <Link to="/login" className="text-gold-400 hover:text-gold-300 font-medium shadow-gold-glow hover:shadow-gold-glow-lg transition-all duration-300 inline-block px-4 py-2 rounded-xl backdrop-blur-xl">Sign in here</Link>
+          <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium shadow-blue-glow hover:shadow-blue-glow-lg transition-all duration-300 inline-block px-4 py-2 rounded-xl backdrop-blur-xl">Sign in here</Link>
         </motion.p>
       </div>
     </motion.div>

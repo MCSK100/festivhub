@@ -1,118 +1,193 @@
 import { motion } from 'framer-motion'
-import { DoodleBanner } from '../utils/doodles'
+import { ArrowRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
-const Hero = () => (
-  <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-white via-blue-50/50 to-indigo-50 py-24 lg:py-32">
-    {/* Floating Doodles */}
-    <DoodleBanner className="absolute top-20 right-20 w-96 h-auto opacity-20 animate-floatSlow text-sky-400 hidden lg:block" />
-    
-    <div className="max-w-7xl mx-auto px-6 lg:px-20 2xl:px-32 relative z-10">
-      <div className="grid lg:grid-cols-2 items-center gap-20 lg:gap-32 min-h-[70vh]">
-        {/* Left - Content */}
-        <motion.div 
-          initial={{ opacity: 0, x: -60 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="lg:pr-16 space-y-8 lg:space-y-12"
-        >
-          <motion.div 
-            className="inline-block bg-gradient-to-r from-sky-400/20 to-sky-500/20 backdrop-blur-xl px-8 py-4 rounded-3xl border border-sky-200 shadow-xl"
-          >
-            <span className="text-sm font-medium text-sky-600 tracking-wide uppercase">Trusted Marketplace</span>
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-5xl md:text-7xl lg:text-[5rem] 2xl:text-8xl font-serif font-black leading-[0.9] bg-gradient-to-r from-slate-900 via-sky-900 to-slate-900 bg-clip-text text-transparent"
-          >
-            Find Your Perfect<br />
-            <span className="text-4xl md:text-5xl lg:text-3xl 2xl:text-6xl block font-light bg-gradient-to-r from-sky-500 to-sky-400 text-sky-500">Event Team</span>
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="text-xl lg:text-2xl xl:text-3xl font-light text-slate-600 leading-relaxed max-w-lg"
-          >
-            Connect with top-rated photographers, caterers, decorators and more. 
-            <span className="block mt-4 text-sky-600 font-medium">Your dream event, flawlessly executed.</span>
-          </motion.p>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col sm:flex-row gap-4 lg:gap-6"
-            transition={{ delay: 0.6 }}
-          >
-            <motion.button 
-              whileHover={{ scale: 1.05, y: -4 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative px-10 lg:px-12 py-6 lg:py-7 text-xl lg:text-2xl font-semibold bg-gradient-to-r from-sky-500 to-sky-400 hover:from-sky-600 hover:to-sky-500 text-white rounded-3xl shadow-2xl hover:shadow-sky-500/50 transition-all duration-300 font-serif tracking-wide"
-            >
-              <span>Find Professionals</span>
-              <motion.span 
-                className="absolute -inset-2 bg-gradient-to-r from-sky-400 to-sky-500 -skew-x-12 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition-all duration-500 -z-10"
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-            </motion.button>
-            <motion.button 
-              whileHover={{ scale: 1.03 }}
-              className="px-10 lg:px-12 py-6 lg:py-7 border-2 border-sky-300 text-xl lg:text-2xl font-light bg-white/80 backdrop-blur-xl rounded-3xl shadow-lg hover:bg-sky-50 hover:border-sky-400 hover:shadow-xl transition-all duration-300 text-slate-800 font-serif tracking-wide"
-            >
-              Join as Vendor
-            </motion.button>
-          </motion.div>
-        </motion.div>
+const Hero = () => {
+  const navigate = useNavigate()
 
-        {/* Right - Hero Image */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative lg:col-start-2"
-          transition={{ delay: 0.8 }}
-        >
-          <div className="relative w-full h-96 lg:h-[600px] rounded-3xl overflow-hidden shadow-2xl group">
-            <img 
-              src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
-              alt="Event celebration"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent pointer-events-none" />
-            <div className="absolute bottom-8 left-8 right-8">
-              <div className="bg-white/90 backdrop-blur-xl px-8 py-4 rounded-2xl shadow-xl inline-block">
-                <span className="text-sm font-medium text-sky-600 tracking-wide uppercase block mb-1">Live Events</span>
-                <span className="text-2xl font-bold text-slate-900">2000+ Happening Now</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Floating Elements */}
-          <motion.div 
-            className="absolute -top-16 -right-20 w-32 h-32 bg-gradient-to-br from-sky-400/20 to-sky-500/20 backdrop-blur-xl rounded-full shadow-2xl"
-            animate={{ 
-              y: [0, -20, 0],
-              rotate: [0, 180],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{ 
-              y: { duration: 4, repeat: Infinity },
-              rotate: { duration: 20, repeat: Infinity },
-              scale: { duration: 3, repeat: Infinity }
-            }}
-          />
-          <motion.div 
-            className="absolute bottom-24 left-16 w-24 h-24 bg-gradient-to-br from-indigo-400/20 to-sky-400/20 backdrop-blur-xl rounded-2xl shadow-xl rotate-12"
-            animate={{ x: [0, 20, 0] }}
-            transition={{ duration: 6, repeat: Infinity }}
-          />
-        </motion.div>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: 'easeOut' },
+    },
+  }
+
+  return (
+    <section className="relative min-h-screen overflow-hidden navy-bg py-20 lg:py-32 flex items-center pt-40 lg:pt-32">
+      {/* Animated Background Gradients */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400/15 to-transparent rounded-full blur-3xl"
+          animate={{
+            y: [0, 100, 0],
+            x: [-50, 50, -50],
+          }}
+          transition={{ duration: 20, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-tl from-indigo-400/15 to-transparent rounded-full blur-3xl"
+          animate={{
+            y: [0, -100, 0],
+            x: [50, -50, 50],
+          }}
+          transition={{ duration: 25, repeat: Infinity, delay: 2 }}
+        />
       </div>
-    </div>
-  </section>
-)
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-15 relative z-10 w-full">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left Content */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-8 lg:space-y-12"
+          >
+            {/* Badge */}
+            <motion.div
+              variants={itemVariants}
+              className="inline-flex items-center gap-3 px-6 py-3 glass-accent rounded-full w-fit"
+            >
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+              <span className="text-sm font-medium text-blue-600">
+                Trusted by 8,000+ Professionals
+              </span>
+            </motion.div>
+
+            {/* Main Heading */}
+            <motion.div variants={itemVariants} className="space-y-4">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-light leading-tight">
+                <span className="text-slate-900">Seamless</span>
+                <br />
+                <span className="gradient-gold-text font-semibold">
+                  Events.
+                </span>
+                <br />
+                <span className="text-slate-900">
+                  Extraordinary
+                </span>
+                <br />
+                <span className="gradient-gold-text font-semibold">
+                  Professionals
+                </span>
+              </h1>
+            </motion.div>
+
+            {/* Subheading */}
+            <motion.p
+              variants={itemVariants}
+              className="text-lg md:text-xl lg:text-2xl text-slate-700 leading-relaxed max-w-xl"
+            >
+              Connect with elite vendors and professionals. Book verified talent
+              for photography, catering, decoration, and more. Your dream event
+              deserves excellence.
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col sm:flex-row gap-4 lg:gap-6 pt-4"
+            >
+              <button
+                onClick={() => navigate('/signup?role=customer')}
+                className="group btn-premium-gold flex items-center justify-center gap-2"
+              >
+                <span>Find Vendors</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button
+                onClick={() => navigate('/signup?role=vendor')}
+                className="px-8 py-4 rounded-2xl border-2 border-blue-500/50 text-blue-600 font-semibold hover:bg-blue-500/10 hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                <span>Join as Vendor</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              variants={itemVariants}
+              className="grid grid-cols-3 gap-8 pt-12 border-t border-blue-500/20"
+            >
+              <div>
+                <p className="text-3xl lg:text-4xl font-bold text-blue-600 mb-2">
+                  8K+
+                </p>
+                <p className="text-sm text-slate-700 font-medium">Vendors</p>
+              </div>
+              <div>
+                <p className="text-3xl lg:text-4xl font-bold text-blue-600 mb-2">
+                  25K+
+                </p>
+                <p className="text-sm text-slate-700 font-medium">Bookings</p>
+              </div>
+              <div>
+                <p className="text-3xl lg:text-4xl font-bold text-blue-600 mb-2">
+                  85+
+                </p>
+                <p className="text-sm text-slate-700 font-medium">Cities</p>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Right Image */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, x: 40 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="relative h-96 lg:h-[600px]"
+          >
+            <div className="absolute inset-0 rounded-3xl overflow-hidden glass-dark shadow-hero-glow border border-blue-500/30">
+              <img
+                src="https://images.unsplash.com/photo-1541538670337-c53313ad7c00?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWFycmlhZ2V8ZW58MHwxfDB8fHww"
+                alt="Premium event"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent" />
+
+              {/* Floating Badge */}
+              <motion.div
+                className="absolute bottom-8 left-8 right-8 glass-accent rounded-2xl p-6"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity }}
+              >
+                <p className="text-sm text-slate-600 font-medium mb-2">
+                  LIVE EVENTS
+                </p>
+                <p className="text-2xl font-bold text-slate-900">2000+ Happening Now</p>
+              </motion.div>
+            </div>
+
+            {/* Floating Elements */}
+            <motion.div
+              className="absolute -top-12 -right-12 w-40 h-40 bg-gradient-to-br from-blue-400/15 to-transparent rounded-full blur-2xl"
+              animate={{ y: [0, 20, 0], rotate: [0, 180, 360] }}
+              transition={{ duration: 8, repeat: Infinity }}
+            />
+            <motion.div
+              className="absolute -bottom-8 left-1/4 w-32 h-32 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-full blur-2xl"
+              animate={{ x: [0, 30, 0], rotate: [360, 180, 0] }}
+              transition={{ duration: 10, repeat: Infinity }}
+            />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
 
 export default Hero
 

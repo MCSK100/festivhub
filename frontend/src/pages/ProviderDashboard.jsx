@@ -59,7 +59,7 @@ const ProviderDashboard = () => {
         >
           Professional Dashboard
         </motion.h1>
-        <p className="text-2xl lg:text-3xl text-slate-200/90 mb-20 lg:mb-28 font-light max-w-4xl">
+        <p className="text-2xl lg:text-3xl text-slate-700 mb-20 lg:mb-28 font-light max-w-4xl">
           Showcase your portfolio • Manage bookings • Grow your business
         </p>
 
@@ -74,7 +74,7 @@ const ProviderDashboard = () => {
             <div className="w-20 h-20 mx-auto mb-8 bg-gradient-to-br from-gold-500 to-purple-500 rounded-[2.5rem] flex items-center justify-center shadow-gold-glow-xl group-hover:rotate-360 transition-all duration-1000">
               <span className="text-2xl font-bold text-slate-900 drop-shadow-lg">👁️</span>
             </div>
-            <div className="text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-slate-100 mb-4 shadow-2xl">{analytics.views}</div>
+            <div className="text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-blue-600 mb-4 shadow-2xl">{analytics.views}</div>
             <p className="text-2xl text-slate-400/90 font-light group-hover:text-slate-300">Profile Views</p>
           </motion.div>
 
@@ -87,7 +87,7 @@ const ProviderDashboard = () => {
             <div className="w-20 h-20 mx-auto mb-8 bg-gradient-to-br from-purple-500 to-gold-500 rounded-[2.5rem] flex items-center justify-center shadow-purple-glow-xl group-hover:rotate-360 transition-all duration-1000">
               <span className="text-2xl font-bold text-slate-900 drop-shadow-lg">💬</span>
             </div>
-            <div className="text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-slate-100 mb-4 shadow-2xl">{analytics.leads}</div>
+            <div className="text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-indigo-600 mb-4 shadow-2xl">{analytics.leads}</div>
             <p className="text-2xl text-slate-400/90 font-light group-hover:text-slate-300">New Inquiries</p>
           </motion.div>
 
@@ -100,7 +100,7 @@ const ProviderDashboard = () => {
             <div className="w-20 h-20 mx-auto mb-8 bg-gradient-to-br from-gold-400 to-purple-500 rounded-[2.5rem] flex items-center justify-center shadow-gold-glow-xl group-hover:rotate-360 transition-all duration-1000">
               <span className="text-2xl font-bold text-slate-900 drop-shadow-lg">✅</span>
             </div>
-            <div className="text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-slate-100 mb-4 shadow-2xl">{analytics.bookings}</div>
+            <div className="text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-blue-600 mb-4 shadow-2xl">{analytics.bookings}</div>
             <p className="text-2xl text-slate-400/90 font-light group-hover:text-slate-300">Confirmed Bookings</p>
           </motion.div>
         </div>
@@ -120,7 +120,7 @@ const ProviderDashboard = () => {
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid md:grid-cols-2 gap-8">
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-                  <label className="block text-xl font-serif font-light text-slate-200 mb-4">Service Name</label>
+                  <label className="block text-xl font-serif font-light text-slate-800 mb-4">Service Name</label>
                   <input 
                     placeholder="e.g. Elite Wedding Photography" 
                     value={formData.name}
@@ -130,7 +130,7 @@ const ProviderDashboard = () => {
                 </motion.div>
 
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-                  <label className="block text-xl font-serif font-light text-slate-200 mb-4">Category</label>
+                  <label className="block text-xl font-serif font-light text-slate-800 mb-4">Category</label>
                   <select 
                     value={formData.category}
                     onChange={(e) => setFormData({...formData, category: e.target.value})}
@@ -143,7 +143,7 @@ const ProviderDashboard = () => {
               </div>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-                <label className="block text-xl font-serif font-light text-slate-200 mb-4">Portfolio Upload</label>
+                <label className="block text-xl font-serif font-light text-slate-800 mb-4">Portfolio Upload</label>
                 <input 
                   type="file" 
                   multiple 
