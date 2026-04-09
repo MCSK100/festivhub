@@ -1,32 +1,85 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Calendar, LogOut, AlertCircle } from 'lucide-react'
+import {
+  LayoutDashboard,
+  Briefcase,
+  Calendar,
+  Settings,
+  Bell,
+  LogOut,
+  Menu,
+  X,
+  TrendingUp,
+  Users,
+  Star,
+  CheckCircle,
+  XCircle,
+  Clock,
+  ChevronDown
+} from 'lucide-react'
 import api from '../services/api'
+
+// Sub-components
+import DashboardOverview from '../components/vendor/DashboardOverview'
+import BookingsManagement from '../components/vendor/BookingsManagement'
+import ProfileSettings from '../components/vendor/ProfileSettings'
+import PortfolioManagement from '../components/vendor/PortfolioManagement'
 
 const VendorDashboard = () => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
-  const [services, setServices] = useState([])
+  const [activeTab, setActiveTab] = useState('dashboard')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [vendorProfile, setVendorProfile] = useState(null)
+  const [bookings, setBookings] = useState([])
+  const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [showForm, setShowForm] = useState(false)
-  const [formData, setFormData] = useState({
-    serviceName: '',
-    category: '',
-    price: '',
-    description: ''
-  })
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
 
   useEffect(() => {
     if (!user) {
       navigate('/login')
+      return
     }
+    if (user.role !== 'vendor') {
+      navigate('/customer-dashboard')
+      return
+    }
+    fetchVendorData()
   }, [user, navigate])
+
+  const fetchVendorData = async () => {
+    try {
+      setLoading(true)
+      const [profileRes, bookingsRes] = await Promise.all([
+        api.get('/providers/me'),
+        api.get('/bookings/vendor-bookings')
+      ])
+      
+      setVendorProfile(profileRes.data)
+      setBookings(bookingsRes.data)
+      setUnreadCount(bookingsRes.data.filter(b => !b.isRead).length)
+    } catch (error) {
+      console.error('Error fetching vendor data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  const updateVendorProfile = (updatedProfile) => {
+    setVendorProfile(updatedProfile)
+  }
+
+  const updateBookings = (updatedBookings) => {
+    setBookings(updatedBookings)
+    setUnreadCount(updatedBookings.filter(b => !b.isRead).length)
   }
 
   const handleSubmit = async (e) => {
@@ -42,232 +95,198 @@ const VendorDashboard = () => {
     }
   }
 
-  const trialDaysLeft = user?.trialExpiration 
-    ? Math.ceil((new Date(user.trialExpiration) - new Date()) / (1000 * 60 * 60 * 24))
-    : 0
+  const sidebarItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'bookings', label: 'Bookings', icon: Calendar },
+    { id: 'services', label: 'My Services', icon: Briefcase },
+    { id: 'profile', label: 'Profile Settings', icon: Settings }
+  ]
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return (
+          <DashboardOverview
+            vendorProfile={vendorProfile}
+            bookings={bookings}
+            onUpdate={fetchVendorData}
+          />
+        )
+      case 'bookings':
+        return (
+          <BookingsManagement
+            bookings={bookings}
+            onUpdate={updateBookings}
+          />
+        )
+      case 'services':
+        return (
+          <PortfolioManagement
+            vendorProfile={vendorProfile}
+            onUpdate={updateVendorProfile}
+          />
+        )
+      case 'profile':
+        return (
+          <ProfileSettings
+            vendorProfile={vendorProfile}
+            onUpdate={updateVendorProfile}
+          />
+        )
+      default:
+        return (
+          <DashboardOverview
+            vendorProfile={vendorProfile}
+            bookings={bookings}
+            onUpdate={fetchVendorData}
+          />
+        )
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen pt-28 lg:pt-32 navy-bg backdrop-blur-xl pb-20"
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
+    <div className="min-h-screen bg-gray-900 text-white flex">
+      {/* Sidebar */}
+      <motion.div
+        initial={{ x: -300 }}
+        animate={{ x: sidebarOpen ? 0 : -300 }}
+        className="fixed lg:relative lg:translate-x-0 z-30 w-64 h-full bg-gray-800 border-r border-gray-700 flex flex-col"
+      >
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-12 flex justify-between items-start"
-        >
-          <div>
-            <h1 className="text-6xl lg:text-7xl xl:text-8xl font-serif font-light italic mb-4 gradient-gold-text">
-              Vendor Dashboard
-            </h1>
-            <p className="text-2xl lg:text-3xl text-slate-700 font-light max-w-4xl">
-              Welcome back, <span className="font-semibold text-slate-900">{user?.name || user?.email}</span>
-            </p>
-          </div>
-          <motion.button
-            onClick={handleLogout}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-red-500/80 hover:bg-red-600 text-white rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2"
-          >
-            <LogOut className="w-4 h-4" />
-            Logout
-          </motion.button>
-        </motion.div>
-
-        {/* Trial Status */}
-        {trialDaysLeft > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-6 bg-blue-50 border border-blue-200/50 rounded-2xl flex items-start gap-4"
-          >
-            <Calendar className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-slate-900 mb-1">30-Day Free Trial Active</h3>
-              <p className="text-slate-700">
-                You have <span className="font-bold text-blue-600">{trialDaysLeft} days</span> remaining in your trial period.
-              </p>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Stats Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="glass-accent rounded-2xl p-8 border border-blue-500/30"
-          >
-            <div className="text-5xl font-bold text-blue-600 mb-2">{services.length}</div>
-            <p className="text-slate-700 font-medium">Services Listed</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="glass-accent rounded-2xl p-8 border border-indigo-500/30"
-          >
-            <div className="text-5xl font-bold text-indigo-600 mb-2">0</div>
-            <p className="text-slate-700 font-medium">Bookings</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="glass-accent rounded-2xl p-8 border border-green-500/30"
-          >
-            <div className="text-5xl font-bold text-green-600 mb-2">0</div>
-            <p className="text-slate-700 font-medium">Reviews</p>
-          </motion.div>
+        <div className="p-6 border-b border-gray-700">
+          <h1 className="text-2xl font-bold text-blue-400">VendorHub</h1>
+          <p className="text-sm text-gray-400 mt-1">Management Dashboard</p>
         </div>
 
-        {/* Add Service Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mb-16"
-        >
-          <motion.button
-            onClick={() => setShowForm(!showForm)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full btn-premium-gold py-4 lg:py-5 text-lg font-semibold flex items-center justify-center gap-2 mb-8"
-          >
-            <Plus className="w-6 h-6" />
-            Add New Service
-          </motion.button>
-
-          {showForm && (
-            <motion.form
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              onSubmit={handleSubmit}
-              className="bg-white/80 backdrop-blur-xl rounded-2xl p-8 lg:p-10 border border-blue-200/50 shadow-xl space-y-6"
-            >
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-3">
-                    Service Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.serviceName}
-                    onChange={(e) => setFormData({ ...formData, serviceName: e.target.value })}
-                    placeholder="e.g., Professional Wedding Photography"
-                    required
-                    className="w-full px-4 py-3 bg-slate-50 border border-blue-200/60 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-3">
-                    Category
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    required
-                    className="w-full px-4 py-3 bg-slate-50 border border-blue-200/60 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+        {/* Navigation */}
+        <nav className="flex-1 p-4">
+          <ul className="space-y-2">
+            {sidebarItems.map((item) => {
+              const Icon = item.icon
+              return (
+                <li key={item.id}>
+                  <button
+                    onClick={() => {
+                      setActiveTab(item.id)
+                      setSidebarOpen(false)
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                      activeTab === item.id
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    }`}
                   >
-                    <option value="">Select Category</option>
-                    <option value="Photography">Photography</option>
-                    <option value="Catering">Catering</option>
-                    <option value="DJ & Music">DJ & Music</option>
-                    <option value="Decorations">Decorations</option>
-                    <option value="Makeup & Beauty">Makeup & Beauty</option>
-                    <option value="Event Planning">Event Planning</option>
-                    <option value="Lighting">Lighting</option>
-                  </select>
-                </div>
-              </div>
+                    <Icon className="w-5 h-5" />
+                    {item.label}
+                    {item.id === 'bookings' && unreadCount > 0 && (
+                      <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-3">
-                    Price per Event
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    placeholder="0.00"
-                    required
-                    className="w-full px-4 py-3 bg-slate-50 border border-blue-200/60 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                  />
-                </div>
-              </div>
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-700">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all"
+          >
+            <LogOut className="w-5 h-5" />
+            Logout
+          </button>
+        </div>
+      </motion.div>
 
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-3">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Describe your service, experience, and what makes you stand out..."
-                  rows="4"
-                  className="w-full px-4 py-3 bg-slate-50 border border-blue-200/60 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                />
-              </div>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top Bar */}
+        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-2 hover:bg-gray-700 rounded-lg"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <h2 className="text-xl font-semibold capitalize">
+              {sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
+            </h2>
+          </div>
 
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg font-semibold transition-all"
-                >
-                  Add Service
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-all"
-                >
-                  Cancel
-                </button>
-              </div>
-            </motion.form>
-          )}
-        </motion.div>
+          {/* Notifications */}
+          <div className="relative">
+            <button
+              onClick={() => setNotificationsOpen(!notificationsOpen)}
+              className="relative p-2 hover:bg-gray-700 rounded-lg"
+            >
+              <Bell className="w-5 h-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
 
-        {/* Services List */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <h2 className="text-4xl font-serif font-light mb-8 text-slate-900">Your Services</h2>
-          {services.length === 0 ? (
-            <div className="bg-blue-50 border border-blue-200/50 rounded-2xl p-12 text-center">
-              <p className="text-slate-700 text-lg">No services added yet. Click "Add New Service" to get started!</p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {services.map((service, idx) => (
+            <AnimatePresence>
+              {notificationsOpen && (
                 <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="glass-accent rounded-2xl p-6 border border-blue-500/30 hover:border-blue-500/60 transition-all"
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-80 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50"
                 >
-                  <h3 className="text-xl font-semibold text-slate-900 mb-2">{service.serviceName}</h3>
-                  <p className="text-sm text-slate-600 mb-4">{service.category}</p>
-                  <p className="text-2xl font-bold text-blue-600">₹{service.price}</p>
+                  <div className="p-4 border-b border-gray-700">
+                    <h3 className="font-semibold">Recent Bookings</h3>
+                  </div>
+                  <div className="max-h-64 overflow-y-auto">
+                    {bookings.slice(0, 5).map((booking) => (
+                      <div key={booking._id} className="p-3 border-b border-gray-700 hover:bg-gray-700">
+                        <p className="text-sm font-medium">{booking.customer?.name}</p>
+                        <p className="text-xs text-gray-400">{booking.serviceTitle}</p>
+                        <p className="text-xs text-blue-400">{new Date(booking.date).toLocaleDateString()}</p>
+                      </div>
+                    ))}
+                    {bookings.length === 0 && (
+                      <div className="p-4 text-center text-gray-400">
+                        No bookings yet
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
-              ))}
-            </div>
-          )}
-        </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </header>
+
+        {/* Content Area */}
+        <main className="flex-1 p-6 overflow-auto">
+          {renderContent()}
+        </main>
       </div>
-    </motion.div>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+    </div>
   )
+}
 }
 
 export default VendorDashboard

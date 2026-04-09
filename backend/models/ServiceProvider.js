@@ -2,12 +2,15 @@ const mongoose = require('mongoose')
 
 const serviceProviderSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  companyName: { type: String, default: '' },
   category: { 
     type: String, 
     enum: ['Photographer', 'Catering', 'DJ', 'Decorations', 'Florist', 'Lighting'], 
     required: true 
   },
-  experience: { type: Number, min: 0 }, // years
+  experience: { type: String, default: '0' }, // Changed to String to allow "5 years" format
+  description: { type: String, default: '' },
+  profileImage: { type: String, default: '' },
   location: {
     city: String,
     state: String,
@@ -16,11 +19,13 @@ const serviceProviderSchema = new mongoose.Schema({
       lng: Number
     }
   },
-  socialMedia: {
-    instagram: String,
-    website: String
+  socialLinks: {
+    facebook: { type: String, default: '' },
+    instagram: { type: String, default: '' },
+    website: { type: String, default: '' }
   },
-  gallery: [String], // Cloudinary URLs
+  portfolioImages: [{ type: String }], // Array of image URLs
+  gallery: [String], // Cloudinary URLs (keeping for backward compatibility)
   ratings: {
     average: { type: Number, default: 0, min: 0, max: 5 },
     count: { type: Number, default: 0 }
