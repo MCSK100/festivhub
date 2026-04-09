@@ -140,18 +140,19 @@ const VendorDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex">
-      {/* Sidebar */}
-      <motion.div
-        initial={{ x: -300 }}
-        animate={{ x: sidebarOpen ? 0 : -300 }}
-        className="fixed lg:relative lg:translate-x-0 z-30 w-64 h-full bg-gray-800 border-r border-gray-700 flex flex-col"
-      >
-        {/* Header */}
-        <div className="p-6 border-b border-gray-700">
-          <h1 className="text-2xl font-bold text-blue-400">VendorHub</h1>
-          <p className="text-sm text-gray-400 mt-1">Management Dashboard</p>
-        </div>
+    <div className="min-h-screen pt-24 lg:pt-28 navy-bg text-slate-900">
+      <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] gap-6">
+        {/* Sidebar */}
+        <motion.div
+          initial={{ x: -300 }}
+          animate={{ x: sidebarOpen ? 0 : -300 }}
+          className="fixed lg:static lg:translate-x-0 z-30 w-72 h-full bg-white/80 glass-accent border border-slate-200 shadow-xl flex flex-col backdrop-blur-xl"
+        >
+          {/* Header */}
+          <div className="p-6 border-b border-slate-200">
+            <h1 className="text-2xl font-bold text-slate-900">{vendorProfile?.companyName || vendorProfile?.name || 'VendorHub'}</h1>
+            <p className="text-sm text-slate-500 mt-1">Vendor management center</p>
+          </div>
 
         {/* Navigation */}
         <nav className="flex-1 p-4">
@@ -168,7 +169,7 @@ const VendorDashboard = () => {
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                       activeTab === item.id
                         ? 'bg-blue-600 text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -186,10 +187,10 @@ const VendorDashboard = () => {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-700">
+        <div className="p-4 border-t border-slate-200">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition-all"
+            className="w-full flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-lg transition-all"
           >
             <LogOut className="w-5 h-5" />
             Logout
@@ -199,75 +200,97 @@ const VendorDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Bar */}
-        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 hover:bg-gray-700 rounded-lg"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <h2 className="text-xl font-semibold capitalize">
-              {sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
-            </h2>
-          </div>
+          <header className="bg-white/90 border-b border-slate-200 px-6 py-4 flex flex-col gap-4 lg:flex-row items-start lg:items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-semibold text-slate-900">
+                {sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
+              </h2>
+              <p className="text-sm text-slate-500 mt-1">Manage your profile, portfolio and booking activity.</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+              <button
+                onClick={handleLogout}
+                className="btn-premium-gold px-5 py-3 text-sm"
+              >
+                Sign Out
+              </button>
+            </div>
+          </header>
 
-          {/* Notifications */}
-          <div className="relative">
-            <button
-              onClick={() => setNotificationsOpen(!notificationsOpen)}
-              className="relative p-2 hover:bg-gray-700 rounded-lg"
-            >
-              <Bell className="w-5 h-5" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              )}
-            </button>
-
-            <AnimatePresence>
-              {notificationsOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 mt-2 w-80 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50"
-                >
-                  <div className="p-4 border-b border-gray-700">
-                    <h3 className="font-semibold">Recent Bookings</h3>
+          <section className="px-6 py-6 lg:px-10 lg:py-8">
+            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+              <div className="glass-accent rounded-3xl p-6 border border-slate-200">
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div>
+                    <h3 className="text-xl font-semibold text-slate-900">Profile Overview</h3>
+                    <p className="text-sm text-slate-500 mt-1">
+                      Review and update your category, experience, company details and contact profile.
+                    </p>
                   </div>
-                  <div className="max-h-64 overflow-y-auto">
-                    {bookings.slice(0, 5).map((booking) => (
-                      <div key={booking._id} className="p-3 border-b border-gray-700 hover:bg-gray-700">
-                        <p className="text-sm font-medium">{booking.customer?.name}</p>
-                        <p className="text-xs text-gray-400">{booking.serviceTitle}</p>
-                        <p className="text-xs text-blue-400">{new Date(booking.date).toLocaleDateString()}</p>
-                      </div>
-                    ))}
-                    {bookings.length === 0 && (
-                      <div className="p-4 text-center text-gray-400">
-                        No bookings yet
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </header>
+                  <button
+                    onClick={() => setActiveTab('profile')}
+                    className="inline-flex items-center justify-center rounded-full border border-blue-500 bg-white px-5 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 transition-all"
+                  >
+                    Edit Profile Details
+                  </button>
+                </div>
 
-        {/* Content Area */}
-        <main className="flex-1 p-6 overflow-auto">
-          {renderContent()}
-        </main>
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-2xl bg-white/90 p-4 border border-slate-200">
+                    <p className="text-sm text-slate-500">Category</p>
+                    <p className="mt-2 font-semibold text-slate-900">{vendorProfile?.category || 'Not set'}</p>
+                  </div>
+                  <div className="rounded-2xl bg-white/90 p-4 border border-slate-200">
+                    <p className="text-sm text-slate-500">Experience</p>
+                    <p className="mt-2 font-semibold text-slate-900">{vendorProfile?.experience || 'Not set'}</p>
+                  </div>
+                  <div className="rounded-2xl bg-white/90 p-4 border border-slate-200">
+                    <p className="text-sm text-slate-500">Company</p>
+                    <p className="mt-2 font-semibold text-slate-900">{vendorProfile?.companyName || 'Not set'}</p>
+                  </div>
+                  <div className="rounded-2xl bg-white/90 p-4 border border-slate-200">
+                    <p className="text-sm text-slate-500">Location</p>
+                    <p className="mt-2 font-semibold text-slate-900">
+                      {vendorProfile?.location?.city ? `${vendorProfile.location.city}, ${vendorProfile.location.state}` : 'Not set'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="glass-accent rounded-3xl p-6 border border-slate-200">
+                <h3 className="text-xl font-semibold text-slate-900">Profile Completion</h3>
+                <p className="text-sm text-slate-500 mt-1">Keep your profile complete to attract more customers.</p>
+                <div className="mt-5 bg-slate-200/70 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="h-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-500"
+                    style={{ width: `${Math.min(100, Math.max(0, ((vendorProfile?.name?1:0)+(vendorProfile?.companyName?1:0)+(vendorProfile?.description?1:0)+(vendorProfile?.profileImage?1:0)+(vendorProfile?.portfolioImages?.length>0?1:0)+(vendorProfile?.socialLinks?.website||vendorProfile?.socialLinks?.instagram||vendorProfile?.socialLinks?.facebook?1:0))*100/6))}%` }}
+                  />
+                </div>
+                <div className="mt-6 space-y-3 text-sm text-slate-600">
+                  <p><strong>Website:</strong> {vendorProfile?.socialLinks?.website || 'Not set'}</p>
+                  <p><strong>Instagram:</strong> {vendorProfile?.socialLinks?.instagram || 'Not set'}</p>
+                  <p><strong>Facebook:</strong> {vendorProfile?.socialLinks?.facebook || 'Not set'}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <main className="flex-1 p-6 overflow-auto">
+            {renderContent()}
+          </main>
+        </div>
       </div>
 
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-20 z-20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
