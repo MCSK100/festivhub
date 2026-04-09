@@ -13,6 +13,8 @@ const CustomerDashboard = () => {
   const [vendors, setVendors] = useState([])
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
+  const [bookingLoading, setBookingLoading] = useState(false)
+  const [bookingsLoading, setBookingsLoading] = useState(false)
   const [bookingModal, setBookingModal] = useState({ open: false, vendor: null })
   const [bookingForm, setBookingForm] = useState({
     date: '',
@@ -28,6 +30,23 @@ const CustomerDashboard = () => {
     fetchVendors()
     fetchBookings()
   }, [user, navigate])
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
+
+  const filteredVendors = vendors.filter((vendor) => {
+    const matchesCategory = selectedCategory === 'all' || vendor.category === selectedCategory
+    const query = searchQuery.trim().toLowerCase()
+    const matchesSearch =
+      !query ||
+      vendor.name?.toLowerCase().includes(query) ||
+      vendor.category?.toLowerCase().includes(query) ||
+      vendor.location?.city?.toLowerCase().includes(query) ||
+      vendor.location?.state?.toLowerCase().includes(query)
+    return matchesCategory && matchesSearch
+  })
 
   const fetchVendors = async () => {
     try {
