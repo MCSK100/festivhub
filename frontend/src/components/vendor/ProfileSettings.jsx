@@ -110,8 +110,8 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-white">Profile Settings</h1>
-        <div className="text-sm text-gray-400">
+        <h1 className="text-3xl font-bold text-slate-900">Profile Settings</h1>
+        <div className="text-sm text-slate-500">
           Profile completion: {profileCompletion}%
         </div>
       </div>
@@ -120,19 +120,19 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gray-800 rounded-xl p-6 border border-gray-700"
+        className="glass-accent rounded-xl p-6 border border-slate-200"
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Profile Completion</h2>
-          <span className="text-2xl font-bold text-blue-400">{profileCompletion}%</span>
+          <h2 className="text-xl font-semibold text-slate-900">Profile Completion</h2>
+          <span className="text-2xl font-bold text-blue-600">{profileCompletion}%</span>
         </div>
-        <div className="w-full bg-gray-700 rounded-full h-3">
+        <div className="w-full bg-slate-200/70 rounded-full h-3">
           <div
             className="bg-blue-500 h-3 rounded-full transition-all duration-500"
             style={{ width: `${profileCompletion}%` }}
           ></div>
         </div>
-        <p className="text-sm text-gray-400 mt-2">
+        <p className="text-sm text-slate-500 mt-2">
           Complete your profile to attract more customers
         </p>
       </motion.div>
@@ -143,12 +143,12 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-gray-800 rounded-xl p-6 border border-gray-700"
+          className="glass-accent rounded-xl p-6 border border-slate-200"
         >
-          <h3 className="text-lg font-semibold text-white mb-4">Profile Image</h3>
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">Profile Image</h3>
           <div className="flex items-center gap-6">
             <div className="relative">
-              <div className="w-24 h-24 bg-gray-700 rounded-full overflow-hidden">
+              <div className="w-24 h-24 bg-slate-200 rounded-full overflow-hidden">
                 {vendorProfile?.profileImage ? (
                   <img
                     src={vendorProfile.profileImage}
@@ -157,7 +157,7 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <User className="w-8 h-8 text-gray-400" />
+                    <User className="w-8 h-8 text-slate-400" />
                   </div>
                 )}
               </div>
@@ -184,7 +184,7 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                 <Camera className="w-4 h-4" />
                 {profileImageLoading ? 'Uploading...' : 'Change Photo'}
               </button>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-slate-500 mt-2">
                 Max file size: 3MB. Recommended: Square image
               </p>
             </div>
@@ -196,21 +196,21 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-gray-800 rounded-xl p-6 border border-gray-700"
+          className="glass-accent rounded-xl p-6 border border-slate-200"
         >
-          <h3 className="text-lg font-semibold text-white mb-6">Basic Information</h3>
+          <h3 className="text-lg font-semibold text-slate-900 mb-6">Basic Information</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Full Name *
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   placeholder="Your full name"
                   required
                 />
@@ -218,31 +218,31 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Company Name
               </label>
               <div className="relative">
-                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="text"
                   value={formData.companyName}
                   onChange={(e) => handleInputChange('companyName', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   placeholder="Your company name"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Category *
               </label>
               <div className="relative">
-                <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <select
                   value={formData.category}
                   onChange={(e) => handleInputChange('category', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   required
                 >
                   <option value="">Select Category</option>
@@ -257,30 +257,30 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Years of Experience
               </label>
               <input
                 type="text"
                 value={formData.experience}
                 onChange={(e) => handleInputChange('experience', e.target.value)}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 placeholder="e.g., 5 years"
               />
             </div>
           </div>
 
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-slate-700 mb-2">
               Description
             </label>
             <div className="relative">
-              <FileText className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+              <FileText className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
               <textarea
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={4}
-                className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
+                className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
                 placeholder="Tell customers about your services, experience, and what makes you special..."
               />
             </div>
@@ -292,53 +292,53 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-gray-800 rounded-xl p-6 border border-gray-700"
+          className="glass-accent rounded-xl p-6 border border-slate-200"
         >
-          <h3 className="text-lg font-semibold text-white mb-6">Social Links</h3>
+          <h3 className="text-lg font-semibold text-slate-900 mb-6">Social Links</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Facebook
               </label>
               <div className="relative">
-                <Facebook className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Facebook className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="url"
                   value={formData.socialLinks.facebook}
                   onChange={(e) => handleInputChange('socialLinks.facebook', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   placeholder="https://facebook.com/yourpage"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Instagram
               </label>
               <div className="relative">
-                <Instagram className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Instagram className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="url"
                   value={formData.socialLinks.instagram}
                   onChange={(e) => handleInputChange('socialLinks.instagram', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   placeholder="https://instagram.com/yourhandle"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-slate-700 mb-2">
                 Website
               </label>
               <div className="relative">
-                <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="url"
                   value={formData.socialLinks.website}
                   onChange={(e) => handleInputChange('socialLinks.website', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   placeholder="https://yourwebsite.com"
                 />
               </div>

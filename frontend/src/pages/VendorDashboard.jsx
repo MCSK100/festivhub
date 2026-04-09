@@ -143,11 +143,7 @@ const VendorDashboard = () => {
     <div className="min-h-screen pt-24 lg:pt-28 navy-bg text-slate-900">
       <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] gap-6">
         {/* Sidebar */}
-        <motion.div
-          initial={{ x: -300 }}
-          animate={{ x: sidebarOpen ? 0 : -300 }}
-          className="fixed lg:static lg:translate-x-0 z-30 w-72 h-full bg-white/80 glass-accent border border-slate-200 shadow-xl flex flex-col backdrop-blur-xl"
-        >
+        <div className="hidden lg:flex lg:flex-col w-72 h-full bg-white/80 glass-accent border border-slate-200 shadow-xl backdrop-blur-xl">
           {/* Header */}
           <div className="p-6 border-b border-slate-200">
             <h1 className="text-2xl font-bold text-slate-900">{vendorProfile?.companyName || vendorProfile?.name || 'VendorHub'}</h1>
@@ -196,32 +192,78 @@ const VendorDashboard = () => {
             Logout
           </button>
         </div>
+      </div>
+
+      {/* Mobile Sidebar */}
+      <motion.div
+        initial={{ x: -300 }}
+        animate={{ x: sidebarOpen ? 0 : -300 }}
+        className="fixed lg:hidden z-30 w-72 h-full bg-white/80 glass-accent border border-slate-200 shadow-xl flex flex-col backdrop-blur-xl"
+      >
+        {/* Header */}
+        <div className="p-6 border-b border-slate-200">
+          <h1 className="text-2xl font-bold text-slate-900">{vendorProfile?.companyName || vendorProfile?.name || 'VendorHub'}</h1>
+          <p className="text-sm text-slate-500 mt-1">Vendor management center</p>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-4">
+          <ul className="space-y-2">
+            {sidebarItems.map((item) => {
+              const Icon = item.icon
+              return (
+                <li key={item.id}>
+                  <button
+                    onClick={() => {
+                      setActiveTab(item.id)
+                      setSidebarOpen(false)
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                      activeTab === item.id
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {item.label}
+                    {item.id === 'bookings' && unreadCount > 0 && (
+                      <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-slate-200">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-lg transition-all"
+          >
+            <LogOut className="w-5 h-5" />
+            Logout
+          </button>
+        </div>
       </motion.div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-          <header className="bg-white/90 border-b border-slate-200 px-6 py-4 flex flex-col gap-4 lg:flex-row items-start lg:items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold text-slate-900">
-                {sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
-              </h2>
-              <p className="text-sm text-slate-500 mt-1">Manage your profile, portfolio and booking activity.</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden p-2 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
-              <button
-                onClick={handleLogout}
-                className="btn-premium-gold px-5 py-3 text-sm"
-              >
-                Sign Out
-              </button>
-            </div>
-          </header>
+          {/* Mobile Header */}
+          <div className="lg:hidden bg-white/90 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-slate-900">
+              {sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
+            </h2>
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-2 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
 
           <section className="px-6 py-6 lg:px-10 lg:py-8">
             <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
