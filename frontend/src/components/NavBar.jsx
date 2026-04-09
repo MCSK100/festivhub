@@ -75,12 +75,6 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <Link
-                  to="/dashboard"
-                  className="px-6 py-3 rounded-xl text-slate-700 hover:text-blue-600 font-medium transition-colors duration-300 text-sm"
-                >
-                  Dashboard
-                </Link>
                 <motion.button
                   onClick={handleLogout}
                   whileHover={{ scale: 1.05 }}
@@ -150,13 +144,6 @@ const NavBar = () => {
                 </>
               ) : (
                 <>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-6 py-3 text-center text-slate-700 hover:text-blue-600 font-medium transition-colors duration-300 text-sm"
-                  >
-                    Dashboard
-                  </Link>
                   <motion.button
                     onClick={() => {
                       setMobileMenuOpen(false)
