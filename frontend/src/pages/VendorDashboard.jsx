@@ -82,19 +82,6 @@ const VendorDashboard = () => {
     setUnreadCount(updatedBookings.filter(b => !b.isRead).length)
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      await api.post('/providers', formData)
-      alert('✅ Service added successfully!')
-      setFormData({ serviceName: '', category: '', price: '', description: '' })
-      setShowForm(false)
-    } catch (error) {
-      console.error('Error adding service:', error.response?.data || error.message)
-      alert('❌ Error: ' + (error.response?.data?.error || error.message))
-    }
-  }
-
   const sidebarItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'bookings', label: 'Bookings', icon: Calendar },
@@ -286,7 +273,6 @@ const VendorDashboard = () => {
       )}
     </div>
   )
-}
 }
 
 export default VendorDashboard
