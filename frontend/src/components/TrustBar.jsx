@@ -2,9 +2,9 @@ import { motion } from 'framer-motion'
 
 const TrustBar = () => {
   const stats = [
-    { number: '8K+', label: 'Verified\nProfessionals', color: 'blue', delay: 0 },
-    { number: '25K+', label: 'Events\nCelebrated', color: 'indigo', delay: 0.1 },
-    { number: '85+', label: 'Cities\nWorldwide', color: 'blue', delay: 0.2 },
+    { number: '1K+', label: 'Verified\nProfessionals', color: 'blue', delay: 0 },
+    { number: '2K+', label: 'Events\nCelebrated', color: 'indigo', delay: 0.1 },
+    { number: '15+', label: 'Cities\nWorldwide', color: 'blue', delay: 0.2 },
     { number: '99.9%', label: 'Satisfaction\nGuaranteed', color: 'indigo', delay: 0.3 },
   ]
 

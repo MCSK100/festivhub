@@ -96,7 +96,7 @@ const Login = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-3xl overflow-hidden border border-blue-200/50 shadow-xl">
               <img
-                src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&w=800&fit=crop&crop=entropy&auto=format"
+                src="https://images.unsplash.com/photo-1662483818635-c07ee6f2fa3c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z2lybCUyMHVzaW5nJTIwcGhvbmVzJTIwb2ZmaWNlfGVufDB8fDB8fHwy"
                 alt="Premium event professionals"
                 className="w-full h-full object-cover transition-transform duration-1000 hover:scale-110"
               />
@@ -115,7 +115,7 @@ const Login = () => {
                   Trusted by professionals
                 </p>
               </div>
-              <p className="text-2xl font-bold text-slate-900">8K+ Active Users</p>
+              <p className="text-2xl font-bold text-slate-900">1K+ Active Users</p>
               <p className="text-sm text-slate-600 mt-1">Join thousands booking events daily</p>
             </motion.div>
           </motion.div>
@@ -286,7 +286,7 @@ const Login = () => {
                 <p className="text-slate-700 text-sm">
                   Don't have an account?{' '}
                   <Link
-                    to="/signup"
+                    to="/role-select"
                     className="text-blue-600 hover:text-blue-700 font-bold transition-colors underline underline-offset-2"
                   >
                     Create one now

@@ -53,7 +53,7 @@ const LandingPage = () => {
     {
       name: 'Photography',
       description: 'Professional photographers for your special moments',
-      image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&w=400&fit=crop&crop=entropy&auto=format',
+      image: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2F0ZXJpbmd8ZW58MHx8MHx8fDI%3D',
     },
     {
       name: 'Catering',
@@ -376,10 +376,10 @@ const LandingPage = () => {
             >
               <button
                 onClick={() => navigate('/signup?role=customer')}
-                className="group btn-premium-gold inline-flex items-center justify-center gap-2 text-lg px-10 py-5"
+                className="group btn-premium-gold inline-flex items-center justify-center gap-2 whitespace-nowrap text-lg px-10 py-5"
               >
                 <span>Get Started Now</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="inline-block w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
                 onClick={() => navigate('/login')}

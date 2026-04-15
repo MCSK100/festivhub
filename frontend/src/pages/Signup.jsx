@@ -128,7 +128,7 @@ const Signup = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-100 to-blue-100 rounded-3xl overflow-hidden border border-blue-200/50 shadow-xl">
               <img
-                src="https://images.unsplash.com/photo-1524712627812-4078e9d1cb88?ixlib=rb-4.0.3&w=800&fit=crop&auto=format"
+                src="https://images.unsplash.com/photo-1587603323459-ba478f963aa3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fHByZW1pdW0lMjBldmVudCUyMHNlcnZpY2VzfGVufDB8MXwwfHx8Mg%3D%3D"
                 alt="Premium event services"
                 className="w-full h-full object-cover transition-transform duration-1000 hover:scale-110"
               />
@@ -147,7 +147,7 @@ const Signup = () => {
                   Join our community
                 </p>
               </div>
-              <p className="text-2xl font-bold text-slate-900">25K+ Bookings</p>
+              <p className="text-2xl font-bold text-slate-900">2K+ Bookings</p>
               <p className="text-sm text-slate-600 mt-1">Professional events powered by our platform</p>
             </motion.div>
           </motion.div>

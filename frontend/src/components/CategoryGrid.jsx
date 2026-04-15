@@ -5,7 +5,7 @@ const CategoryGrid = () => {
     {
       name: 'Photography',
       icon: '📸',
-      image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&w=800&fit=crop&crop=entropy&auto=format',
+      image: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2F0ZXJpbmd8ZW58MHx8MHx8fDI%3D',
       color: 'from-blue-400/15',
     },
     {
@@ -17,32 +17,26 @@ const CategoryGrid = () => {
     {
       name: 'Decorations',
       icon: '✨',
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&fit=crop&auto=format',
+      image: 'https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZGVjb3JhdGlvbnxlbnwwfHwwfHx8Mg%3D%3D',
       color: 'from-blue-400/15',
     },
     {
       name: 'Music & DJ',
       icon: '🎵',
-      image: 'https://images.unsplash.com/photo-1576693936061-7f0a92a47d94?w=800&fit=crop&crop=face&auto=format',
+      image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bXVzaWN8ZW58MHx8MHx8fDI%3D',
       color: 'from-indigo-400/15',
     },
     {
       name: 'Makeup & Beauty',
       icon: '💄',
-      image: 'https://images.unsplash.com/photo-1625772299848-361b80395917?w=800&fit=crop&crop=face&auto=format',
+      image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bWFrZXVwfGVufDB8fDB8fHwy',
       color: 'from-blue-400/15',
     },
     {
       name: 'Event Planners',
       icon: '🎪',
-      image: 'https://images.unsplash.com/photo-1558618047-7facc92277e1?w=800&fit=crop&auto=format',
+      image: 'https://images.unsplash.com/photo-1712903276180-eda90d32c182?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZXZlbnQlMjBwbGFuZXJ8ZW58MHx8MHx8fDI%3D',
       color: 'from-indigo-400/15',
-    },
-    {
-      name: 'Lighting',
-      icon: '💡',
-      image: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24f?w=800&fit=crop&auto=format',
-      color: 'from-blue-400/15',
     },
   ]
 
@@ -112,7 +106,7 @@ const CategoryGrid = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4 lg:gap-6"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 lg:gap-6"
         >
           {categories.map((cat, index) => (
             <motion.div
@@ -142,16 +136,16 @@ const CategoryGrid = () => {
                 {/* Content */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
                   {/* Icon */}
-                  <motion.div
+                  {/* <motion.div
                     className="text-4xl lg:text-5xl mb-3 drop-shadow-lg group-hover:scale-110 transition-transform duration-300"
                     whileHover={{ scale: 1.15 }}
                   >
                     
-                  </motion.div>
+                  </motion.div> */}
 
                   {/* Text */}
                   <motion.span
-                    className="text-center font-serif text-base lg:text-lg font-light text-slate-900 drop-shadow-lg group-hover:text-blue-600 transition-colors duration-300"
+                    className="text-center  text-2xl  drop-shadow-lg opacity-0 group-hover:opacity-100  transition-all duration-300"
                     whileHover={{ scale: 1.05 }}
                   >
                     {cat.name}

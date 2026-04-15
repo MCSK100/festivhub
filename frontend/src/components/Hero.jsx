@@ -63,7 +63,7 @@ const Hero = () => {
             >
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
               <span className="text-sm font-medium text-blue-600">
-                Trusted by 8,000+ Professionals
+                Trusted by 1,000+ Professionals
               </span>
             </motion.div>
 
@@ -103,17 +103,17 @@ const Hero = () => {
             >
               <button
                 onClick={() => navigate('/signup?role=customer')}
-                className="group btn-premium-gold flex items-center justify-center gap-2"
+                className="group btn-premium-gold inline-flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 <span>Find Vendors</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="inline-block w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
                 onClick={() => navigate('/signup?role=vendor')}
-                className="px-8 py-4 rounded-2xl border-2 border-blue-500/50 text-blue-600 font-semibold hover:bg-blue-500/10 hover:border-blue-500 transition-all duration-300 flex items-center justify-center gap-2"
+                className="px-8 py-4 rounded-2xl border-2 border-blue-500/50 text-blue-600 font-semibold hover:bg-blue-500/10 hover:border-blue-500 transition-all duration-300 inline-flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 <span>Join as Vendor</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="inline-block w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </motion.div>
 
@@ -124,19 +124,19 @@ const Hero = () => {
             >
               <div>
                 <p className="text-3xl lg:text-4xl font-bold text-blue-600 mb-2">
-                  8K+
+                  500+
                 </p>
                 <p className="text-sm text-slate-700 font-medium">Vendors</p>
               </div>
               <div>
                 <p className="text-3xl lg:text-4xl font-bold text-blue-600 mb-2">
-                  25K+
+                  1K+
                 </p>
                 <p className="text-sm text-slate-700 font-medium">Bookings</p>
               </div>
               <div>
                 <p className="text-3xl lg:text-4xl font-bold text-blue-600 mb-2">
-                  85+
+                  15+
                 </p>
                 <p className="text-sm text-slate-700 font-medium">Cities</p>
               </div>

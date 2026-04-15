@@ -51,7 +51,7 @@ const VendorSection = () => (
           Showcase<br className="lg:hidden" /> Your Talent
         </h2>
         <p className="text-2xl lg:text-3xl font-light text-slate-600/90 max-w-4xl mx-auto leading-relaxed">
-          Join 8,000+ professionals getting booked daily. Build your portfolio, 
+          Join 1,000+ professionals getting booked daily. Build your portfolio, 
           set your rates, connect directly with clients.
         </p>
       </motion.div>
