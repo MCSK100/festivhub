@@ -73,7 +73,7 @@ const Testimonials = () => {
       whileInView="visible"
       viewport={{ once: true, margin: '-100px' }}
       variants={containerVariants}
-      className="relative py-32 lg:py-48 navy-bg overflow-hidden"
+      className="relative py-32 lg:py-48 bg-gray-50 overflow-hidden"
     >
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">

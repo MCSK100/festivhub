@@ -56,7 +56,7 @@ export function WhatsAppButton() {
             exit={{ opacity: 0, scale: 0.8 }}
             className="glass-card rounded-2xl p-4 mb-4 w-64"
           >
-            <p className="text-white text-sm mb-3">
+            <p className="text-gray-700 text-sm mb-3">
               Hi! How can we help you plan your event?
             </p>
             <button
@@ -118,9 +118,9 @@ export function AIChatBot() {
             className="glass-card rounded-2xl w-80 h-96 mb-4 flex flex-col"
           >
             {/* Header */}
-            <div className="p-4 border-b border-white/10">
-              <h3 className="font-semibold text-white">AI Event Assistant</h3>
-              <p className="text-xs text-gray-400">Ask us anything</p>
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="font-semibold text-gray-900">AI Event Assistant</h3>
+              <p className="text-xs text-gray-500">Ask us anything</p>
             </div>
 
             {/* Messages */}
@@ -130,8 +130,8 @@ export function AIChatBot() {
                   key={i}
                   className={`text-sm p-3 rounded-xl ${
                     msg.role === 'assistant'
-                      ? 'bg-gold/10 text-gray-300'
-                      : 'bg-gold text-white'
+                      ? 'bg-primary/10 text-gray-700'
+                      : 'bg-primary-dark text-white'
                   }`}
                 >
                   {msg.content}
@@ -140,7 +140,7 @@ export function AIChatBot() {
             </div>
 
             {/* Input */}
-            <div className="p-3 border-t border-white/10">
+            <div className="p-3 border-t border-gray-200">
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -148,11 +148,11 @@ export function AIChatBot() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                   placeholder="Type a message..."
-                  className="flex-1 px-3 py-2 rounded-lg bg-premium-input text-sm"
+                  className="flex-1 px-3 py-2 rounded-lg bg-gray-100 text-sm text-gray-900"
                 />
                 <button
                   onClick={handleSend}
-                  className="p-2 rounded-lg bg-gold text-premium-bg"
+                  className="p-2 rounded-lg bg-primary-dark text-white"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -169,7 +169,7 @@ export function AIChatBot() {
         className="w-12 h-12 rounded-full bg-gold flex items-center justify-center shadow-lg"
       >
         {isOpen ? (
-          <X className="w-5 h-5 text-premium-bg" />
+          <X className="w-5 h-5 text-white" />
         ) : (
           <span className="text-xl">🤖</span>
         )}

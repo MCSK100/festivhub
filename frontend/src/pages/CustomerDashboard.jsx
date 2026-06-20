@@ -168,7 +168,7 @@ const CustomerDashboard = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen pt-28 lg:pt-32 navy-bg pb-20 relative z-10"
+      className="min-h-screen pt-28 lg:pt-32 bg-gray-50 pb-20 relative z-10"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
         {/* Header */}

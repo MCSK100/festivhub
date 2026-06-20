@@ -7,7 +7,7 @@ const RoleSelection = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen premium-bg flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen bg-gray-50 flex items-center justify-center relative overflow-hidden"
     >
       {/* Subtle Background Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(250,204,21,0.08)_0%,transparent_40%),radial-gradient(circle_at_75%_75%,rgba(250,204,21,0.06)_0%,transparent_40%)] opacity-50" />
@@ -26,7 +26,7 @@ const RoleSelection = () => {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-2xl lg:text-4xl xl:text-5xl font-light text-gray-400 mb-24 lg:mb-32 leading-[1.6] backdrop-blur-xl max-w-3xl mx-auto px-4"
+          className="text-2xl lg:text-4xl xl:text-5xl font-light text-gray-500 mb-24 lg:mb-32 leading-[1.6] backdrop-blur-xl max-w-3xl mx-auto px-4"
         >
           Whether hiring top talent or showcasing your expertise – 
           <span className="block mt-6 gradient-gold font-serif italic">
@@ -42,21 +42,21 @@ const RoleSelection = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
             whileHover={{ scale: 1.05, y: -12 }}
-            className="group relative glass-card backdrop-blur-3xl p-12 lg:p-20 rounded-[4rem] border border-gold/40 hover:border-gold/60 hover:shadow-glow transition-all duration-700 cursor-pointer overflow-hidden"
+            className="group relative glass-card backdrop-blur-3xl p-12 lg:p-20 rounded-[4rem] border border-primary/20 hover:border-primary/40 hover:shadow-lg transition-all duration-700 cursor-pointer overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
-            <div className="w-28 h-28 lg:w-32 lg:h-32 mx-auto mb-10 lg:mb-12 rounded-[3rem] bg-gradient-to-r from-gold to-gold-dark flex items-center justify-center shadow-glow-lg border-4 border-white/10 backdrop-blur-2xl group-hover:rotate-6 group-hover:scale-110 transition-all duration-700 relative z-10">
-              <svg className="w-14 lg:w-16 h-14 lg:h-16 text-premium-bg drop-shadow-2xl" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
+            <div className="w-28 h-28 lg:w-32 lg:h-32 mx-auto mb-10 lg:mb-12 rounded-[3rem] bg-gradient-to-r from-primary-dark to-primary flex items-center justify-center shadow-lg border-4 border-white/50 backdrop-blur-2xl group-hover:rotate-6 group-hover:scale-110 transition-all duration-700 relative z-10">
+              <svg className="w-14 lg:w-16 h-14 lg:h-16 text-white drop-shadow-2xl" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
               </svg>
             </div>
             <motion.h3 
-              className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-8 text-white group-hover:text-gold transition-all duration-700 leading-tight"
+              className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-8 text-gray-900 group-hover:text-primary-dark transition-all duration-700 leading-tight"
               whileHover={{ y: -4 }}
             >
               Hire Talent
             </motion.h3>
-            <p className="text-xl lg:text-2xl text-gray-400 mb-12 lg:mb-16 leading-relaxed font-light max-w-lg mx-auto group-hover:text-gray-300">
+            <p className="text-xl lg:text-2xl text-gray-500 mb-12 lg:mb-16 leading-relaxed font-light max-w-lg mx-auto group-hover:text-gray-700">
               Find & book verified photographers, caterers, decorators and more for your perfect event.
             </p>
             <Link 
@@ -73,21 +73,21 @@ const RoleSelection = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
             whileHover={{ scale: 1.05, y: -12 }}
-            className="group relative glass-card backdrop-blur-3xl p-12 lg:p-20 rounded-[4rem] border border-gold/30 hover:border-gold/60 hover:shadow-glow transition-all duration-700 cursor-pointer overflow-hidden"
+            className="group relative glass-card backdrop-blur-3xl p-12 lg:p-20 rounded-[4rem] border border-primary/15 hover:border-primary/40 hover:shadow-lg transition-all duration-700 cursor-pointer overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
-            <div className="w-28 h-28 lg:w-32 lg:h-32 mx-auto mb-10 lg:mb-12 rounded-[3rem] bg-gradient-to-r from-gold-dark to-gold flex items-center justify-center shadow-glow-lg border-4 border-white/10 backdrop-blur-2xl group-hover:rotate-6 group-hover:scale-110 transition-all duration-700 relative z-10">
-              <svg className="w-14 lg:w-16 h-14 lg:h-16 text-premium-bg drop-shadow-2xl" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
+            <div className="w-28 h-28 lg:w-32 lg:h-32 mx-auto mb-10 lg:mb-12 rounded-[3rem] bg-gradient-to-r from-primary to-primary-dark flex items-center justify-center shadow-lg border-4 border-white/50 backdrop-blur-2xl group-hover:rotate-6 group-hover:scale-110 transition-all duration-700 relative z-10">
+              <svg className="w-14 lg:w-16 h-14 lg:h-16 text-white drop-shadow-2xl" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
             </div>
             <motion.h3 
-              className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-8 text-white group-hover:text-gold transition-all duration-700 leading-tight"
+              className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-8 text-gray-900 group-hover:text-primary-dark transition-all duration-700 leading-tight"
               whileHover={{ y: -4 }}
             >
               Showcase Work
             </motion.h3>
-            <p className="text-xl lg:text-2xl text-gray-400 mb-12 lg:mb-16 leading-relaxed font-light max-w-lg mx-auto group-hover:text-gray-300">
+            <p className="text-xl lg:text-2xl text-gray-500 mb-12 lg:mb-16 leading-relaxed font-light max-w-lg mx-auto group-hover:text-gray-700">
               Build your portfolio and connect with thousands of event organizers looking for professionals like you.
             </p>
             <Link 
@@ -113,10 +113,10 @@ const RoleSelection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
-          className="mt-20 text-lg lg:text-xl text-gray-500 font-light backdrop-blur-xl"
+          className="mt-20 text-lg lg:text-xl text-gray-400 font-light backdrop-blur-xl"
         >
           Already registered?{' '}
-          <Link to="/login" className="text-gold hover:text-gold-light font-medium transition-all duration-300 inline-block px-4 py-2 rounded-xl">Sign in here</Link>
+          <Link to="/login" className="text-primary-dark hover:text-primary-dark/80 font-medium transition-all duration-300 inline-block px-4 py-2 rounded-xl">Sign in here</Link>
         </motion.p>
       </div>
     </motion.div>

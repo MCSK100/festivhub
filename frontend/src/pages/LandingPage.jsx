@@ -149,7 +149,7 @@ const LandingPage = () => {
   }, [])
 
   return (
-    <main ref={mainRef} className="bg-premium-bg min-h-screen">
+    <main ref={mainRef} className="bg-white min-h-screen">
       {/* Hero Section */}
       <Hero />
 

@@ -13,17 +13,16 @@ const TrustBar = () => {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-100px' }}
-      className="relative py-24 lg:py-32 premium-bg border-y border-gold/20"
+      className="relative py-24 lg:py-32 bg-gray-50 border-y border-gray-100"
     >
-      {/* Background Decorative Elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
-          className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-gold/10 to-transparent rounded-full blur-3xl"
+          className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-primary/5 to-transparent rounded-full blur-3xl"
           animate={{ y: [-50, 50, -50], x: [50, -50, 50] }}
           transition={{ duration: 15, repeat: Infinity }}
         />
         <motion.div
-          className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-gold/10 to-transparent rounded-full blur-3xl"
+          className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-primary/5 to-transparent rounded-full blur-3xl"
           animate={{ y: [50, -50, 50], x: [-50, 50, -50] }}
           transition={{ duration: 18, repeat: Infinity, delay: 2 }}
         />
@@ -41,8 +40,7 @@ const TrustBar = () => {
               whileHover={{ y: -10, transition: { duration: 0.3 } }}
               className="group"
             >
-              <div className="glass-card rounded-2xl p-6 lg:p-8 border border-gold/20 transition-all duration-300 group-hover:border-gold/50 group-hover:shadow-glow">
-                {/* Number */}
+              <div className="glass-card rounded-2xl p-6 lg:p-8 transition-all duration-300 group-hover:shadow-card-hover">
                 <motion.div
                   className="text-3xl lg:text-4xl xl:text-5xl font-bold font-serif mb-4 gradient-gold"
                   animate={{ scale: [1, 1.05, 1] }}
@@ -50,16 +48,10 @@ const TrustBar = () => {
                 >
                   {stat.number}
                 </motion.div>
-
-                {/* Label */}
-                <p className="text-sm lg:text-base text-gray-400 font-medium whitespace-pre-line leading-relaxed">
+                <p className="text-sm lg:text-base text-gray-500 font-medium whitespace-pre-line leading-relaxed">
                   {stat.label}
                 </p>
-
-                {/* Accent Line */}
-                <motion.div
-                  className="mt-4 h-1 w-0 group-hover:w-full transition-all duration-300 rounded-full bg-gradient-to-r from-gold to-gold-light"
-                />
+                <motion.div className="mt-4 h-1 w-0 group-hover:w-full transition-all duration-300 rounded-full bg-gradient-to-r from-primary to-primary-light" />
               </div>
             </motion.div>
           ))}

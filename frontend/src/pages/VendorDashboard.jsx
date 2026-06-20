@@ -124,7 +124,7 @@ const VendorDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center navy-bg">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <motion.div
             animate={{ rotate: 360 }}
@@ -201,7 +201,7 @@ const VendorDashboard = () => {
   )
 
   return (
-    <div className="min-h-screen pt-24 lg:pt-28 navy-bg">
+    <div className="min-h-screen pt-24 lg:pt-28 bg-gray-50">
       <div className="flex">
         {/* Desktop Sidebar */}
         <aside className="hidden lg:flex flex-col fixed top-24 left-0 w-72 h-[calc(100vh-6rem)] glass-dark border-r border-white/10 z-20">

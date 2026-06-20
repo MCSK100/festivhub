@@ -134,7 +134,7 @@ const ParallaxShowcase = () => {
             Every Layer Tells a{' '}
             <span className="gradient-gold">Story</span>
           </h2>
-          <p className="parallax-desc text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-8 opacity-0">
+          <p className="parallax-desc text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed mb-8 opacity-0">
             Our events are built with depth and intention. Each element is carefully layered to create
             an immersive experience that engages all the senses.
           </p>

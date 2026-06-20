@@ -23,7 +23,7 @@ function App() {
       <ThemeProvider>
         <ToastProvider>
           <Router>
-            <div className="min-h-screen premium-bg">
+            <div className="min-h-screen bg-white">
               <NavBar />
               <Routes>
                 <Route path="/" element={<LandingPage />} />
@@ -52,7 +52,6 @@ function App() {
                 />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
-              {/* Floating Elements */}
               <WhatsAppButton />
               <AIChatBot />
             </div>

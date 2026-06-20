@@ -50,7 +50,7 @@ const ForgotPassword = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen premium-bg flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
+      className="min-h-screen bg-gray-50 flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -65,17 +65,17 @@ const ForgotPassword = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="glass-card rounded-3xl p-8 lg:p-10 border border-gold/10"
+          className="glass-card rounded-3xl p-8 lg:p-10 border border-primary/10"
         >
           {/* Header */}
           <motion.div variants={itemVariants} className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-gold to-gold-dark rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="w-8 h-8 text-premium-bg" />
+              <Mail className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-serif font-light text-white mb-2">
+            <h1 className="text-3xl font-serif font-light text-gray-900 mb-2">
               Reset Password
             </h1>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-500 text-sm">
               Enter your email to receive a password reset link
             </p>
           </motion.div>
@@ -84,7 +84,7 @@ const ForgotPassword = () => {
             <motion.form variants={containerVariants} onSubmit={handleSubmit} className="space-y-6">
               {/* Email Input */}
               <motion.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address
                 </label>
                 <input
@@ -92,7 +92,7 @@ const ForgotPassword = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-premium-input border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-gold transition-all duration-300"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-all duration-300"
                   placeholder="your@email.com"
                 />
               </motion.div>
@@ -111,7 +111,7 @@ const ForgotPassword = () => {
               <motion.div variants={itemVariants} className="text-center">
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-2 text-gold hover:text-gold-light font-medium transition-colors"
+                  className="inline-flex items-center gap-2 text-primary-dark hover:text-primary-dark/80 font-medium transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to Login
@@ -129,20 +129,20 @@ const ForgotPassword = () => {
                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               </motion.div>
               <motion.div variants={itemVariants}>
-                <h2 className="text-2xl font-serif font-light text-white mb-2">
+                <h2 className="text-2xl font-serif font-light text-gray-900 mb-2">
                   Check Your Email
                 </h2>
-                <p className="text-gray-400">
-                  We've sent a password reset link to <span className="font-semibold text-white">{email}</span>
+                <p className="text-gray-500">
+                  We've sent a password reset link to <span className="font-semibold text-gray-900">{email}</span>
                 </p>
               </motion.div>
-              <motion.p variants={itemVariants} className="text-sm text-gray-500">
+              <motion.p variants={itemVariants} className="text-sm text-gray-400">
                 The link expires in 1 hour. If you don't see it, check your spam folder.
               </motion.p>
               <motion.div variants={itemVariants}>
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-2 text-gold hover:text-gold-light font-medium transition-colors"
+                  className="inline-flex items-center gap-2 text-primary-dark hover:text-primary-dark/80 font-medium transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to Login

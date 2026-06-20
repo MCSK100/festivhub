@@ -4,7 +4,6 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -26,11 +25,11 @@ export default {
         '128': '32rem',
       },
       colors: {
-        premium: {
-          bg: '#0A0A0A',
-          card: '#141414',
-          elevated: '#0F0F0F',
-          input: '#1A1A1A',
+        primary: {
+          DEFAULT: '#FACC15',
+          light: '#FDE047',
+          dark: '#EAB308',
+          accent: '#FDE68A',
         },
         gold: {
           DEFAULT: '#FACC15',
@@ -44,23 +43,16 @@ export default {
         info: '#60A5FA',
       },
       boxShadow: {
-        'glow': '0 0 40px rgba(250, 204, 21, 0.3)',
-        'glow-lg': '0 0 60px rgba(250, 204, 21, 0.4)',
-        'glow-xl': '0 0 80px rgba(250, 204, 21, 0.5)',
-        'card': '0 20px 40px rgba(0, 0, 0, 0.4)',
-        'card-hover': '0 30px 60px rgba(0, 0, 0, 0.5)',
-        'inner-glow': 'inset 0 0 30px rgba(250, 204, 21, 0.1)',
-      },
-      backdropBlur: {
-        xs: '2px',
-        sm: '8px',
-        xl: '20px',
-        '2xl': '40px',
-        '3xl': '64px',
+        'glow': '0 0 40px rgba(250, 204, 21, 0.25)',
+        'glow-lg': '0 0 60px rgba(250, 204, 21, 0.35)',
+        'glow-xl': '0 0 80px rgba(250, 204, 21, 0.45)',
+        'card': '0 4px 24px rgba(0, 0, 0, 0.06)',
+        'card-hover': '0 8px 40px rgba(0, 0, 0, 0.1)',
+        'soft': '0 2px 16px rgba(0, 0, 0, 0.04)',
       },
       backgroundImage: {
-        'premium-gradient': 'radial-gradient(circle at 50% 50%, #0F0F0F 0%, #0A0A0A 100%)',
-        'gold-shimmer': 'linear-gradient(135deg, transparent 0%, rgba(250, 204, 21, 0.1) 50%, transparent 100%)',
+        'hero-gradient': 'radial-gradient(ellipse at 50% 0%, rgba(250, 204, 21, 0.08) 0%, transparent 60%)',
+        'gold-shimmer': 'linear-gradient(135deg, transparent 0%, rgba(250, 204, 21, 0.08) 50%, transparent 100%)',
       },
       animation: {
         'fade-up': 'fadeUp 0.8s ease-out forwards',
@@ -73,6 +65,8 @@ export default {
         'marquee-reverse': 'marquee 30s linear infinite reverse',
         'text-reveal': 'textReveal 1s ease-out forwards',
         'parallax': 'parallax 1s ease-out forwards',
+        'spin-slow': 'spin 20s linear infinite',
+        'bounce-slow': 'bounce 3s ease-in-out infinite',
       },
       keyframes: {
         fadeUp: {
@@ -92,8 +86,8 @@ export default {
           '50%': { transform: 'translateY(-20px)' },
         },
         pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(250, 204, 21, 0.2)' },
-          '50%': { boxShadow: '0 0 40px rgba(250, 204, 21, 0.4)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(250, 204, 21, 0.15)' },
+          '50%': { boxShadow: '0 0 40px rgba(250, 204, 21, 0.3)' },
         },
         marquee: {
           '0%': { transform: 'translateX(0)' },
@@ -113,12 +107,6 @@ export default {
         'expo-in-out': 'cubic-bezier(0.87, 0, 0.13, 1)',
         'quart-out': 'cubic-bezier(0.25, 1, 0.5, 1)',
         'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-      },
-      transitionDuration: {
-        'fast': '150ms',
-        'base': '200ms',
-        'slow': '300ms',
-        'slower': '500ms',
       },
     },
   },

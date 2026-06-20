@@ -3,62 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 
 const faqs = [
-  {
-    question: 'What types of events does FestivLink specialize in?',
-    answer:
-      'FestivLink specializes in corporate events, weddings, brand activations, exhibitions, product launches, concerts, festivals, and conferences. Our team has extensive experience across all major event types and can handle events of any scale.',
-  },
-  {
-    question: 'How far in advance should I book FestivLink?',
-    answer:
-      'We recommend booking 3-6 months in advance for large events, though we can accommodate last-minute requests based on availability. For peak seasons (spring/summer), earlier booking is advisable to secure your preferred date.',
-  },
-  {
-    question: 'What is your pricing structure?',
-    answer:
-      'Our pricing varies based on event type, size, duration, and specific requirements. We offer customizable packages and can work within different budgets. Contact us for a personalized quote after a free consultation.',
-  },
-  {
-    question: 'Do you handle events internationally?',
-    answer:
-      'Yes! FestivLink has experience executing events in 50+ cities worldwide. Our global network of partners allows us to deliver consistent quality wherever your event takes place.',
-  },
-  {
-    question: 'What makes FestivLink different from other event companies?',
-    answer:
-      'Our commitment to excellence, attention to detail, and creative approach set us apart. We don\'t just execute events — we craft experiences that leave lasting impressions. Our team combines creativity with flawless execution.',
-  },
-  {
-    question: 'Can you handle venue sourcing?',
-    answer:
-      'Absolutely. We have relationships with venues across all categories and can help you find the perfect location based on your vision, budget, and guest count. We handle all logistics from contracts to setup.',
-  },
+  { question: 'What types of events does FestivLink specialize in?', answer: 'FestivLink specializes in corporate events, weddings, brand activations, exhibitions, product launches, concerts, festivals, and conferences. Our team has extensive experience across all major event types and can handle events of any scale.' },
+  { question: 'How far in advance should I book FestivLink?', answer: 'We recommend booking 3-6 months in advance for large events, though we can accommodate last-minute requests based on availability. For peak seasons (spring/summer), earlier booking is advisable to secure your preferred date.' },
+  { question: 'What is your pricing structure?', answer: 'Our pricing varies based on event type, size, duration, and specific requirements. We offer customizable packages and can work within different budgets. Contact us for a personalized quote after a free consultation.' },
+  { question: 'Do you handle events internationally?', answer: 'Yes! FestivLink has experience executing events in 50+ cities worldwide. Our global network of partners allows us to deliver consistent quality wherever your event takes place.' },
+  { question: 'What makes FestivLink different from other event companies?', answer: "Our commitment to excellence, attention to detail, and creative approach set us apart. We don't just execute events — we craft experiences that leave lasting impressions. Our team combines creativity with flawless execution." },
+  { question: 'Can you handle venue sourcing?', answer: 'Absolutely. We have relationships with venues across all categories and can help you find the perfect location based on your vision, budget, and guest count. We handle all logistics from contracts to setup.' },
 ]
 
 function FAQItem({ faq, isOpen, onToggle }) {
   return (
-    <div className="border-b border-white/10">
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between py-6 text-left"
-      >
-        <span className="text-lg lg:text-xl font-medium pr-8">{faq.question}</span>
-        <ChevronDown
-          className={`w-6 h-6 text-gold flex-shrink-0 transition-transform duration-300 ${
-            isOpen ? 'rotate-180' : ''
-          }`}
-        />
+    <div className="border-b border-gray-100">
+      <button onClick={onToggle} className="w-full flex items-center justify-between py-6 text-left">
+        <span className="text-lg lg:text-xl font-medium pr-8 text-gray-900">{faq.question}</span>
+        <ChevronDown className={`w-6 h-6 text-primary-dark flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
-          >
-            <p className="pb-6 text-gray-400 leading-relaxed">{faq.answer}</p>
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden">
+            <p className="pb-6 text-gray-500 leading-relaxed">{faq.answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -70,43 +33,29 @@ const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState(0)
 
   return (
-    <section className="relative py-24 lg:py-32 premium-bg overflow-hidden">
-      {/* Background */}
+    <section className="relative py-24 lg:py-32 bg-gray-50 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-3xl mx-auto px-6 lg:px-12 relative z-10">
-        {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="inline-block text-gold text-sm font-medium uppercase tracking-widest mb-4">
-            FAQ
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-light mb-6">
-            Frequently Asked{' '}
-            <span className="gradient-gold">Questions</span>
+          <span className="inline-block text-primary-dark text-sm font-medium uppercase tracking-widest mb-4">FAQ</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-light mb-6 text-gray-900">
+            Frequently Asked <span className="gradient-gold">Questions</span>
           </h2>
-          <p className="text-lg text-gray-400">
-            Everything you need to know about our event services.
-          </p>
+          <p className="text-lg text-gray-500">Everything you need to know about our event services.</p>
         </div>
 
-        {/* FAQ List */}
         <div className="glass-card rounded-2xl p-8">
           {faqs.map((faq, index) => (
-            <FAQItem
-              key={index}
-              faq={faq}
-              isOpen={openIndex === index}
-              onToggle={() => setOpenIndex(openIndex === index ? -1 : index)}
-            />
+            <FAQItem key={index} faq={faq} isOpen={openIndex === index} onToggle={() => setOpenIndex(openIndex === index ? -1 : index)} />
           ))}
         </div>
 
-        {/* CTA */}
         <div className="text-center mt-10">
-          <p className="text-gray-400 mb-4">Still have questions?</p>
+          <p className="text-gray-500 mb-4">Still have questions?</p>
           <button className="btn-primary">Schedule a Call</button>
         </div>
       </div>

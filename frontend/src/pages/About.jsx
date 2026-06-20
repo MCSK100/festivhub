@@ -26,7 +26,7 @@ const About = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen premium-bg overflow-hidden"
+      className="min-h-screen bg-white overflow-hidden"
     >
       {/* Hero Section */}
       <section className="relative pt-40 pb-24 lg:py-48 overflow-hidden">
@@ -53,13 +53,13 @@ const About = () => {
           >
             <motion.h1
               variants={itemVariants}
-              className="text-6xl md:text-7xl lg:text-8xl font-serif font-light mb-8 text-white"
+              className="text-6xl md:text-7xl lg:text-8xl font-serif font-light mb-8 text-gray-900"
             >
               About <span className="gradient-gold font-semibold">FestivLink</span>
             </motion.h1>
             <motion.p
               variants={itemVariants}
-              className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-400 max-w-4xl mx-auto leading-relaxed"
+              className="text-2xl md:text-3xl lg:text-4xl font-light text-gray-500 max-w-4xl mx-auto leading-relaxed"
             >
               Simplifying event planning through verified professionals and seamless connections
             </motion.p>
@@ -83,10 +83,10 @@ const About = () => {
               className="group relative"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-gold/10 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-              <div className="relative glass-card rounded-3xl p-10 lg:p-12 border border-gold/10">
-                <Target className="w-12 h-12 text-gold mb-6" />
-                <h3 className="text-3xl font-semibold text-white mb-4">Our Mission</h3>
-                <p className="text-gray-400 leading-relaxed text-lg">
+              <div className="relative glass-card rounded-3xl p-10 lg:p-12 border border-primary/10">
+                <Target className="w-12 h-12 text-primary-dark mb-6" />
+                <h3 className="text-3xl font-semibold text-gray-900 mb-4">Our Mission</h3>
+                <p className="text-gray-500 leading-relaxed text-lg">
                   To revolutionize event planning by connecting organizers with verified professionals, making quality accessible and stress-free.
                 </p>
               </div>
@@ -98,10 +98,10 @@ const About = () => {
               className="group relative"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-gold/10 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-              <div className="relative glass-card rounded-3xl p-10 lg:p-12 border border-gold/10">
-                <Globe className="w-12 h-12 text-gold mb-6" />
-                <h3 className="text-3xl font-semibold text-white mb-4">Our Vision</h3>
-                <p className="text-gray-400 leading-relaxed text-lg">
+              <div className="relative glass-card rounded-3xl p-10 lg:p-12 border border-primary/10">
+                <Globe className="w-12 h-12 text-primary-dark mb-6" />
+                <h3 className="text-3xl font-semibold text-gray-900 mb-4">Our Vision</h3>
+                <p className="text-gray-500 leading-relaxed text-lg">
                   A world where every celebration is powered by excellence, trust, and genuine human connection.
                 </p>
               </div>
@@ -113,10 +113,10 @@ const About = () => {
               className="group relative"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-gold/10 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-              <div className="relative glass-card rounded-3xl p-10 lg:p-12 border border-gold/10">
-                <Heart className="w-12 h-12 text-gold mb-6" />
-                <h3 className="text-3xl font-semibold text-white mb-4">Our Purpose</h3>
-                <p className="text-gray-400 leading-relaxed text-lg">
+              <div className="relative glass-card rounded-3xl p-10 lg:p-12 border border-primary/10">
+                <Heart className="w-12 h-12 text-primary-dark mb-6" />
+                <h3 className="text-3xl font-semibold text-gray-900 mb-4">Our Purpose</h3>
+                <p className="text-gray-500 leading-relaxed text-lg">
                   Empowering both customers and professionals to create meaningful moments without compromise.
                 </p>
               </div>
@@ -136,14 +136,14 @@ const About = () => {
           >
             <motion.h2
               variants={itemVariants}
-              className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-12 text-white"
+              className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-12 text-gray-900"
             >
               Our <span className="gradient-gold font-semibold">Story</span>
             </motion.h2>
             
             <motion.div
               variants={itemVariants}
-              className="space-y-8 text-lg md:text-xl text-gray-400 leading-relaxed"
+              className="space-y-8 text-lg md:text-xl text-gray-500 leading-relaxed"
             >
               <p>
                 FestivLink was born from a real problem. Our founders struggled through countless events, dealing with unreliable vendors, broken promises, and endless coordination nightmares. We knew there had to be a better way.
@@ -170,7 +170,7 @@ const About = () => {
           >
             <motion.h2
               variants={itemVariants}
-              className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-16 text-white text-center"
+              className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-16 text-gray-900 text-center"
             >
               Our <span className="gradient-gold font-semibold">Values</span>
             </motion.h2>
@@ -212,12 +212,12 @@ const About = () => {
                     className="group relative"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-gold/10 rounded-2xl blur-2xl opacity-0 group-hover:opacity-30 transition-all duration-500" />
-                    <div className="relative glass-card rounded-2xl p-8 group-hover:border-gold/30 transition-all duration-300 border border-gold/10">
-                      <div className="w-10 h-10 mb-4 rounded-xl bg-gold/20 flex items-center justify-center">
-                        <Icon className="w-6 h-6 text-gold" />
+                    <div className="relative glass-card rounded-2xl p-8 group-hover:border-primary/30 transition-all duration-300 border border-primary/10">
+                      <div className="w-10 h-10 mb-4 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-primary-dark" />
                       </div>
-                      <h3 className="text-xl font-semibold text-white mb-3">{value.title}</h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">{value.description}</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-3">{value.title}</h3>
+                      <p className="text-gray-500 text-sm leading-relaxed">{value.description}</p>
                     </div>
                   </motion.div>
                 )
@@ -254,10 +254,10 @@ const About = () => {
                 >
                   {stat.icon}
                 </motion.div>
-                <h3 className="text-4xl md:text-5xl font-serif font-light text-white mb-3">
+                <h3 className="text-4xl md:text-5xl font-serif font-light text-gray-900 mb-3">
                   {stat.number}
                 </h3>
-                <p className="text-lg text-gray-400 font-light">{stat.label}</p>
+                <p className="text-lg text-gray-500 font-light">{stat.label}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -283,13 +283,13 @@ const About = () => {
           >
             <motion.h2
               variants={itemVariants}
-              className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-8 text-white"
+              className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-8 text-gray-900"
             >
               Ready to <span className="gradient-gold font-semibold">Join Us?</span>
             </motion.h2>
             <motion.p
               variants={itemVariants}
-              className="text-xl md:text-2xl text-gray-400 mb-12 leading-relaxed"
+              className="text-xl md:text-2xl text-gray-500 mb-12 leading-relaxed"
             >
               Whether you're looking to book incredible services or showcase your talent, FestivLink is your platform for success.
             </motion.p>

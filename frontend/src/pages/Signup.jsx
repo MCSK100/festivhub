@@ -95,7 +95,7 @@ const Signup = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen premium-bg flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
+      className="min-h-screen bg-gray-50 flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
     >
       {/* Animated Background Gradients */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -126,18 +126,18 @@ const Signup = () => {
             transition={{ duration: 0.8 }}
             className="hidden lg:block relative h-[600px] rounded-3xl overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-premium-card to-premium-elevated rounded-3xl overflow-hidden border border-gold/20 shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-100 rounded-3xl overflow-hidden border border-primary/20 shadow-xl">
               <img
                 src="https://images.unsplash.com/photo-1587603323459-ba478f963aa3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fHByZW1pdW0lMjBldmVudCUyMHNlcnZpY2VzfGVufDB8MXwwfHx8Mg%3D%3D"
                 alt="Premium event services"
                 className="w-full h-full object-cover transition-transform duration-1000 hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-premium-bg/60 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent" />
             </div>
 
             {/* Floating Badge */}
             <motion.div
-              className="absolute bottom-8 left-8 right-8 bg-premium-card/95 backdrop-blur-xl rounded-2xl p-6 border border-gold/20 shadow-lg"
+              className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-xl rounded-2xl p-6 border border-primary/20 shadow-lg"
               animate={{ y: [0, -8, 0] }}
               transition={{ duration: 4, repeat: Infinity }}
             >
@@ -147,8 +147,8 @@ const Signup = () => {
                   Join our community
                 </p>
               </div>
-              <p className="text-2xl font-bold text-white">2K+ Bookings</p>
-              <p className="text-sm text-gray-400 mt-1">Professional events powered by our platform</p>
+              <p className="text-2xl font-bold text-gray-900">2K+ Bookings</p>
+              <p className="text-sm text-gray-500 mt-1">Professional events powered by our platform</p>
             </motion.div>
           </motion.div>
 
@@ -161,10 +161,10 @@ const Signup = () => {
           >
             {/* Header */}
             <motion.div variants={itemVariants} className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-serif font-light text-white mb-3">
+              <h1 className="text-4xl md:text-5xl font-serif font-light text-gray-900 mb-3">
                 Get Started Today
               </h1>
-              <p className="text-lg text-gray-400">
+              <p className="text-lg text-gray-500">
                 Create your account and start discovering premium services
               </p>
             </motion.div>
@@ -173,14 +173,14 @@ const Signup = () => {
             <motion.form
               variants={itemVariants}
               onSubmit={handleSubmit}
-              className="glass-card rounded-2xl p-8 lg:p-10 border border-gold/10 shadow-xl space-y-5"
+              className="glass-card rounded-2xl p-8 lg:p-10 border border-primary/10 shadow-xl space-y-5"
             >
               {/* Success Message */}
               {success && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-green-500/10 border border-green-500/30 text-green-400 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2"
+                  className="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2"
                 >
                   <Check className="w-5 h-5" />
                   {success}
@@ -192,16 +192,16 @@ const Signup = () => {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start gap-3"
+                  className="bg-red-50 border border-red-300 rounded-lg p-4 flex items-start gap-3"
                 >
-                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-red-400 text-sm">{error}</span>
+                  <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-red-600 text-sm">{error}</span>
                 </motion.div>
               )}
 
               {/* Role Selection */}
               <motion.div variants={itemVariants}>
-                <label className="block text-sm font-semibold text-gray-300 mb-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
                   I'm joining as
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -215,8 +215,8 @@ const Signup = () => {
                       onClick={() => setRole(option.value)}
                       className={`py-3 px-4 rounded-lg border-2 font-medium transition-all duration-300 ${
                         role === option.value
-                          ? 'border-gold bg-gold/10 text-gold'
-                          : 'border-white/10 text-gray-400 hover:border-gold/50'
+                          ? 'border-primary-dark bg-primary/10 text-primary-dark'
+                          : 'border-gray-200 text-gray-500 hover:border-primary/50'
                       }`}
                     >
                       {option.label}
@@ -227,7 +227,7 @@ const Signup = () => {
 
               {/* Name Field */}
               <motion.div variants={itemVariants}>
-                <label htmlFor="name" className="block text-sm font-semibold text-gray-300 mb-3">
+                <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-3">
                   Full Name
                 </label>
                 <input
@@ -237,13 +237,13 @@ const Signup = () => {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
                   required
-                  className="w-full px-4 py-3 bg-premium-input border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all duration-300 font-medium"
+                  className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
                 />
               </motion.div>
 
               {/* Email Field */}
               <motion.div variants={itemVariants}>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-3">
+                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">
                   Email Address
                 </label>
                 <input
@@ -253,13 +253,13 @@ const Signup = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full px-4 py-3 bg-premium-input border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all duration-300 font-medium"
+                  className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
                 />
               </motion.div>
 
               {/* Password Field */}
               <motion.div variants={itemVariants}>
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-300 mb-3">
+                <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-3">
                   Password
                 </label>
                 <div className="relative mb-2">
@@ -270,12 +270,12 @@ const Signup = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full px-4 py-3 bg-premium-input border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all duration-300 font-medium"
+                    className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gold transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary-dark transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -299,7 +299,7 @@ const Signup = () => {
 
               {/* Confirm Password Field */}
               <motion.div variants={itemVariants}>
-                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-300 mb-3">
+                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-3">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -310,18 +310,18 @@ const Signup = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full px-4 py-3 bg-premium-input border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all duration-300 font-medium"
+                    className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gold transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary-dark transition-colors"
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
                 {confirmPassword && password === confirmPassword && (
-                  <p className="text-xs text-green-400 mt-2 flex items-center gap-1 font-medium">
+                  <p className="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
                     <Check className="w-4 h-4" />
                     Passwords match
                   </p>
@@ -342,7 +342,7 @@ const Signup = () => {
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                      className="w-5 h-5 border-2 border-premium-bg/30 border-t-premium-bg rounded-full"
+                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
                     />
                     Creating account...
                   </>
@@ -357,12 +357,12 @@ const Signup = () => {
               {/* Sign In Link */}
               <motion.p
                 variants={itemVariants}
-                className="text-center text-gray-400 text-sm pt-4"
+                className="text-center text-gray-500 text-sm pt-4"
               >
                 Already have an account?{' '}
                 <Link
                   to="/login"
-                  className="text-gold hover:text-gold-light font-bold transition-colors underline underline-offset-2"
+                  className="text-primary-dark hover:text-primary-dark/80 font-bold transition-colors underline underline-offset-2"
                 >
                   Sign in here
                 </Link>
@@ -386,7 +386,7 @@ const Signup = () => {
                 <div className="w-2 h-2 bg-green-500 rounded-full" />
                 Secure Registration
               </div>
-              <div className="w-1 h-1 bg-gray-700 rounded-full" />
+              <div className="w-1 h-1 bg-gray-300 rounded-full" />
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-green-500 rounded-full" />
                 Privacy Protected
