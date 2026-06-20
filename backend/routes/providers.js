@@ -27,7 +27,7 @@ const upload = multer({
 const createProviderSchema = z.object({
   name: z.string().min(2),
   category: z.enum(['Photographer', 'Catering', 'DJ', 'Decorations', 'Florist', 'Lighting']),
-  experience: z.number().min(0),
+  experience: z.union([z.string(), z.number()]).transform(String),
   location: z.object({
     city: z.string(),
     state: z.string()
@@ -95,21 +95,6 @@ router.post('/:id/gallery', authMiddleware, upload.single('image'), async (req, 
   }
 })
 
-// Get all with filters
-router.get('/', async (req, res) => {
-  try {
-    const { category, location, priceMin, priceMax } = req.query
-    const filters = {}
-    if (category) filters.category = category
-    if (location) filters['location.city'] = { $regex: location, $options: 'i' }
-    
-    const providers = await ServiceProvider.find(filters).sort({ ratings: -1 })
-    res.json(providers)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
-
 // Get current vendor's profile
 router.get('/me', authMiddleware, async (req, res) => {
   try {
@@ -139,6 +124,21 @@ router.get('/me', authMiddleware, async (req, res) => {
       }
     }
     res.json(provider)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// Get all with filters
+router.get('/', async (req, res) => {
+  try {
+    const { category, location, priceMin, priceMax } = req.query
+    const filters = {}
+    if (category) filters.category = category
+    if (location) filters['location.city'] = { $regex: location, $options: 'i' }
+    
+    const providers = await ServiceProvider.find(filters).sort({ ratings: -1 })
+    res.json(providers)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

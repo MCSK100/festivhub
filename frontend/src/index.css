@@ -82,7 +82,7 @@ body {
 }
 
 /* Exemptions for elements that MUST remain dark (like inside light badges) */
-.bg-white .text-slate-900, .bg-white/95 .text-slate-900, .bg-white/95 .text-slate-600,
+.bg-white .text-slate-900,
 .bg-yellow-100 .text-yellow-800, .bg-green-100 .text-green-800,
 .bg-blue-100 .text-blue-800, .bg-red-100 .text-red-800,
 .bg-slate-100 .text-slate-900, .bg-slate-100 .text-slate-600, .bg-slate-50 .text-slate-900,
@@ -91,7 +91,7 @@ body {
   color: inherit !important;
 }
 
-.bg-white, .bg-white\/80 {
+.bg-white {
   background-color: rgba(13, 14, 33, 0.6) !important;
   backdrop-filter: blur(30px);
   border-color: rgba(255, 255, 255, 0.08) !important;

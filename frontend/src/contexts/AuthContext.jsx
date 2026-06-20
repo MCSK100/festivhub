@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    localStorage.setItem('user', null);
+    localStorage.removeItem('user');
     setUser(null);
     window.location.href = '/';
   };
