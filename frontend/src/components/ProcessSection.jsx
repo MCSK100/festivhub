@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Lightbulb, ClipboardList, Hammer, Play, PartyPopper } from 'lucide-react'
+import { Lightbulb, ClipboardList, Hammer, Zap, PartyPopper } from 'lucide-react'
 
 const steps = [
   {
@@ -19,7 +19,7 @@ const steps = [
     description: 'Where creativity takes form. Our team brings the vision to life with meticulous attention.',
   },
   {
-    icon: Play,
+    icon: Zap,
     title: 'Execution',
     description: 'The moment everything comes alive. We deliver flawless experiences that exceed expectations.',
   },

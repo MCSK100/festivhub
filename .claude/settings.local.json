@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm install lenis --save)",
+      "Bash(npm install --legacy-peer-deps)"
+    ]
+  }
+}

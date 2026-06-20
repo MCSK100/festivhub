@@ -1,6 +1,6 @@
 import { Suspense, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import Lenis from '@studio-freight/lenis'
+import Lenis from 'lenis'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 

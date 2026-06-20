@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Environment, Float, Particles, MeshDistortMaterial } from '@react-three/drei'
-import * as THREE from 'three'
+import { Environment, Float, MeshDistortMaterial } from '@react-three/drei'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -22,7 +21,7 @@ function HeroScene() {
       <pointLight position={[-10, -10, -10]} intensity={0.5} color="#FFD27D" />
 
       <FloatingStage />
-      <Particles />
+      <ParticleField />
 
       <Environment preset="night" />
     </Canvas>
@@ -31,11 +30,19 @@ function HeroScene() {
 
 function FloatingStage() {
   const meshRef = useRef()
+  const ring1Ref = useRef()
+  const ring2Ref = useRef()
 
   useFrame((state) => {
     if (meshRef.current) {
       meshRef.current.rotation.y = state.clock.elapsedTime * 0.1
       meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1
+    }
+    if (ring1Ref.current) {
+      ring1Ref.current.rotation.z = state.clock.elapsedTime * 0.2
+    }
+    if (ring2Ref.current) {
+      ring2Ref.current.rotation.z = -state.clock.elapsedTime * 0.15
     }
   })
 
@@ -54,12 +61,12 @@ function FloatingStage() {
       </mesh>
 
       {/* Stage rings */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+      <mesh ref={ring1Ref} rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <torusGeometry args={[2.2, 0.02, 16, 100]} />
         <meshStandardMaterial color="#C59D5F" emissive="#C59D5F" emissiveIntensity={0.5} />
       </mesh>
 
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
+      <mesh ref={ring2Ref} rotation={[Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
         <torusGeometry args={[2.8, 0.01, 16, 100]} />
         <meshStandardMaterial color="#FFD27D" emissive="#FFD27D" emissiveIntensity={0.3} />
       </mesh>
@@ -67,7 +74,7 @@ function FloatingStage() {
   )
 }
 
-function Particles() {
+function ParticleField() {
   const count = 500
   const positions = new Float32Array(count * 3)
 
@@ -172,17 +179,17 @@ const Hero = () => {
         >
           <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display font-light leading-tight">
             <span className="block mb-4">
-              <span className="char opacity-0 transform translate-y-full transition-all duration-700 ease-expo-out">
+              <span className="char opacity-0 transform translate-y-full transition-all duration-700 ease-out">
                 Crafting
               </span>
             </span>
             <span className="block mb-4">
-              <span className="char opacity-0 transform translate-y-full transition-all duration-700 ease-expo-out gradient-gold">
+              <span className="char opacity-0 transform translate-y-full transition-all duration-700 ease-out gradient-gold">
                 Experiences
               </span>
             </span>
             <span className="block">
-              <span className="char opacity-0 transform translate-y-full transition-all duration-700 ease-expo-out">
+              <span className="char opacity-0 transform translate-y-full transition-all duration-700 ease-out">
                 That Leave Lasting Impressions
               </span>
             </span>
@@ -239,15 +246,15 @@ const Hero = () => {
           </button>
         </motion.div>
       </div>
+
+      {/* Helper styles */}
+      <style>{`
+        .ease-out { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+        .char { display: inline-block; }
+        .char.revealed { opacity: 1 !important; transform: translateY(0) !important; }
+      `}</style>
     </section>
   )
 }
 
 export default Hero
-
-// Helper styles inline
-const styles = `
-  .ease-expo-out { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
-  .char { display: inline-block; }
-  .char.revealed { opacity: 1 !important; transform: translateY(0) !important; }
-`

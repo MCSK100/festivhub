@@ -5,7 +5,7 @@ import { motion, useInView } from 'framer-motion'
 function useCounter(end, duration = 2) {
   const [count, setCount] = useState(0)
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const isInView = useInView(ref, { once: true, margin: '-100px' })
 
   useEffect(() => {
     if (!isInView) return
@@ -45,7 +45,7 @@ const MetricsSection = () => {
     <section className="relative py-24 lg:py-32 premium-bg overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-linear-to-b from-premium-bg via-premium-elevated to-premium-bg" />
+        <div className="absolute inset-0 bg-gradient-to-b from-premium-bg via-premium-elevated to-premium-bg" />
       </div>
 
       {/* Decorative line */}

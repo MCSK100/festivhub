@@ -15,6 +15,7 @@ import PrivateRoute from './components/PrivateRoute'
 import { ThemeProvider } from './utils/ThemeContext'
 import { AuthProvider } from './contexts/AuthContext'
 import { ToastProvider } from './components/ui/Toast'
+import { WhatsAppButton, AIChatBot } from './components/FloatingElements'
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
       <ThemeProvider>
         <ToastProvider>
           <Router>
-            <div className="min-h-screen navy-bg">
+            <div className="min-h-screen premium-bg">
               <NavBar />
               <Routes>
                 <Route path="/" element={<LandingPage />} />
@@ -33,24 +34,27 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password/:token" element={<ResetPassword />} />
-                <Route 
-                  path="/vendor-dashboard" 
+                <Route
+                  path="/vendor-dashboard"
                   element={
                     <PrivateRoute requiredRole="vendor">
                       <VendorDashboard />
                     </PrivateRoute>
-                  } 
+                  }
                 />
-                <Route 
-                  path="/customer-dashboard" 
+                <Route
+                  path="/customer-dashboard"
                   element={
                     <PrivateRoute requiredRole="customer">
                       <CustomerDashboard />
                     </PrivateRoute>
-                  } 
+                  }
                 />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
+              {/* Floating Elements */}
+              <WhatsAppButton />
+              <AIChatBot />
             </div>
           </Router>
         </ToastProvider>
