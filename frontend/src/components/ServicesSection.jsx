@@ -8,7 +8,7 @@ import {
   Music,
   PartyPopper,
   Mic,
-  Stage,
+  Theater,
   TrendingUp
 } from 'lucide-react'
 
@@ -54,7 +54,7 @@ const services = [
     description: 'Flawless execution for events that shape industries.',
   },
   {
-    icon: Stage,
+    icon: Theater,
     title: 'Stage Production',
     description: 'Cutting-edge staging and technical production that amaze.',
   },
