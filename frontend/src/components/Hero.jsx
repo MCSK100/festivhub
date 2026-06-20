@@ -1,26 +1,30 @@
 import { useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, Float, MeshDistortMaterial } from '@react-three/drei'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 // 3D Scene Components
-function HeroScene() {
+function HeroScene({ scrollProgress }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 8], fov: 45 }}
       gl={{ antialias: true, alpha: true }}
       className="absolute inset-0"
     >
-      <color attach="background" args={['#050505']} />
-      <fog attach="fog" args={['#050505', 5, 15]} />
+      <color attach="background" args={['#0A0A0A']} />
+      <fog attach="fog" args={['#0A0A0A', 5, 15]} />
 
       <ambientLight intensity={0.2} />
-      <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} intensity={1} color="#C59D5F" />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#FFD27D" />
+      <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} intensity={1} color="#FACC15" />
+      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#FDE68A" />
 
-      <FloatingStage />
+      <FloatingStage scrollProgress={scrollProgress} />
       <ParticleField />
 
       <Environment preset="night" />
@@ -28,21 +32,28 @@ function HeroScene() {
   )
 }
 
-function FloatingStage() {
+function FloatingStage({ scrollProgress }) {
   const meshRef = useRef()
   const ring1Ref = useRef()
   const ring2Ref = useRef()
 
   useFrame((state) => {
+    const scroll = scrollProgress?.current || 0
+    const baseSpeed = 0.1 + scroll * 0.5
+
     if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.1
-      meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1
+      meshRef.current.rotation.y = state.clock.elapsedTime * baseSpeed
+      meshRef.current.rotation.x = scroll * 0.5
+      meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1 - scroll * 2
+      meshRef.current.scale.setScalar(1 - scroll * 0.3)
     }
     if (ring1Ref.current) {
-      ring1Ref.current.rotation.z = state.clock.elapsedTime * 0.2
+      ring1Ref.current.rotation.z = state.clock.elapsedTime * (0.2 + scroll * 0.3)
+      ring1Ref.current.rotation.x = Math.PI / 2 + scroll * 0.3
     }
     if (ring2Ref.current) {
-      ring2Ref.current.rotation.z = -state.clock.elapsedTime * 0.15
+      ring2Ref.current.rotation.z = -(state.clock.elapsedTime * (0.15 + scroll * 0.2))
+      ring2Ref.current.rotation.x = Math.PI / 2 - scroll * 0.2
     }
   })
 
@@ -51,7 +62,7 @@ function FloatingStage() {
       <mesh ref={meshRef} position={[0, 0, 0]}>
         <icosahedronGeometry args={[1.5, 1]} />
         <MeshDistortMaterial
-          color="#C59D5F"
+          color="#FACC15"
           metalness={0.8}
           roughness={0.2}
           distort={0.3}
@@ -63,12 +74,12 @@ function FloatingStage() {
       {/* Stage rings */}
       <mesh ref={ring1Ref} rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <torusGeometry args={[2.2, 0.02, 16, 100]} />
-        <meshStandardMaterial color="#C59D5F" emissive="#C59D5F" emissiveIntensity={0.5} />
+        <meshStandardMaterial color="#FACC15" emissive="#FACC15" emissiveIntensity={0.5} />
       </mesh>
 
       <mesh ref={ring2Ref} rotation={[Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
         <torusGeometry args={[2.8, 0.01, 16, 100]} />
-        <meshStandardMaterial color="#FFD27D" emissive="#FFD27D" emissiveIntensity={0.3} />
+        <meshStandardMaterial color="#FDE68A" emissive="#FDE68A" emissiveIntensity={0.3} />
       </mesh>
     </Float>
   )
@@ -104,7 +115,7 @@ function ParticleField() {
       </bufferGeometry>
       <pointsMaterial
         size={0.02}
-        color="#C59D5F"
+        color="#FACC15"
         transparent
         opacity={0.6}
         sizeAttenuation
@@ -134,8 +145,40 @@ const Hero = () => {
   const navigate = useNavigate()
   const headingRef = useRef(null)
   const subRef = useRef(null)
+  const sectionRef = useRef(null)
+  const scrollProgress = useRef(0)
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 150])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.85])
 
   useTextReveal(headingRef)
+
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on('change', (v) => {
+      scrollProgress.current = v
+    })
+    return unsubscribe
+  }, [scrollYProgress])
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.hero-badge',
+        { opacity: 0, y: 30, scale: 0.9 },
+        { opacity: 1, y: 0, scale: 1, duration: 1, ease: 'power3.out', delay: 0.2 }
+      )
+      gsap.fromTo('.hero-cta',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', delay: 1 }
+      )
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
 
   const scrollToContent = () => {
     window.scrollTo({
@@ -145,23 +188,23 @@ const Hero = () => {
   }
 
   return (
-    <section className="relative min-h-screen overflow-hidden premium-bg">
+    <section ref={sectionRef} className="relative min-h-[120vh] overflow-hidden premium-bg">
       {/* 3D Background */}
       <div className="absolute inset-0 z-0">
-        <HeroScene />
+        <HeroScene scrollProgress={scrollProgress} />
       </div>
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-premium-bg/50 via-transparent to-premium-bg z-[1]" />
 
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col justify-center items-center text-center px-6 pt-32 pb-20">
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity, scale }}
+        className="relative z-10 min-h-screen flex flex-col justify-center items-center text-center px-6 pt-32 pb-20 sticky top-0"
+      >
         {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 glass rounded-full mb-8"
+          className="hero-badge inline-flex items-center gap-3 px-5 py-2.5 glass rounded-full mb-8 opacity-0"
         >
           <div className="w-2 h-2 bg-gold rounded-full animate-pulse" />
           <span className="text-sm font-medium text-gold">
@@ -210,10 +253,7 @@ const Hero = () => {
 
         {/* CTA Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="flex flex-col sm:flex-row gap-4 mt-10"
+          className="hero-cta flex flex-col sm:flex-row gap-4 mt-10 opacity-0"
         >
           <button
             onClick={() => navigate('/contact')}
@@ -245,7 +285,7 @@ const Hero = () => {
             <ChevronDown className="w-5 h-5 animate-bounce" />
           </button>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Helper styles */}
       <style>{`

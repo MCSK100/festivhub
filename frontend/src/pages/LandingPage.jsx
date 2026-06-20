@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import Lenis from 'lenis'
 import { gsap } from 'gsap'
@@ -15,6 +15,8 @@ import AwardsSection from '../components/AwardsSection'
 import FeaturedEventsSection from '../components/FeaturedEventsSection'
 import TrustBar from '../components/TrustBar'
 import CategoryGrid from '../components/CategoryGrid'
+import VideoShowcase from '../components/VideoShowcase'
+import ParallaxShowcase from '../components/ParallaxShowcase'
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger)
@@ -29,6 +31,8 @@ const itemVariants = {
 }
 
 const LandingPage = () => {
+  const mainRef = useRef(null)
+
   useEffect(() => {
     // Initialize Lenis smooth scroll
     const lenis = new Lenis({
@@ -43,14 +47,109 @@ const LandingPage = () => {
     gsap.ticker.add((time) => lenis.raf(time * 1000))
     gsap.ticker.lagSmoothing(0)
 
+    // GSAP ScrollTrigger parallax effects for sections
+    const ctx = gsap.context(() => {
+      // Services section parallax
+      gsap.fromTo('.services-section',
+        { opacity: 0, y: 60, scale: 0.98 },
+        {
+          opacity: 1, y: 0, scale: 1,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.services-section',
+            start: 'top 85%',
+            end: 'top 40%',
+            scrub: 1,
+          },
+        }
+      )
+
+      // Featured events parallax
+      gsap.fromTo('.featured-events',
+        { opacity: 0, y: 80 },
+        {
+          opacity: 1, y: 0,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.featured-events',
+            start: 'top 85%',
+            end: 'top 35%',
+            scrub: 1,
+          },
+        }
+      )
+
+      // Process section - 3D tilt on scroll
+      gsap.fromTo('.process-section',
+        { rotateX: 5, opacity: 0 },
+        {
+          rotateX: 0, opacity: 1,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.process-section',
+            start: 'top 80%',
+            end: 'top 40%',
+            scrub: 1,
+          },
+        }
+      )
+
+      // Awards cards stagger
+      gsap.fromTo('.awards-section .glass-card',
+        { y: 40, opacity: 0, rotateY: -5 },
+        {
+          y: 0, opacity: 1, rotateY: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.awards-section',
+            start: 'top 80%',
+          },
+        }
+      )
+
+      // FAQ section scale entrance
+      gsap.fromTo('.faq-section',
+        { scale: 0.95, opacity: 0 },
+        {
+          scale: 1, opacity: 1,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.faq-section',
+            start: 'top 80%',
+          },
+        }
+      )
+
+      // Contact section slide-in
+      gsap.fromTo('.contact-section',
+        { x: -50, opacity: 0 },
+        {
+          x: 0, opacity: 1,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.contact-section',
+            start: 'top 80%',
+          },
+        }
+      )
+    }, mainRef)
+
     return () => {
       lenis.destroy()
       gsap.ticker.lagSmoothing(false)
+      ctx.revert()
     }
   }, [])
 
   return (
-    <main className="bg-premium-bg min-h-screen">
+    <main ref={mainRef} className="bg-premium-bg min-h-screen">
       {/* Hero Section */}
       <Hero />
 
@@ -58,12 +157,14 @@ const LandingPage = () => {
       <TrustBar />
 
       {/* Services Showcase */}
-      <ServicesSection />
+      <div className="services-section">
+        <ServicesSection />
+      </div>
 
       {/* Metrics */}
       <MetricsSection />
 
-      {/* Event Categories (CategoryGrid already exists) */}
+      {/* Event Categories */}
       <motion.div
         initial="hidden"
         whileInView="visible"
@@ -74,29 +175,35 @@ const LandingPage = () => {
       </motion.div>
 
       {/* Featured Events Gallery */}
-      <FeaturedEventsSection />
+      <div className="featured-events">
+        <FeaturedEventsSection />
+      </div>
+
+      {/* Video Showcase */}
+      <VideoShowcase />
 
       {/* Process Timeline */}
-      <ProcessSection />
+      <div className="process-section" style={{ perspective: '1000px' }}>
+        <ProcessSection />
+      </div>
 
-      {/* Testimonials (existing component) */}
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={itemVariants}
-      >
-        <CategoryGrid />
-      </motion.div>
+      {/* Parallax Showcase */}
+      <ParallaxShowcase />
 
       {/* Awards */}
-      <AwardsSection />
+      <div className="awards-section">
+        <AwardsSection />
+      </div>
 
       {/* FAQ */}
-      <FAQSection />
+      <div className="faq-section">
+        <FAQSection />
+      </div>
 
       {/* Contact / Lead Gen */}
-      <ContactSection />
+      <div className="contact-section">
+        <ContactSection />
+      </div>
     </main>
   )
 }

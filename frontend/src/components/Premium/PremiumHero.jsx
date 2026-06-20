@@ -87,7 +87,7 @@ const PremiumHero = () => {
   return (
     <div
       ref={heroRef}
-      className="relative w-full h-screen overflow-hidden bg-[#050505]"
+      className="relative w-full h-screen overflow-hidden bg-[#0A0A0A]"
     >
       {/* 3D Hero Scene */}
       <div className="absolute inset-0 z-0">
@@ -100,7 +100,7 @@ const PremiumHero = () => {
         className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 lg:px-20"
       >
         {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050505]/30 to-[#050505] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0A0A0A]/30 to-[#0A0A0A] pointer-events-none" />
 
         {/* Content Container */}
         <div className="relative z-20 text-center max-w-4xl">
@@ -110,7 +110,7 @@ const PremiumHero = () => {
             className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-6 text-white leading-tight"
           >
             Crafting Experiences That
-            <span className="block text-[#C59D5F] font-semibold">
+            <span className="block text-[#FACC15] font-semibold">
               Leave Lasting Impressions
             </span>
           </h1>
@@ -133,7 +133,7 @@ const PremiumHero = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 lg:px-12 py-4 bg-[#C59D5F] text-white font-semibold rounded-lg hover:bg-[#B8915A] transition-all duration-300 shadow-lg hover:shadow-[0_20px_40px_rgba(197,157,95,0.3)]"
+              className="px-8 lg:px-12 py-4 bg-[#FACC15] text-[#0A0A0A] font-semibold rounded-lg hover:bg-[#FDE047] transition-all duration-300 shadow-lg hover:shadow-[0_20px_40px_rgba(250,204,21,0.3)]"
             >
               Plan Your Event
             </motion.button>
@@ -142,7 +142,7 @@ const PremiumHero = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 lg:px-12 py-4 border-2 border-[#C59D5F] text-[#C59D5F] font-semibold rounded-lg hover:bg-[#C59D5F]/10 transition-all duration-300"
+              className="px-8 lg:px-12 py-4 border-2 border-[#FACC15] text-[#FACC15] font-semibold rounded-lg hover:bg-[#FACC15]/10 transition-all duration-300"
             >
               Explore Vendors
             </motion.button>
@@ -152,7 +152,7 @@ const PremiumHero = () => {
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-[#FFD27D]"
+            className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-[#FDE68A]"
           >
             <svg
               className="w-6 h-6"
@@ -176,10 +176,10 @@ const PremiumHero = () => {
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-[#FFD27D] rounded-full"
+            className="absolute w-1 h-1 bg-[#FDE68A] rounded-full"
             initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
               opacity: Math.random() * 0.5,
             }}
             animate={{

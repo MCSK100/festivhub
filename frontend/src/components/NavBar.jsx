@@ -22,21 +22,20 @@ const NavBar = () => {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
-    // { href: '/faq', label: 'FAQ' },
   ]
 
   return (
     <motion.nav
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed top-0 z-50 w-full glass-dark border-b border-blue-500/20 backdrop-blur-xl"
+      className="fixed top-0 z-50 w-full glass border-b border-gold/20 backdrop-blur-xl"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-20">
         <div className="flex justify-between items-center h-20 lg:h-24">
           {/* Logo */}
           <Link
             to="/"
-            className="text-3xl lg:text-4xl font-serif font-light italic gradient-gold-text hover:scale-110 transition-transform duration-300"
+            className="text-3xl lg:text-4xl font-serif font-light italic gradient-gold hover:scale-110 transition-transform duration-300"
           >
             FestivLink
           </Link>
@@ -50,8 +49,8 @@ const NavBar = () => {
                   to={link.href}
                   className={`text-sm font-medium transition-all duration-300 pb-2 border-b-2 ${
                     isActive(link.href)
-                      ? 'text-blue-600 border-blue-500'
-                      : 'text-slate-700 border-transparent hover:text-blue-600 hover:border-blue-500/50'
+                      ? 'text-gold border-gold'
+                      : 'text-gray-400 border-transparent hover:text-gold hover:border-gold/50'
                   }`}
                 >
                   {link.label}
@@ -66,13 +65,13 @@ const NavBar = () => {
               <>
                 <Link
                   to="/login"
-                  className="px-6 py-3 text-slate-700 hover:text-blue-600 font-medium transition-colors duration-300 text-sm"
+                  className="px-6 py-3 text-gray-400 hover:text-gold font-medium transition-colors duration-300 text-sm"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/role-select"
-                  className="btn-premium-gold px-7 py-3 text-sm font-semibold flex items-center justify-center"
+                  className="btn-primary px-7 py-3 text-sm font-semibold flex items-center justify-center"
                 >
                   Get Started
                 </Link>
@@ -95,7 +94,7 @@ const NavBar = () => {
           {!isVendorDashboard && (
             <motion.button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg glass-accent border border-blue-500/30 text-blue-600 hover:text-blue-500 transition-colors"
+              className="lg:hidden p-2 rounded-lg glass border border-gold/30 text-gold hover:text-gold-light transition-colors"
               whileTap={{ scale: 0.95 }}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -113,7 +112,7 @@ const NavBar = () => {
             }}
             className="lg:hidden overflow-hidden pb-6"
           >
-            <div className="flex flex-col gap-4 bg-white/40 rounded-xl p-4 mt-4 border border-blue-500/20">
+            <div className="flex flex-col gap-4 bg-premium-card/80 rounded-xl p-4 mt-4 border border-gold/20">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -121,21 +120,21 @@ const NavBar = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`text-sm font-medium py-2 px-3 rounded-lg transition-all duration-300 ${
                     isActive(link.href)
-                      ? 'text-blue-600 bg-blue-500/20'
-                      : 'text-slate-700 hover:text-blue-600 hover:bg-blue-500/10'
+                      ? 'text-gold bg-gold/10'
+                      : 'text-gray-400 hover:text-gold hover:bg-gold/5'
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
 
-              <div className="border-t border-blue-500/20 pt-4 mt-4 flex flex-col gap-3">
+              <div className="border-t border-gold/20 pt-4 mt-4 flex flex-col gap-3">
                 {!user ? (
                   <>
                     <Link
                       to="/login"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="px-6 py-3 text-center text-slate-700 hover:text-blue-600 font-medium transition-colors duration-300 text-sm"
+                      className="px-6 py-3 text-center text-gray-400 hover:text-gold font-medium transition-colors duration-300 text-sm"
                     >
                       Sign In
                     </Link>
@@ -144,7 +143,7 @@ const NavBar = () => {
                       onClick={() => {
                         setMobileMenuOpen(false)
                       }}
-                      className="btn-premium-gold px-6 py-3 text-sm font-semibold w-full text-center block"
+                      className="btn-primary px-6 py-3 text-sm font-semibold w-full text-center block"
                     >
                       Get Started
                     </Link>

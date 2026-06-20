@@ -26,33 +26,30 @@ export default {
         '128': '32rem',
       },
       colors: {
-        // Premium Dark Background
         premium: {
-          bg: '#050505',
-          card: '#0F0F0F',
-          elevated: '#0A0A0A',
-          input: '#141414',
+          bg: '#0A0A0A',
+          card: '#141414',
+          elevated: '#0F0F0F',
+          input: '#1A1A1A',
         },
-        // Primary Gold (#C59D5F)
         gold: {
-          DEFAULT: '#C59D5F',
-          light: '#D4AF6A',
-          dark: '#A88447',
-          accent: '#FFD27D',
+          DEFAULT: '#FACC15',
+          light: '#FDE047',
+          dark: '#EAB308',
+          accent: '#FDE68A',
         },
-        // Semantic
         success: '#4ADE80',
         error: '#F87171',
         warning: '#FBBF24',
         info: '#60A5FA',
       },
       boxShadow: {
-        'glow': '0 0 40px rgba(197, 157, 95, 0.3)',
-        'glow-lg': '0 0 60px rgba(197, 157, 95, 0.4)',
-        'glow-xl': '0 0 80px rgba(197, 157, 95, 0.5)',
+        'glow': '0 0 40px rgba(250, 204, 21, 0.3)',
+        'glow-lg': '0 0 60px rgba(250, 204, 21, 0.4)',
+        'glow-xl': '0 0 80px rgba(250, 204, 21, 0.5)',
         'card': '0 20px 40px rgba(0, 0, 0, 0.4)',
         'card-hover': '0 30px 60px rgba(0, 0, 0, 0.5)',
-        'inner-glow': 'inset 0 0 30px rgba(197, 157, 95, 0.1)',
+        'inner-glow': 'inset 0 0 30px rgba(250, 204, 21, 0.1)',
       },
       backdropBlur: {
         xs: '2px',
@@ -62,8 +59,8 @@ export default {
         '3xl': '64px',
       },
       backgroundImage: {
-        'premium-gradient': 'radial-gradient(circle at 50% 50%, #0A0A0A 0%, #050505 100%)',
-        'gold-shimmer': 'linear-gradient(135deg, transparent 0%, rgba(197, 157, 95, 0.1) 50%, transparent 100%)',
+        'premium-gradient': 'radial-gradient(circle at 50% 50%, #0F0F0F 0%, #0A0A0A 100%)',
+        'gold-shimmer': 'linear-gradient(135deg, transparent 0%, rgba(250, 204, 21, 0.1) 50%, transparent 100%)',
       },
       animation: {
         'fade-up': 'fadeUp 0.8s ease-out forwards',
@@ -95,8 +92,8 @@ export default {
           '50%': { transform: 'translateY(-20px)' },
         },
         pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(197, 157, 95, 0.2)' },
-          '50%': { boxShadow: '0 0 40px rgba(197, 157, 95, 0.4)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(250, 204, 21, 0.2)' },
+          '50%': { boxShadow: '0 0 40px rgba(250, 204, 21, 0.4)' },
         },
         marquee: {
           '0%': { transform: 'translateX(0)' },

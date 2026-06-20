@@ -300,7 +300,7 @@ export const glowAnimation = (element, options = {}) => {
   if (!element) return;
 
   gsap.to(element, {
-    boxShadow: `0 0 30px rgba(197, 157, 95, ${config.intensity})`,
+    boxShadow: `0 0 30px rgba(250, 204, 21, ${config.intensity})`,
     duration: config.duration,
     repeat: config.repeat,
     yoyo: true,

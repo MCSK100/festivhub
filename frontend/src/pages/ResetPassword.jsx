@@ -82,11 +82,11 @@ const ResetPassword = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen navy-bg flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
+      className="min-h-screen premium-bg flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-blue-300/10 to-transparent rounded-full blur-3xl"
+          className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-gold/10 to-transparent rounded-full blur-3xl"
           animate={{ y: [0, 60, 0], x: [50, -50, 50] }}
           transition={{ duration: 20, repeat: Infinity }}
         />
@@ -97,17 +97,17 @@ const ResetPassword = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="backdrop-blur-xl bg-white/10 rounded-3xl p-8 lg:p-10 border border-blue-500/20"
+          className="glass-card rounded-3xl p-8 lg:p-10 border border-gold/10"
         >
           {/* Header */}
           <motion.div variants={itemVariants} className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-gradient-to-br from-gold to-gold-dark rounded-full flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8 text-premium-bg" />
             </div>
-            <h1 className="text-3xl font-serif font-light text-slate-900 mb-2">
+            <h1 className="text-3xl font-serif font-light text-white mb-2">
               Set New Password
             </h1>
-            <p className="text-slate-700 text-sm">
+            <p className="text-gray-400 text-sm">
               Create a strong password for your account
             </p>
           </motion.div>
@@ -117,10 +117,10 @@ const ResetPassword = () => {
               <motion.div variants={itemVariants}>
                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
               </motion.div>
-              <motion.p variants={itemVariants} className="text-slate-900 font-semibold">
+              <motion.p variants={itemVariants} className="text-white font-semibold">
                 Password reset successfully!
               </motion.p>
-              <motion.p variants={itemVariants} className="text-slate-600 text-sm">
+              <motion.p variants={itemVariants} className="text-gray-400 text-sm">
                 Redirecting to login...
               </motion.p>
             </motion.div>
@@ -130,13 +130,13 @@ const ResetPassword = () => {
                 <AlertCircle className="w-16 h-16 text-red-500 mx-auto" />
               </motion.div>
               <motion.div variants={itemVariants}>
-                <p className="text-slate-900 font-semibold mb-2">Link Expired</p>
-                <p className="text-slate-600 text-sm mb-6">
+                <p className="text-white font-semibold mb-2">Link Expired</p>
+                <p className="text-gray-400 text-sm mb-6">
                   Your password reset link has expired or is invalid. Please request a new one.
                 </p>
                 <Link
                   to="/forgot-password"
-                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300"
+                  className="inline-block btn-primary px-6 py-2 rounded-lg font-semibold transition-all duration-300"
                 >
                   Request New Link
                 </Link>
@@ -146,7 +146,7 @@ const ResetPassword = () => {
             <motion.form variants={containerVariants} onSubmit={handleSubmit} className="space-y-6">
               {/* Password Input */}
               <motion.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-slate-900 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   New Password
                 </label>
                 <div className="relative">
@@ -154,13 +154,13 @@ const ResetPassword = () => {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-blue-500/30 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-all duration-300"
+                    className="w-full px-4 py-3 rounded-lg bg-premium-input border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-gold transition-all duration-300"
                     placeholder="Enter new password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-slate-500 hover:text-slate-700"
+                    className="absolute right-3 top-3 text-gray-500 hover:text-gold"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -171,17 +171,17 @@ const ResetPassword = () => {
                   <div className="mt-2 flex gap-1">
                     <div
                       className={`h-1 flex-1 rounded-full ${
-                        password.length > 0 ? 'bg-red-500' : 'bg-gray-300'
+                        password.length > 0 ? 'bg-red-500' : 'bg-gray-700'
                       }`}
                     />
                     <div
                       className={`h-1 flex-1 rounded-full ${
-                        password.length >= 6 ? 'bg-yellow-500' : 'bg-gray-300'
+                        password.length >= 6 ? 'bg-yellow-500' : 'bg-gray-700'
                       }`}
                     />
                     <div
                       className={`h-1 flex-1 rounded-full ${
-                        password.length >= 10 ? 'bg-green-500' : 'bg-gray-300'
+                        password.length >= 10 ? 'bg-green-500' : 'bg-gray-700'
                       }`}
                     />
                   </div>
@@ -190,7 +190,7 @@ const ResetPassword = () => {
 
               {/* Confirm Password Input */}
               <motion.div variants={itemVariants}>
-                <label className="block text-sm font-medium text-slate-900 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -198,13 +198,13 @@ const ResetPassword = () => {
                     type={showConfirmPassword ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-blue-500/30 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-all duration-300"
+                    className="w-full px-4 py-3 rounded-lg bg-premium-input border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-gold transition-all duration-300"
                     placeholder="Confirm password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-3 text-slate-500 hover:text-slate-700"
+                    className="absolute right-3 top-3 text-gray-500 hover:text-gold"
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -216,7 +216,7 @@ const ResetPassword = () => {
                 variants={itemVariants}
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full btn-primary py-3 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Resetting...' : 'Reset Password'}
               </motion.button>
@@ -225,7 +225,7 @@ const ResetPassword = () => {
               <motion.div variants={itemVariants} className="text-center">
                 <Link
                   to="/login"
-                  className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
+                  className="text-gold hover:text-gold-light font-medium text-sm transition-colors"
                 >
                   Back to Login
                 </Link>

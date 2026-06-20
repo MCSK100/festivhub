@@ -6,10 +6,10 @@
 export const designTokens = {
   // Color Palette
   colors: {
-    primary: '#C59D5F',      // Gold/Luxury
+    primary: '#FACC15',      // Electric Yellow
     secondary: '#FFFFFF',     // White
-    accent: '#FFD27D',        // Light Gold
-    background: '#050505',    // Deep Black
+    accent: '#FDE68A',        // Light Yellow
+    background: '#0A0A0A',    // Deep Black
     
     // Extended Palette
     dark: {
@@ -23,21 +23,21 @@ export const designTokens = {
       700: '#374151',
       800: '#1F2937',
       900: '#111827',
-      950: '#050505',
+      950: '#0A0A0A',
     },
     
     // Accent Colors
     gold: {
-      50: '#FFFBF0',
-      100: '#FEF3E2',
-      200: '#FDE68A',
-      300: '#FCD34D',
-      400: '#FBBF24',
-      500: '#F59E0B',
-      600: '#D97706',
-      700: '#B45309',
-      800: '#92400E',
-      900: '#78350F',
+      50: '#FEFCE8',
+      100: '#FEF9C3',
+      200: '#FEF08A',
+      300: '#FDE047',
+      400: '#FACC15',
+      500: '#EAB308',
+      600: '#CA8A04',
+      700: '#A16207',
+      800: '#854D0E',
+      900: '#713F12',
     },
   },
 
@@ -99,8 +99,8 @@ export const designTokens = {
     '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
     
     // Luxury shadows
-    luxury: '0 20px 40px rgba(197, 157, 95, 0.15)',
-    luxuryHover: '0 30px 60px rgba(197, 157, 95, 0.25)',
+    luxury: '0 20px 40px rgba(250, 204, 21, 0.15)',
+    luxuryHover: '0 30px 60px rgba(250, 204, 21, 0.25)',
   },
 
   // Border Radius
