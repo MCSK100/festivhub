@@ -7,17 +7,9 @@ import {
   Briefcase,
   Calendar,
   Settings,
-  Bell,
   LogOut,
   Menu,
   X,
-  TrendingUp,
-  Users,
-  Star,
-  CheckCircle,
-  XCircle,
-  Clock,
-  ChevronDown
 } from 'lucide-react'
 import api from '../services/api'
 
@@ -36,7 +28,6 @@ const VendorDashboard = () => {
   const [bookings, setBookings] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [notificationsOpen, setNotificationsOpen] = useState(false)
 
   useEffect(() => {
     if (!user) {
@@ -133,209 +124,153 @@ const VendorDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen flex items-center justify-center navy-bg">
+        <div className="text-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
+            className="w-14 h-14 border-2 border-white/10 border-t-yellow-400 rounded-full mx-auto mb-4"
+          />
+          <p className="text-slate-400 font-medium">Loading your workspace…</p>
+        </div>
       </div>
     )
   }
 
-  return (
-    <div className="min-h-screen pt-24 lg:pt-28 navy-bg text-slate-900">
-      <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] gap-6">
-        {/* Sidebar */}
-        <div className="hidden lg:flex lg:flex-col w-72 h-full bg-white/80 glass-accent border border-slate-200 shadow-xl backdrop-blur-xl">
-          {/* Header */}
-          <div className="p-6 border-b border-slate-200">
-            <h1 className="text-2xl font-bold text-slate-900">{vendorProfile?.companyName || vendorProfile?.name || 'VendorHub'}</h1>
-            <p className="text-sm text-slate-500 mt-1">Vendor management center</p>
+  const SidebarContent = () => (
+    <>
+      {/* Header */}
+      <div className="p-6 border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400/20 to-amber-600/20 border border-yellow-500/30 flex items-center justify-center text-yellow-400 font-bold text-lg">
+            {(vendorProfile?.name || 'V').charAt(0).toUpperCase()}
           </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon
-              return (
-                <li key={item.id}>
-                  <button
-                    onClick={() => {
-                      setActiveTab(item.id)
-                      setSidebarOpen(false)
-                    }}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                      activeTab === item.id
-                        ? 'bg-blue-600 text-white'
-                        : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    {item.label}
-                    {item.id === 'bookings' && unreadCount > 0 && (
-                      <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        </nav>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-slate-200">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-lg transition-all"
-          >
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
+          <div>
+            <h1 className="text-base font-bold text-white leading-tight truncate max-w-[160px]">
+              {vendorProfile?.companyName || vendorProfile?.name || 'FestivLink Vendor'}
+            </h1>
+            <p className="text-xs text-slate-500 mt-0.5">Vendor Portal</p>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Sidebar */}
-      <motion.div
-        initial={{ x: -300 }}
-        animate={{ x: sidebarOpen ? 0 : -300 }}
-        className="fixed lg:hidden z-30 w-72 h-full bg-white/80 glass-accent border border-slate-200 shadow-xl flex flex-col backdrop-blur-xl"
-      >
-        {/* Header */}
-        <div className="p-6 border-b border-slate-200">
-          <h1 className="text-2xl font-bold text-slate-900">{vendorProfile?.companyName || vendorProfile?.name || 'VendorHub'}</h1>
-          <p className="text-sm text-slate-500 mt-1">Vendor management center</p>
-        </div>
+      {/* Navigation */}
+      <nav className="flex-1 p-4">
+        <ul className="space-y-1.5">
+          {sidebarItems.map((item) => {
+            const Icon = item.icon
+            const isActive = activeTab === item.id
+            return (
+              <li key={item.id}>
+                <button
+                  onClick={() => {
+                    setActiveTab(item.id)
+                    setSidebarOpen(false)
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium ${
+                    isActive
+                      ? 'bg-gradient-to-r from-yellow-500/20 to-amber-500/10 text-yellow-400 border border-yellow-500/30'
+                      : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${isActive ? 'text-yellow-400' : ''}`} />
+                  {item.label}
+                  {item.id === 'bookings' && unreadCount > 0 && (
+                    <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      </nav>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon
-              return (
-                <li key={item.id}>
+      {/* Footer */}
+      <div className="p-4 border-t border-white/10">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 rounded-xl transition-all duration-200 text-sm font-medium"
+        >
+          <LogOut className="w-5 h-5" />
+          Logout
+        </button>
+      </div>
+    </>
+  )
+
+  return (
+    <div className="min-h-screen pt-24 lg:pt-28 navy-bg">
+      <div className="flex">
+        {/* Desktop Sidebar */}
+        <aside className="hidden lg:flex flex-col fixed top-24 left-0 w-72 h-[calc(100vh-6rem)] glass-dark border-r border-white/10 z-20">
+          <SidebarContent />
+        </aside>
+
+        {/* Mobile Sidebar */}
+        <AnimatePresence>
+          {sidebarOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/60 z-30 lg:hidden"
+                onClick={() => setSidebarOpen(false)}
+              />
+              <motion.aside
+                initial={{ x: -280 }}
+                animate={{ x: 0 }}
+                exit={{ x: -280 }}
+                transition={{ type: 'spring', damping: 25 }}
+                className="fixed top-0 left-0 w-72 h-full glass-dark border-r border-white/10 z-40 flex flex-col"
+              >
+                <div className="flex items-center justify-between p-4 border-b border-white/10">
+                  <span className="text-white font-bold text-sm">Menu</span>
                   <button
-                    onClick={() => {
-                      setActiveTab(item.id)
-                      setSidebarOpen(false)
-                    }}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                      activeTab === item.id
-                        ? 'bg-blue-600 text-white'
-                        : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
-                    }`}
+                    onClick={() => setSidebarOpen(false)}
+                    className="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
                   >
-                    <Icon className="w-5 h-5" />
-                    {item.label}
-                    {item.id === 'bookings' && unreadCount > 0 && (
-                      <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                        {unreadCount}
-                      </span>
-                    )}
+                    <X className="w-5 h-5" />
                   </button>
-                </li>
-              )
-            })}
-          </ul>
-        </nav>
+                </div>
+                <SidebarContent />
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-slate-200">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-lg transition-all"
-          >
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
-        </div>
-      </motion.div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+        {/* Main Content */}
+        <main className="flex-1 lg:ml-72 flex flex-col min-w-0">
           {/* Mobile Header */}
-          <div className="lg:hidden bg-white/90 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-900">
+          <div className="lg:hidden glass-dark border-b border-white/10 px-5 py-4 flex items-center justify-between">
+            <h2 className="text-base font-semibold text-white">
               {sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
             </h2>
             <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors"
+              onClick={() => setSidebarOpen(true)}
+              className="p-2 rounded-xl glass-accent border border-white/10 text-slate-400 hover:text-white transition-colors"
             >
               <Menu className="w-5 h-5" />
             </button>
           </div>
 
-          <section className="px-6 py-6 lg:px-10 lg:py-8">
-            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-              <div className="glass-accent rounded-3xl p-6 border border-slate-200">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold text-slate-900">Profile Overview</h3>
-                    <p className="text-sm text-slate-500 mt-1">
-                      Review and update your category, experience, company details and contact profile.
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setActiveTab('profile')}
-                    className="inline-flex items-center justify-center rounded-full border border-blue-500 bg-white px-5 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 transition-all"
-                  >
-                    Edit Profile Details
-                  </button>
-                </div>
-
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-2xl bg-white/90 p-4 border border-slate-200">
-                    <p className="text-sm text-slate-500">Category</p>
-                    <p className="mt-2 font-semibold text-slate-900">{vendorProfile?.category || 'Not set'}</p>
-                  </div>
-                  <div className="rounded-2xl bg-white/90 p-4 border border-slate-200">
-                    <p className="text-sm text-slate-500">Experience</p>
-                    <p className="mt-2 font-semibold text-slate-900">{vendorProfile?.experience || 'Not set'}</p>
-                  </div>
-                  <div className="rounded-2xl bg-white/90 p-4 border border-slate-200">
-                    <p className="text-sm text-slate-500">Company</p>
-                    <p className="mt-2 font-semibold text-slate-900">{vendorProfile?.companyName || 'Not set'}</p>
-                  </div>
-                  <div className="rounded-2xl bg-white/90 p-4 border border-slate-200">
-                    <p className="text-sm text-slate-500">Location</p>
-                    <p className="mt-2 font-semibold text-slate-900">
-                      {vendorProfile?.location?.city ? `${vendorProfile.location.city}, ${vendorProfile.location.state}` : 'Not set'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="glass-accent rounded-3xl p-6 border border-slate-200">
-                <h3 className="text-xl font-semibold text-slate-900">Profile Completion</h3>
-                <p className="text-sm text-slate-500 mt-1">Keep your profile complete to attract more customers.</p>
-                <div className="mt-5 bg-slate-200/70 rounded-full h-3 overflow-hidden">
-                  <div
-                    className="h-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-500"
-                    style={{ width: `${Math.min(100, Math.max(0, ((vendorProfile?.name?1:0)+(vendorProfile?.companyName?1:0)+(vendorProfile?.description?1:0)+(vendorProfile?.profileImage?1:0)+(vendorProfile?.portfolioImages?.length>0?1:0)+(vendorProfile?.socialLinks?.website||vendorProfile?.socialLinks?.instagram||vendorProfile?.socialLinks?.facebook?1:0))*100/6))}%` }}
-                  />
-                </div>
-                <div className="mt-6 space-y-3 text-sm text-slate-600">
-                  <p><strong>Website:</strong> {vendorProfile?.socialLinks?.website || 'Not set'}</p>
-                  <p><strong>Instagram:</strong> {vendorProfile?.socialLinks?.instagram || 'Not set'}</p>
-                  <p><strong>Facebook:</strong> {vendorProfile?.socialLinks?.facebook || 'Not set'}</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <main className="flex-1 p-6 overflow-auto">
-            {renderContent()}
-          </main>
-        </div>
+          <div className="flex-1 p-6 lg:p-8 overflow-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                {renderContent()}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </main>
       </div>
-
-      {/* Mobile Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-20 z-20 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
     </div>
   )
 }

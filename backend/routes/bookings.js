@@ -42,7 +42,7 @@ router.post('/', authMiddleware, async (req, res) => {
     await booking.save();
 
     // Add booking to vendor's bookings array
-    await ServiceProvider.findByIdAndUpdate(vendorId, {
+    await ServiceProvider.findByIdAndUpdate(data.vendorId, {
       $push: { bookings: booking._id }
     });
 

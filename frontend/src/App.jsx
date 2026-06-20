@@ -14,47 +14,46 @@ import CustomerDashboard from './pages/CustomerDashboard'
 import PrivateRoute from './components/PrivateRoute'
 import { ThemeProvider } from './utils/ThemeContext'
 import { AuthProvider } from './contexts/AuthContext'
-import { useToast, ToastContainer } from './components/ui/Toast'
+import { ToastProvider } from './components/ui/Toast'
 
 function App() {
-  const { toasts, removeToast } = useToast()
-
   return (
     <AuthProvider>
       <ThemeProvider>
-        <Router>
-          <div className="min-h-screen navy-bg">
-            <NavBar />
-            <ToastContainer toasts={toasts} removeToast={removeToast} />
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/role-select" element={<RoleSelection />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password/:token" element={<ResetPassword />} />
-              <Route 
-                path="/vendor-dashboard" 
-                element={
-                  <PrivateRoute requiredRole="vendor">
-                    <VendorDashboard />
-                  </PrivateRoute>
-                } 
-              />
-              <Route 
-                path="/customer-dashboard" 
-                element={
-                  <PrivateRoute requiredRole="customer">
-                    <CustomerDashboard />
-                  </PrivateRoute>
-                } 
-              />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </div>
-        </Router>
+        <ToastProvider>
+          <Router>
+            <div className="min-h-screen navy-bg">
+              <NavBar />
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/role-select" element={<RoleSelection />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
+                <Route 
+                  path="/vendor-dashboard" 
+                  element={
+                    <PrivateRoute requiredRole="vendor">
+                      <VendorDashboard />
+                    </PrivateRoute>
+                  } 
+                />
+                <Route 
+                  path="/customer-dashboard" 
+                  element={
+                    <PrivateRoute requiredRole="customer">
+                      <CustomerDashboard />
+                    </PrivateRoute>
+                  } 
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </div>
+          </Router>
+        </ToastProvider>
       </ThemeProvider>
     </AuthProvider>
   )

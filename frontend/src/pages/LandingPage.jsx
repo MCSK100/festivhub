@@ -4,6 +4,7 @@ import Hero from '../components/Hero'
 import CategoryGrid from '../components/CategoryGrid'
 import TrustBar from '../components/TrustBar'
 import Testimonials from '../components/Testimonials'
+import ThreeDCard from '../components/ui/ThreeDCard'
 import { useNavigate } from 'react-router-dom'
 
 const LandingPage = () => {
@@ -112,7 +113,7 @@ const LandingPage = () => {
               variants={itemVariants}
               className="text-4xl md:text-5xl lg:text-6xl font-serif font-light mb-6 text-slate-900\"
             >
-              Why Choose <span className="gradient-gold-text font-semibold">EventHub?</span>
+              Why Choose <span className="gradient-gold-text font-semibold">FestivLink?</span>
             </motion.h2>
             <motion.p
               variants={itemVariants}
@@ -130,27 +131,29 @@ const LandingPage = () => {
             viewport={{ once: true, margin: '-100px' }}
             className="grid md:grid-cols-3 gap-8"
           >
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                className="group relative glass-accent rounded-2xl p-8 lg:p-10 border border-blue-500/30 hover:border-blue-500/60 transition-all duration-300"
-              >
-                {/* Icon */}
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-400/25 to-indigo-400/25 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:text-blue-500 transition-colors">
-                  {feature.icon}
-                </div>
+             {features.map((feature, index) => (
+              <ThreeDCard key={index} className="h-full">
+                <motion.div
+                  variants={itemVariants}
+                  className="group relative glass-accent rounded-2xl p-8 lg:p-10 border border-blue-500/30 hover:border-blue-500/60 transition-all duration-300 h-full flex flex-col justify-between"
+                >
+                  {/* Icon */}
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-400/25 to-indigo-400/25 rounded-xl flex items-center justify-center mb-6 text-blue-600 group-hover:text-blue-500 transition-colors">
+                    {feature.icon}
+                  </div>
 
-                {/* Content */}
-                <h3 className="text-xl lg:text-2xl font-semibold text-slate-900 mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-700 leading-relaxed">{feature.description}</p>
+                  {/* Content */}
+                  <div>
+                    <h3 className="text-xl lg:text-2xl font-semibold text-slate-900 mb-4">
+                      {feature.title}
+                    </h3>
+                    <p className="text-slate-700 leading-relaxed">{feature.description}</p>
+                  </div>
 
-                {/* Hover Border Animation */}
-                <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 w-0 group-hover:w-full transition-all duration-300 rounded-full" />
-              </motion.div>
+                  {/* Hover Border Animation */}
+                  <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 w-0 group-hover:w-full transition-all duration-300 rounded-full" />
+                </motion.div>
+              </ThreeDCard>
             ))}
           </motion.div>
         </div>
@@ -200,33 +203,34 @@ const LandingPage = () => {
                 description: 'Secure your booking and enjoy your event',
               },
             ].map((item, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="relative"
-              >
-                <div className="glass-accent rounded-2xl p-8 lg:p-10 border border-indigo-500/30 h-full flex flex-col justify-between">
-                  {/* Step Number */}
-                  <div className="text-6xl lg:text-7xl font-serif font-light text-indigo-500/20 mb-4">
-                    {item.step}
-                  </div>
+              <ThreeDCard key={index} className="h-full relative">
+                <motion.div
+                  variants={itemVariants}
+                  className="h-full"
+                >
+                  <div className="glass-accent rounded-2xl p-8 lg:p-10 border border-indigo-500/30 h-full flex flex-col justify-between">
+                    {/* Step Number */}
+                    <div className="text-6xl lg:text-7xl font-serif font-light text-indigo-500/20 mb-4">
+                      {item.step}
+                    </div>
 
-                  {/* Content */}
-                  <div>
-                    <h3 className="text-2xl lg:text-3xl font-semibold text-slate-900 mb-4">
-                      {item.title}
-                    </h3>
-                    <p className="text-slate-700 leading-relaxed">{item.description}</p>
+                    {/* Content */}
+                    <div>
+                      <h3 className="text-2xl lg:text-3xl font-semibold text-slate-900 mb-4">
+                        {item.title}
+                      </h3>
+                      <p className="text-slate-700 leading-relaxed">{item.description}</p>
+                    </div>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Arrow */}
                 {index < 2 && (
-                  <div className="hidden md:flex absolute -right-6 top-1/2 transform -translate-y-1/2">
+                  <div className="hidden md:flex absolute -right-6 top-1/2 transform -translate-y-1/2 z-20">
                     <ArrowRight className="w-8 h-8 text-blue-500" />
                   </div>
                 )}
-              </motion.div>
+              </ThreeDCard>
             ))}
           </motion.div>
         </div>
@@ -264,13 +268,13 @@ const LandingPage = () => {
               variants={itemVariants}
               className="text-4xl md:text-5xl lg:text-6xl font-serif font-light mb-8 text-slate-900"
             >
-              About <span className="gradient-gold-text font-semibold">EventHub</span>
+              About <span className="gradient-gold-text font-semibold">FestivLink</span>
             </motion.h2>
             <motion.p
               variants={itemVariants}
               className="text-lg md:text-xl text-slate-700 leading-relaxed mb-8"
             >
-              We believe every event deserves excellence. EventHub connects customers
+              We believe every event deserves excellence. FestivLink connects customers
               with verified professionals across photography, catering, decoration, and
               more. Our platform makes hiring top talent simple, transparent, and
               stress-free.
@@ -280,7 +284,7 @@ const LandingPage = () => {
               className="text-lg md:text-xl text-slate-700 leading-relaxed mb-12"
             >
               Whether you're a professional looking to showcase your work or an organizer
-              seeking the best vendors, EventHub is your trusted platform for success.
+              seeking the best vendors, FestivLink is your trusted platform for success.
             </motion.p>
 
             <motion.div variants={itemVariants} className="grid md:grid-cols-2 gap-8">

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import ThreeDCard from './ui/ThreeDCard'
 
 const Hero = () => {
   const navigate = useNavigate()
@@ -148,37 +149,39 @@ const Hero = () => {
             initial={{ opacity: 0, scale: 0.95, x: 40 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.4 }}
-            className="relative h-96 lg:h-[600px]"
+            className="relative h-96 lg:h-[600px] w-full"
           >
-            <div className="absolute inset-0 rounded-3xl overflow-hidden glass-dark shadow-hero-glow border border-blue-500/30">
-              <img
-                src="https://images.unsplash.com/photo-1541538670337-c53313ad7c00?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWFycmlhZ2V8ZW58MHwxfDB8fHww"
-                alt="Premium event"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent" />
+            <ThreeDCard className="w-full h-full">
+              <div className="absolute inset-0 rounded-3xl overflow-hidden glass-dark shadow-hero-glow border border-blue-500/30 w-full h-full">
+                <img
+                  src="https://images.unsplash.com/photo-1541538670337-c53313ad7c00?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWFycmlhZ2V8ZW58MHwxfDB8fHww"
+                  alt="Premium event"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
-              {/* Floating Badge */}
-              <motion.div
-                className="absolute bottom-8 left-8 right-8 glass-accent rounded-2xl p-6"
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-              >
-                <p className="text-sm text-slate-600 font-medium mb-2">
-                  LIVE EVENTS
-                </p>
-                <p className="text-2xl font-bold text-slate-900">2000+ Happening Now</p>
-              </motion.div>
-            </div>
+                {/* Floating Badge */}
+                <motion.div
+                  className="absolute bottom-8 left-8 right-8 glass-accent rounded-2xl p-6 border border-white/10"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                >
+                  <p className="text-sm text-yellow-400 font-medium mb-2 uppercase tracking-widest">
+                    ★ LIVE MARKETPLACE
+                  </p>
+                  <p className="text-2xl font-bold text-white">2000+ Verified Vendors</p>
+                </motion.div>
+              </div>
+            </ThreeDCard>
 
             {/* Floating Elements */}
             <motion.div
-              className="absolute -top-12 -right-12 w-40 h-40 bg-gradient-to-br from-blue-400/15 to-transparent rounded-full blur-2xl"
+              className="absolute -top-12 -right-12 w-40 h-40 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-full blur-2xl"
               animate={{ y: [0, 20, 0], rotate: [0, 180, 360] }}
               transition={{ duration: 8, repeat: Infinity }}
             />
             <motion.div
-              className="absolute -bottom-8 left-1/4 w-32 h-32 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-full blur-2xl"
+              className="absolute -bottom-8 left-1/4 w-32 h-32 bg-gradient-to-tr from-purple-500/10 to-transparent rounded-full blur-2xl"
               animate={{ x: [0, 30, 0], rotate: [360, 180, 0] }}
               transition={{ duration: 10, repeat: Infinity }}
             />

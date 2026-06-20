@@ -60,7 +60,7 @@ const RoleSelection = () => {
               Find & book verified photographers, caterers, decorators and more for your perfect event.
             </p>
             <Link 
-              to="/signup" 
+              to="/signup?role=customer" 
               className="inline-block px-10 lg:px-14 py-6 lg:py-8 btn-gold shadow-gold-glow-lg hover:shadow-hero-glow font-light text-xl lg:text-2xl tracking-wide relative z-20"
             >
               Start Hiring
@@ -91,7 +91,7 @@ const RoleSelection = () => {
               Build your portfolio and connect with thousands of event organizers looking for professionals like you.
             </p>
             <Link 
-              to="/signup" 
+              to="/signup?role=vendor" 
               className="inline-block px-10 lg:px-14 py-6 lg:py-8 btn-purple shadow-purple-glow-lg hover:shadow-hero-glow font-light text-xl lg:text-2xl tracking-wide relative z-20"
             >
               Join as Professional

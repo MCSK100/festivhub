@@ -5,7 +5,7 @@ const reviews = [
   {
     name: 'Priya S.',
     role: 'Bride, Mumbai',
-    quote: 'Found our dream photographer through EventHub. The portfolios made our choice effortless – wedding was flawless!',
+    quote: 'Found our dream photographer through FestivLink. The portfolios made our choice effortless – wedding was flawless!',
     rating: 5,
     accentColor: 'blue',
   },

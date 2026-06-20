@@ -1,6 +1,7 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const ServiceProvider = require('../models/ServiceProvider')
 const authMiddleware = require('../middleware/auth');
 const router = express.Router()
 
@@ -27,6 +28,25 @@ router.post('/register', async (req, res) => {
       role,
       trialExpiration
     })
+
+    if (role === 'vendor') {
+      const provider = new ServiceProvider({
+        userId: user._id,
+        name: name || email.split('@')[0],
+        category: 'Photographer', // Default category
+        experience: '0',
+        companyName: '',
+        description: '',
+        profileImage: '',
+        location: { city: '', state: '' },
+        priceRange: 'Contact for pricing',
+        portfolioImages: [],
+        gallery: []
+      })
+      await provider.save()
+      user.providerProfile = provider._id
+    }
+
     await user.save()
 
     // Generate JWT

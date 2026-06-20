@@ -113,9 +113,30 @@ router.get('/', async (req, res) => {
 // Get current vendor's profile
 router.get('/me', authMiddleware, async (req, res) => {
   try {
-    const provider = await ServiceProvider.findOne({ userId: req.user._id })
+    let provider = await ServiceProvider.findOne({ userId: req.user._id })
     if (!provider) {
-      return res.status(404).json({ error: 'Provider profile not found' })
+      if (req.user.role === 'vendor') {
+        provider = new ServiceProvider({
+          userId: req.user._id,
+          name: req.user.name || req.user.email.split('@')[0],
+          category: 'Photographer', // Default category
+          experience: '0',
+          companyName: '',
+          description: '',
+          profileImage: '',
+          location: { city: '', state: '' },
+          priceRange: 'Contact for pricing',
+          portfolioImages: [],
+          gallery: []
+        })
+        await provider.save()
+
+        // Link back to user model
+        req.user.providerProfile = provider._id
+        await req.user.save()
+      } else {
+        return res.status(404).json({ error: 'Provider profile not found' })
+      }
     }
     res.json(provider)
   } catch (error) {
@@ -188,9 +209,12 @@ router.post('/profile-image', authMiddleware, upload.single('image'), async (req
 })
 
 // Delete portfolio image
-router.delete('/portfolio/:imageUrl', authMiddleware, async (req, res) => {
+router.delete('/portfolio', authMiddleware, async (req, res) => {
   try {
-    const { imageUrl } = req.params
+    const imageUrl = req.query.imageUrl
+    if (!imageUrl) {
+      return res.status(400).json({ error: 'Image URL is required' })
+    }
     
     const provider = await ServiceProvider.findOneAndUpdate(
       { userId: req.user._id },
@@ -201,8 +225,6 @@ router.delete('/portfolio/:imageUrl', authMiddleware, async (req, res) => {
     if (!provider) {
       return res.status(404).json({ error: 'Provider profile not found' })
     }
-    
-    // Optionally delete from Cloudinary (you might want to implement this)
     
     res.json({ message: 'Image deleted successfully', provider })
   } catch (error) {

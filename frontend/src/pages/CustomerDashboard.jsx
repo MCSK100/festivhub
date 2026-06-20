@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { Search, LogOut, Calendar, Star, X, Calendar as CalendarIcon, MapPin, Phone } from 'lucide-react'
+import { Search, LogOut, Calendar, Star, X, Calendar as CalendarIcon, MapPin, Info, AlertTriangle } from 'lucide-react'
 import api from '../services/api'
+import { useToast } from '../components/ui/Toast'
 
 const CustomerDashboard = () => {
   const { user, logout } = useAuth()
+  const { success, error: toastError, info } = useToast()
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -16,6 +18,7 @@ const CustomerDashboard = () => {
   const [bookingLoading, setBookingLoading] = useState(false)
   const [bookingsLoading, setBookingsLoading] = useState(false)
   const [bookingModal, setBookingModal] = useState({ open: false, vendor: null })
+  const [cancelModal, setCancelModal] = useState({ open: false, bookingId: null })
   const [bookingForm, setBookingForm] = useState({
     date: '',
     notes: ''
@@ -86,7 +89,7 @@ const CustomerDashboard = () => {
     today.setHours(0, 0, 0, 0)
 
     if (selectedDate < today) {
-      alert('Please select a date in the future')
+      toastError('Please select a date in the future')
       return
     }
 
@@ -95,7 +98,7 @@ const CustomerDashboard = () => {
       const bookingData = {
         vendorId: bookingModal.vendor._id,
         serviceTitle: bookingModal.vendor.category,
-        price: parseInt(bookingModal.vendor.priceRange?.replace(/[^\d]/g, '') || '0'),
+        price: parseInt(bookingModal.vendor.priceRange?.replace(/[^\d]/g, '') || '5000'),
         date: bookingForm.date,
         notes: bookingForm.notes
       }
@@ -103,35 +106,41 @@ const CustomerDashboard = () => {
       await api.post('/bookings', bookingData)
       setBookingModal({ open: false, vendor: null })
       fetchBookings() // Refresh bookings
-      alert('Booking created successfully!')
+      success('Booking requested successfully! The vendor will review it shortly.')
     } catch (error) {
       console.error('Error creating booking:', error)
-      alert(error.response?.data?.error || 'Failed to create booking. Please try again.')
+      toastError(error.response?.data?.error || 'Failed to request booking. Please try again.')
     } finally {
       setBookingLoading(false)
     }
   }
 
-  const handleCancelBooking = async (bookingId) => {
-    if (!confirm('Are you sure you want to cancel this booking?')) return
+  const triggerCancelConfirm = (bookingId) => {
+    setCancelModal({ open: true, bookingId })
+  }
+
+  const handleCancelBooking = async () => {
+    const bookingId = cancelModal.bookingId
+    if (!bookingId) return
 
     try {
       await api.put(`/bookings/${bookingId}/cancel`)
+      setCancelModal({ open: false, bookingId: null })
       fetchBookings() // Refresh bookings
-      alert('Booking cancelled successfully!')
+      success('Booking cancelled successfully.')
     } catch (error) {
       console.error('Error cancelling booking:', error)
-      alert('Failed to cancel booking. Please try again.')
+      toastError('Failed to cancel booking. Please try again.')
     }
   }
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800'
-      case 'confirmed': return 'bg-blue-100 text-blue-800'
-      case 'completed': return 'bg-green-100 text-green-800'
-      case 'cancelled': return 'bg-red-100 text-red-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'pending': return 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+      case 'confirmed': return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+      case 'completed': return 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
+      case 'cancelled': return 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+      default: return 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
     }
   }
 
@@ -159,28 +168,28 @@ const CustomerDashboard = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen pt-28 lg:pt-32 navy-bg backdrop-blur-xl pb-20"
+      className="min-h-screen pt-28 lg:pt-32 navy-bg pb-20 relative z-10"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12 flex justify-between items-start"
+          className="mb-12 flex flex-col md:flex-row md:justify-between md:items-center gap-6"
         >
           <div>
-            <h1 className="text-6xl lg:text-7xl xl:text-8xl font-serif font-light italic mb-4 gradient-gold-text">
-              Customer Dashboard
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-light leading-tight">
+              Customer <span className="gradient-gold-text font-semibold">Dashboard</span>
             </h1>
-            <p className="text-2xl lg:text-3xl text-slate-700 font-light max-w-4xl">
-              Welcome back, <span className="font-semibold text-slate-900">{user?.name || user?.email}</span>
+            <p className="text-slate-400 mt-2 font-medium">
+              Welcome back, <span className="text-white font-semibold">{user?.name || user?.email}</span>
             </p>
           </div>
           <motion.button
             onClick={handleLogout}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-red-500/80 hover:bg-red-600 text-white rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2"
+            className="px-6 py-3 bg-rose-600/90 hover:bg-rose-700 text-white rounded-xl font-semibold text-sm transition-all duration-300 flex items-center gap-2 shadow-lg self-start md:self-auto"
           >
             <LogOut className="w-4 h-4" />
             Logout
@@ -192,13 +201,13 @@ const CustomerDashboard = () => {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-6 bg-blue-50 border border-blue-200/50 rounded-2xl flex items-start gap-4"
+            className="mb-10 p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-3xl flex items-start gap-4"
           >
-            <Calendar className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-slate-900 mb-1">30-Day Free Trial Active</h3>
-              <p className="text-slate-700">
-                You have <span className="font-bold text-blue-600">{trialDaysLeft} days</span> remaining to explore premium services.
+            <Calendar className="w-6 h-6 text-indigo-400 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="font-semibold text-white mb-1">30-Day Free Trial Active</h3>
+              <p className="text-slate-300 text-sm">
+                You have <span className="font-bold text-yellow-400">{trialDaysLeft} days left</span> to hire premium event services under trial.
               </p>
             </div>
           </motion.div>
@@ -212,13 +221,13 @@ const CustomerDashboard = () => {
           className="mb-12"
         >
           <div className="relative max-w-2xl">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-400" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search vendors by name, service, or location..."
-              className="w-full pl-12 pr-6 py-4 bg-white/80 backdrop-blur-xl border border-blue-200/60 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all shadow-lg"
+              placeholder="Search vendors by name, category, or location..."
+              className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all shadow-lg text-lg"
             />
           </div>
         </motion.div>
@@ -230,18 +239,31 @@ const CustomerDashboard = () => {
           transition={{ delay: 0.2 }}
           className="mb-16"
         >
-          <h2 className="text-3xl font-serif font-light mb-6 text-slate-900">Browse by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <h2 className="text-2xl font-serif font-light mb-6 text-white">Browse by Category</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <motion.button
+              onClick={() => setSelectedCategory('all')}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className={`p-4 rounded-2xl font-semibold transition-all text-center border ${
+                selectedCategory === 'all'
+                  ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-slate-950 border-transparent shadow-lg shadow-yellow-500/10'
+                  : 'bg-white/5 border-white/5 text-white hover:border-indigo-500/30'
+              }`}
+            >
+              <div className="text-2xl mb-2">🎉</div>
+              <div className="text-sm">All Services</div>
+            </motion.button>
             {categories.map((cat) => (
               <motion.button
                 key={cat.value}
                 onClick={() => setSelectedCategory(cat.value)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`p-4 rounded-2xl font-medium transition-all text-center ${
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className={`p-4 rounded-2xl font-semibold transition-all text-center border ${
                   selectedCategory === cat.value
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
-                    : 'bg-white/80 border border-blue-200/50 text-slate-900 hover:border-blue-500/60'
+                    ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-slate-950 border-transparent shadow-lg shadow-yellow-500/10'
+                    : 'bg-white/5 border-white/5 text-white hover:border-indigo-500/30'
                 }`}
               >
                 <div className="text-2xl mb-2">{cat.icon}</div>
@@ -257,10 +279,10 @@ const CustomerDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <h2 className="text-3xl font-serif font-light mb-8 text-slate-900">Browse Vendors</h2>
+          <h2 className="text-2xl font-serif font-light mb-8 text-white">Available Professionals</h2>
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -269,71 +291,79 @@ const CustomerDashboard = () => {
                   key={vendor._id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -8 }}
-                  className="glass-accent rounded-2xl overflow-hidden border border-blue-500/30 hover:border-blue-500/60 transition-all"
+                  viewport={{ once: true }}
+                  className="glass-accent rounded-3xl overflow-hidden border border-white/10 hover:border-indigo-500/30 transition-all flex flex-col justify-between"
                 >
-                  {/* Image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={vendor.gallery?.[0] || 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&w=400&fit=crop'}
-                      alt={vendor.name}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-xl px-3 py-1 rounded-full text-sm font-semibold text-slate-900">
-                      ⭐ {vendor.ratings?.average?.toFixed(1) || 'New'}
+                  <div>
+                    {/* Image */}
+                    <div className="relative h-48 overflow-hidden bg-slate-950">
+                      <img
+                        src={vendor.gallery?.[0] || 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&w=400&fit=crop'}
+                        alt={vendor.name}
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                      <div className="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-xl px-3 py-1 rounded-full text-xs font-bold text-yellow-400 border border-white/10">
+                        ⭐ {vendor.ratings?.average ? vendor.ratings.average.toFixed(1) : 'New'}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-bold text-white leading-snug">{vendor.name}</h3>
+                      </div>
+                      <p className="text-xs text-yellow-400 font-semibold uppercase tracking-wider mb-3">{vendor.category}</p>
+                      
+                      {vendor.location?.city && (
+                        <p className="text-sm text-slate-300 mb-4 flex items-center gap-1.5">
+                          <MapPin className="w-4 h-4 text-indigo-400" />
+                          {vendor.location.city}, {vendor.location.state}
+                        </p>
+                      )}
+
+                      {/* Ratings stars */}
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${
+                                i < Math.floor(vendor.ratings?.average || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-slate-600'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs font-semibold text-slate-400">
+                          ({vendor.ratings?.count || 0} reviews)
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2">{vendor.name}</h3>
-                    <p className="text-sm text-slate-600 mb-2">{vendor.category}</p>
-                    {vendor.location?.city && (
-                      <p className="text-sm text-slate-500 mb-4 flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
-                        {vendor.location.city}, {vendor.location.state}
-                      </p>
-                    )}
-
-                    {/* Rating */}
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < Math.floor(vendor.ratings?.average || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-slate-300'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm font-medium text-slate-700">
-                        {vendor.ratings?.average?.toFixed(1) || '0.0'} ({vendor.ratings?.count || 0} reviews)
-                      </span>
+                  {/* Pricing and Book Button */}
+                  <div className="px-6 pb-6 pt-2 border-t border-white/5 flex justify-between items-center">
+                    <div>
+                      <p className="text-xs text-slate-500 uppercase font-semibold">Estimated Price</p>
+                      <p className="text-xl font-extrabold text-white">{vendor.priceRange || 'On Request'}</p>
                     </div>
-
-                    {/* Price & Button */}
-                    <div className="flex justify-between items-center">
-                      <p className="text-2xl font-bold text-blue-600">{vendor.priceRange || 'Contact for pricing'}</p>
-                      <motion.button
-                        onClick={() => handleBookNow(vendor)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:shadow-lg transition-all"
-                      >
-                        Book Now
-                      </motion.button>
-                    </div>
+                    <motion.button
+                      onClick={() => handleBookNow(vendor)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-5 py-2.5 bg-gradient-to-r from-yellow-500 to-amber-600 text-slate-950 font-bold rounded-xl shadow-lg transition-all text-sm"
+                    >
+                      Book Now
+                    </motion.button>
                   </div>
                 </motion.div>
               ))}
             </div>
           )}
           {!loading && filteredVendors.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-slate-600 text-lg">No vendors found matching your criteria.</p>
+            <div className="text-center py-12 glass-dark rounded-3xl border border-white/10">
+              <p className="text-slate-400">No service providers found matching your search.</p>
             </div>
           )}
         </motion.div>
@@ -343,24 +373,24 @@ const CustomerDashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-16"
+          className="mt-20"
         >
-          <h2 className="text-3xl font-serif font-light mb-8 text-slate-900">My Bookings</h2>
+          <h2 className="text-2xl font-serif font-light mb-8 text-white">My Requested Bookings</h2>
 
           {/* Booking Tabs */}
           <div className="flex gap-2 mb-8">
             {[
-              { key: 'all', label: 'All Bookings' },
-              { key: 'upcoming', label: 'Upcoming' },
-              { key: 'completed', label: 'Completed' }
+              { key: 'all', label: 'All Requests' },
+              { key: 'upcoming', label: 'Active & Pending' },
+              { key: 'completed', label: 'Completed Orders' }
             ].map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setBookingTab(tab.key)}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all border ${
                   bookingTab === tab.key
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white/80 text-slate-700 hover:bg-white'
+                    ? 'bg-indigo-600 text-white border-transparent shadow-lg shadow-indigo-500/10'
+                    : 'bg-white/5 border-white/5 text-slate-300 hover:bg-white/10'
                 }`}
               >
                 {tab.label}
@@ -370,15 +400,15 @@ const CustomerDashboard = () => {
 
           {bookingsLoading ? (
             <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
             </div>
           ) : filteredBookings.length === 0 ? (
-            <div className="text-center py-12 glass-accent rounded-2xl">
-              <CalendarIcon className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-              <p className="text-slate-600 text-lg">
-                {bookingTab === 'all' ? 'No bookings yet. Start by booking a vendor above!' :
-                 bookingTab === 'upcoming' ? 'No upcoming bookings.' :
-                 'No completed bookings yet.'}
+            <div className="text-center py-16 glass-dark rounded-3xl border border-white/10">
+              <CalendarIcon className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+              <p className="text-slate-400 text-sm max-w-sm mx-auto">
+                {bookingTab === 'all' ? 'No bookings scheduled. Browse categories to request event staff!' :
+                 bookingTab === 'upcoming' ? 'No active upcoming bookings.' :
+                 'No completed event services registered.'}
               </p>
             </div>
           ) : (
@@ -388,41 +418,50 @@ const CustomerDashboard = () => {
                   key={booking._id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  className="glass-accent rounded-2xl p-6 border border-blue-500/30"
+                  className="glass-accent rounded-3xl p-6 border border-white/10 flex flex-col justify-between"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-slate-900">{booking.serviceTitle}</h3>
-                      <p className="text-sm text-slate-600">{booking.vendor?.name}</p>
+                  <div>
+                    <div className="flex justify-between items-start gap-4 mb-4">
+                      <div>
+                        <h3 className="text-lg font-bold text-white">{booking.serviceTitle}</h3>
+                        <p className="text-xs text-slate-400 mt-0.5">Provider: {booking.vendor?.name}</p>
+                      </div>
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusColor(booking.status)}`}>
+                        {booking.status}
+                      </span>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
-                      {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                    </span>
-                  </div>
 
-                  <div className="space-y-2 mb-4">
-                    <p className="text-sm text-slate-700 flex items-center gap-2">
-                      <CalendarIcon className="w-4 h-4" />
-                      {new Date(booking.date).toLocaleDateString()}
-                    </p>
-                    <p className="text-sm font-semibold text-blue-600">₹{booking.price.toLocaleString()}</p>
-                    <p className="text-xs text-slate-500">
-                      Booked on {new Date(booking.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
+                    <div className="space-y-2 mb-6 bg-white/[0.02] border border-white/5 p-4 rounded-2xl">
+                      <p className="text-sm text-slate-300 flex items-center gap-2">
+                        <CalendarIcon className="w-4 h-4 text-yellow-500" />
+                        {new Date(booking.date).toLocaleDateString(undefined, {
+                          weekday: 'short',
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </p>
+                      <p className="text-lg font-extrabold text-white">₹{booking.price.toLocaleString()}</p>
+                      <p className="text-[10px] text-slate-500 font-semibold">
+                        Submitted: {new Date(booking.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
 
-                  {booking.notes && (
-                    <p className="text-sm text-slate-600 mb-4 italic">"{booking.notes}"</p>
-                  )}
+                    {booking.notes && (
+                      <p className="text-sm text-slate-300 mb-6 italic bg-white/[0.03] p-3 rounded-xl border border-white/5">
+                        "{booking.notes}"
+                      </p>
+                    )}
+                  </div>
 
                   {booking.status !== 'completed' && booking.status !== 'cancelled' && (
                     <motion.button
-                      onClick={() => handleCancelBooking(booking._id)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="w-full px-4 py-2 bg-red-500/80 hover:bg-red-600 text-white rounded-lg font-medium text-sm transition-all"
+                      onClick={() => triggerCancelConfirm(booking._id)}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="w-full px-4 py-2.5 bg-rose-600/90 hover:bg-rose-700 text-white rounded-xl font-bold text-sm transition-all shadow-md mt-2"
                     >
-                      Cancel Booking
+                      Cancel Booking Request
                     </motion.button>
                   )}
                 </motion.div>
@@ -432,91 +471,132 @@ const CustomerDashboard = () => {
         </motion.div>
       </div>
 
-      {/* Booking Modal */}
+      {/* Booking Form Modal */}
       <AnimatePresence>
         {bookingModal.open && bookingModal.vendor && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
             onClick={() => setBookingModal({ open: false, vendor: null })}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+              className="bg-[#0f1020] border border-white/10 rounded-3xl max-w-md w-full p-6"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h2 className="text-2xl font-serif font-light text-slate-900">Book Service</h2>
-                    <p className="text-slate-600">{bookingModal.vendor.name}</p>
-                  </div>
-                  <button
-                    onClick={() => setBookingModal({ open: false, vendor: null })}
-                    className="p-2 hover:bg-slate-100 rounded-full transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h2 className="text-2xl font-serif font-light text-white">Request Service</h2>
+                  <p className="text-slate-400 text-sm mt-1">Book {bookingModal.vendor.name}</p>
+                </div>
+                <button
+                  onClick={() => setBookingModal({ open: false, vendor: null })}
+                  className="p-2 hover:bg-white/5 rounded-full text-slate-400 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleBookingSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">
+                    Event Date *
+                  </label>
+                  <input
+                    type="date"
+                    value={bookingForm.date}
+                    onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })}
+                    min={new Date().toISOString().split('T')[0]}
+                    className="w-full px-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white"
+                    required
+                  />
                 </div>
 
-                <form onSubmit={handleBookingSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Service Date *
-                    </label>
-                    <input
-                      type="date"
-                      value={bookingForm.date}
-                      onChange={(e) => setBookingForm({ ...bookingForm, date: e.target.value })}
-                      min={new Date().toISOString().split('T')[0]}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                      required
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">
+                    Message or Requirements (Optional)
+                  </label>
+                  <textarea
+                    value={bookingForm.notes}
+                    onChange={(e) => setBookingForm({ ...bookingForm, notes: e.target.value })}
+                    placeholder="Describe your event parameters, staging requirements, and timing expectations..."
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 resize-none text-white"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Additional Notes (Optional)
-                    </label>
-                    <textarea
-                      value={bookingForm.notes}
-                      onChange={(e) => setBookingForm({ ...bookingForm, notes: e.target.value })}
-                      placeholder="Any special requirements or notes..."
-                      rows={3}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none"
-                    />
+                <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-4">
+                  <h3 className="font-bold text-white text-sm mb-2">Summary</h3>
+                  <div className="space-y-1 text-sm text-slate-400">
+                    <p><strong>Professional:</strong> {bookingModal.vendor.name}</p>
+                    <p><strong>Service category:</strong> {bookingModal.vendor.category}</p>
+                    <p><strong>Base pricing:</strong> {bookingModal.vendor.priceRange || 'On Request'}</p>
                   </div>
+                </div>
 
-                  <div className="bg-slate-50 rounded-xl p-4">
-                    <h3 className="font-semibold text-slate-900 mb-2">Booking Summary</h3>
-                    <div className="space-y-1 text-sm text-slate-600">
-                      <p><strong>Service:</strong> {bookingModal.vendor.category}</p>
-                      <p><strong>Price:</strong> {bookingModal.vendor.priceRange}</p>
-                      <p><strong>Location:</strong> {bookingModal.vendor.location?.city || 'TBD'}</p>
-                    </div>
-                  </div>
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setBookingModal({ open: false, vendor: null })}
+                    className="flex-1 px-4 py-3 border border-white/10 text-white rounded-xl hover:bg-white/5 transition-colors font-semibold"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={bookingLoading}
+                    className="flex-1 px-4 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 text-slate-950 rounded-xl font-bold hover:shadow-lg disabled:opacity-50"
+                  >
+                    {bookingLoading ? 'Requesting...' : 'Request Booking'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setBookingModal({ open: false, vendor: null })}
-                      className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={bookingLoading}
-                      className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {bookingLoading ? 'Booking...' : 'Confirm Booking'}
-                    </button>
-                  </div>
-                </form>
+      {/* Cancel Confirmation Modal */}
+      <AnimatePresence>
+        {cancelModal.open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/75 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
+            onClick={() => setCancelModal({ open: false, bookingId: null })}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-[#0f1020] border border-white/10 rounded-2xl max-w-sm w-full p-6 text-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-12 h-12 bg-rose-500/10 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-500/20">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Cancel Booking Request?</h3>
+              <p className="text-slate-400 text-sm mb-6">
+                Are you sure you want to withdraw this service request? This will inform the service provider.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setCancelModal({ open: false, bookingId: null })}
+                  className="flex-1 py-3 border border-white/10 text-white rounded-xl hover:bg-white/5 transition-colors font-semibold"
+                >
+                  Dismiss
+                </button>
+                <button
+                  onClick={handleCancelBooking}
+                  className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl transition-all font-semibold shadow-lg"
+                >
+                  Withdraw
+                </button>
               </div>
             </motion.div>
           </motion.div>

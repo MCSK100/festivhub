@@ -38,7 +38,7 @@ const NavBar = () => {
             to="/"
             className="text-3xl lg:text-4xl font-serif font-light italic gradient-gold-text hover:scale-110 transition-transform duration-300"
           >
-            EventHub
+            FestivLink
           </Link>
 
           {/* Desktop Navigation */}
@@ -70,12 +70,12 @@ const NavBar = () => {
                 >
                   Sign In
                 </Link>
-                <button
-                  onClick={() => (window.location.href = '/signup')}
-                  className="btn-premium-gold px-7 py-3 text-sm font-semibold"
+                <Link
+                  to="/role-select"
+                  className="btn-premium-gold px-7 py-3 text-sm font-semibold flex items-center justify-center"
                 >
                   Get Started
-                </button>
+                </Link>
               </>
             ) : (
               <>
@@ -139,15 +139,15 @@ const NavBar = () => {
                     >
                       Sign In
                     </Link>
-                    <button
+                    <Link
+                      to="/role-select"
                       onClick={() => {
                         setMobileMenuOpen(false)
-                        window.location.href = '/signup'
                       }}
-                      className="btn-premium-gold px-6 py-3 text-sm font-semibold w-full"
+                      className="btn-premium-gold px-6 py-3 text-sm font-semibold w-full text-center block"
                     >
                       Get Started
-                    </button>
+                    </Link>
                   </>
                 ) : (
                   <>
