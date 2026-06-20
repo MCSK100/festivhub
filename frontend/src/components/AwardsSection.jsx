@@ -1,0 +1,82 @@
+import { motion } from 'framer-motion'
+import { Award } from 'lucide-react'
+
+const awards = [
+  { year: '2025', title: 'Event Company of the Year', organization: 'Event Tech Awards' },
+  { year: '2024', title: 'Best Wedding Experience', organization: 'Luxury Lifestyle Awards' },
+  { year: '2024', title: 'Innovation in Events', organization: 'Global Event Summit' },
+  { year: '2023', title: 'Top Event Planner', organization: 'Business Excellence' },
+]
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.5, ease: 'easeOut' },
+  },
+}
+
+const AwardsSection = () => {
+  return (
+    <section className="relative py-20 lg:py-28 premium-bg overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gold/3 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+        {/* Section Header */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+          className="text-center mb-12"
+        >
+          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 text-gold mb-4">
+            <Award className="w-5 h-5" />
+            <span className="text-sm font-medium uppercase tracking-widest">Recognition</span>
+          </motion.div>
+          <motion.h2
+            variants={itemVariants}
+            className="text-3xl md:text-4xl lg:text-5xl font-display font-light"
+          >
+            Awards & <span className="gradient-gold">Achievements</span>
+          </motion.h2>
+        </motion.div>
+
+        {/* Awards Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {awards.map((award, index) => (
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              className="glass-card rounded-2xl p-6 text-center hover:border-gold/30 transition-colors"
+            >
+              <div className="text-gold text-sm font-medium mb-2">{award.year}</div>
+              <h3 className="text-lg font-semibold mb-2">{award.title}</h3>
+              <p className="text-gray-400 text-sm">{award.organization}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+export default AwardsSection
