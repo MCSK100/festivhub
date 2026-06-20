@@ -5,7 +5,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 // Components
-import Hero from '../components/Hero'
+import { HorizonHeroSection } from '../components/ui/horizon-hero-section'
 import ServicesSection from '../components/ServicesSection'
 import MetricsSection from '../components/MetricsSection'
 import ProcessSection from '../components/ProcessSection'
@@ -149,9 +149,9 @@ const LandingPage = () => {
   }, [])
 
   return (
-    <main ref={mainRef} className="bg-white min-h-screen">
+    <main ref={mainRef} className="min-h-screen">
       {/* Hero Section */}
-      <Hero />
+      <HorizonHeroSection />
 
       {/* Trust Bar / Marquee */}
       <TrustBar />
