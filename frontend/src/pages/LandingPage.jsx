@@ -15,7 +15,6 @@ import AwardsSection from '../components/AwardsSection'
 import FeaturedEventsSection from '../components/FeaturedEventsSection'
 import TrustBar from '../components/TrustBar'
 import CategoryGrid from '../components/CategoryGrid'
-import VideoShowcase from '../components/VideoShowcase'
 import ParallaxShowcase from '../components/ParallaxShowcase'
 
 // Register GSAP plugins
@@ -178,9 +177,6 @@ const LandingPage = () => {
       <div className="featured-events">
         <FeaturedEventsSection />
       </div>
-
-      {/* Video Showcase */}
-      <VideoShowcase />
 
       {/* Process Timeline */}
       <div className="process-section" style={{ perspective: '1000px' }}>

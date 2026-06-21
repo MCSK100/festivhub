@@ -22,7 +22,6 @@ export const HorizonHeroSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [currentSection, setCurrentSection] = useState(1);
   const [isReady, setIsReady] = useState(false);
-  const [isScrolledPast, setIsScrolledPast] = useState(false);
   const totalSections = 2;
   
   const threeRefs = useRef({
@@ -476,10 +475,6 @@ export const HorizonHeroSection = () => {
       const newSection = Math.floor(progress * totalSections);
       setCurrentSection(newSection);
 
-      const heroHeight = containerRef.current ? containerRef.current.offsetHeight : window.innerHeight * 3;
-      const blurThreshold = window.innerHeight * 0.85;
-      setIsScrolledPast(scrollY > blurThreshold);
-
       const { current: refs } = threeRefs;
       
       const totalProgress = progress * totalSections;
@@ -530,9 +525,9 @@ export const HorizonHeroSection = () => {
 
   return (
     <div ref={containerRef} className="horizon-hero-container">
-      <canvas ref={canvasRef} className={`horizon-hero-canvas ${isScrolledPast ? 'is-blurred' : ''}`} />
+      <canvas ref={canvasRef} className="horizon-hero-canvas" />
       
-      <div ref={menuRef} className={`horizon-side-menu ${isScrolledPast ? 'is-blurred' : ''}`} style={{ visibility: 'hidden' }}>
+      <div ref={menuRef} className="horizon-side-menu" style={{ visibility: 'hidden' }}>
         <div className="horizon-menu-icon">
           <span></span>
           <span></span>
@@ -556,7 +551,7 @@ export const HorizonHeroSection = () => {
         </div>
       </div>
 
-      <div ref={scrollProgressRef} className={`horizon-scroll-progress ${isScrolledPast ? 'is-blurred' : ''}`} style={{ visibility: 'hidden' }}>
+      <div ref={scrollProgressRef} className="horizon-scroll-progress" style={{ visibility: 'hidden' }}>
         <div className="horizon-scroll-text">SCROLL</div>
         <div className="horizon-progress-track">
           <div 
@@ -627,12 +622,6 @@ export const HorizonHeroSection = () => {
           width: 100%;
           height: 100%;
           z-index: 1;
-          transition: filter 0.6s ease, opacity 0.6s ease;
-        }
-
-        .horizon-hero-canvas.is-blurred {
-          filter: blur(12px);
-          opacity: 0.25;
         }
 
         .horizon-side-menu {
@@ -645,12 +634,6 @@ export const HorizonHeroSection = () => {
           flex-direction: column;
           align-items: center;
           gap: 1.5rem;
-          transition: filter 0.6s ease, opacity 0.6s ease;
-        }
-
-        .horizon-side-menu.is-blurred {
-          filter: blur(8px);
-          opacity: 0.3;
         }
 
         .horizon-menu-icon {
@@ -741,12 +724,6 @@ export const HorizonHeroSection = () => {
           flex-direction: column;
           align-items: center;
           gap: 0.75rem;
-          transition: filter 0.6s ease, opacity 0.6s ease;
-        }
-
-        .horizon-scroll-progress.is-blurred {
-          filter: blur(6px);
-          opacity: 0.3;
         }
 
         .horizon-scroll-text {
@@ -781,7 +758,7 @@ export const HorizonHeroSection = () => {
 
         .horizon-scroll-sections {
           position: relative;
-          z-index: 50;
+          z-index: 5;
         }
 
         .horizon-content-section {
@@ -793,7 +770,6 @@ export const HorizonHeroSection = () => {
           text-align: center;
           padding: 2rem;
           padding-top: 6rem;
-          background: rgba(5, 5, 5, 0.6);
         }
 
         @media (max-width: 768px) {
