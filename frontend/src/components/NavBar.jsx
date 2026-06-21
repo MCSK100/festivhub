@@ -56,7 +56,7 @@ const NavBar = () => {
                 <Link to="/login" className="px-6 py-3 text-white/70 hover:text-white font-medium transition-colors duration-300 text-sm">
                   Sign In
                 </Link>
-                <Link to="/role-select" className="btn-primary px-7 py-3 text-sm font-semibold flex items-center justify-center">
+                <Link to="/signup" className="btn-primary px-7 py-3 text-sm font-semibold flex items-center justify-center">
                   Get Started
                 </Link>
               </>
@@ -110,9 +110,9 @@ const NavBar = () => {
                     <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="px-6 py-3 text-center text-gray-600 hover:text-gray-900 font-medium transition-colors duration-300 text-sm">
                       Sign In
                     </Link>
-                    <Link to="/role-select" onClick={() => setMobileMenuOpen(false)} className="btn-primary px-6 py-3 text-sm font-semibold w-full text-center block">
-                      Get Started
-                    </Link>
+<Link to="/signup" onClick={() => setMobileMenuOpen(false)} className="btn-primary px-6 py-3 text-sm font-semibold w-full text-center block">
+                        Get Started
+                      </Link>
                   </>
                 ) : (
                   <motion.button
