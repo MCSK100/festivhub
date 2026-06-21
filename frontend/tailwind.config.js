@@ -7,9 +7,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'Inter Var', 'ui-sans-serif', 'system-ui'],
-        serif: ['"Playfair Display"', '"Crimson Text"', 'serif'],
-        display: ['"Playfair Display"', '"Crimson Text"', 'serif'],
+        sans: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui'],
+        serif: ['"Cormorant Garamond"', 'serif'],
+        display: ['"Cormorant Garamond"', 'serif'],
       },
       spacing: {
         '18': '4.5rem',

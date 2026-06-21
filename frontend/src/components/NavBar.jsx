@@ -24,7 +24,7 @@ const NavBar = () => {
     <motion.nav
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed top-0 z-50 w-full glass border-b border-black/5 backdrop-blur-xl"
+      className="fixed top-0 z-50 w-full glass backdrop-blur-xl"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-20">
         <div className="flex justify-between items-center h-20 lg:h-24">
@@ -65,7 +65,7 @@ const NavBar = () => {
                 onClick={handleLogout}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-medium text-sm transition-all duration-300 border border-red-200"
+                className="px-6 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-medium text-sm transition-all duration-300"
               >
                 Logout
               </motion.button>
@@ -75,7 +75,7 @@ const NavBar = () => {
           {!isVendorDashboard && (
             <motion.button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-dark hover:border-primary/50 transition-colors"
+              className="lg:hidden p-2 rounded-lg text-gray-700 hover:text-primary-dark transition-colors"
               whileTap={{ scale: 0.95 }}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -89,7 +89,7 @@ const NavBar = () => {
             animate={{ opacity: mobileMenuOpen ? 1 : 0, height: mobileMenuOpen ? 'auto' : 0 }}
             className="lg:hidden overflow-hidden pb-6"
           >
-            <div className="flex flex-col gap-4 bg-white/90 rounded-xl p-4 mt-4 border border-gray-100 shadow-lg">
+            <div className="flex flex-col gap-4 bg-white/90 rounded-xl p-4 mt-4 shadow-lg">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -104,7 +104,7 @@ const NavBar = () => {
                   {link.label}
                 </Link>
               ))}
-              <div className="border-t border-gray-100 pt-4 mt-4 flex flex-col gap-3">
+              <div className="pt-4 mt-4 flex flex-col gap-3">
                 {!user ? (
                   <>
                     <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="px-6 py-3 text-center text-gray-600 hover:text-gray-900 font-medium transition-colors duration-300 text-sm">
@@ -119,7 +119,7 @@ const NavBar = () => {
                     onClick={() => { setMobileMenuOpen(false); handleLogout() }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-medium text-sm transition-all duration-300 w-full border border-red-200"
+                    className="px-6 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-medium text-sm transition-all duration-300 w-full"
                   >
                     Logout
                   </motion.button>
