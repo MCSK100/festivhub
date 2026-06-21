@@ -533,13 +533,11 @@ export const HorizonHeroSection = () => {
           <span></span>
           <span></span>
         </div>
-        <div className="horizon-vertical-text">FESTIVLINK</div>
+        <div className="horizon-vertical-text">FESTIV</div>
       </div>
 
       <div className="horizon-hero-content">
-        <h1 ref={titleRef} className="horizon-hero-title">
-          {splitTitle('FESTIVLINK')}
-        </h1>
+
         
         <div ref={subtitleRef} className="horizon-hero-subtitle">
           <p className="subtitle-line">
