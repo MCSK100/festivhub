@@ -24,7 +24,7 @@ const NavBar = () => {
     <motion.nav
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed top-0 z-50 w-full glass backdrop-blur-xl"
+      className="fixed top-0 z-50 w-full bg-transparent"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-20">
         <div className="flex justify-between items-center h-20 lg:h-24">
@@ -40,8 +40,8 @@ const NavBar = () => {
                   to={link.href}
                   className={`text-sm font-medium transition-all duration-300 pb-2 border-b-2 ${
                     isActive(link.href)
-                      ? 'text-primary-dark border-primary'
-                      : 'text-gray-500 border-transparent hover:text-gray-900 hover:border-primary/50'
+                      ? 'text-primary border-primary'
+                      : 'text-white/70 border-transparent hover:text-white hover:border-primary/50'
                   }`}
                 >
                   {link.label}
@@ -53,7 +53,7 @@ const NavBar = () => {
           <div className="hidden lg:flex items-center gap-4">
             {!user ? (
               <>
-                <Link to="/login" className="px-6 py-3 text-gray-600 hover:text-gray-900 font-medium transition-colors duration-300 text-sm">
+                <Link to="/login" className="px-6 py-3 text-white/70 hover:text-white font-medium transition-colors duration-300 text-sm">
                   Sign In
                 </Link>
                 <Link to="/role-select" className="btn-primary px-7 py-3 text-sm font-semibold flex items-center justify-center">
@@ -75,7 +75,7 @@ const NavBar = () => {
           {!isVendorDashboard && (
             <motion.button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-gray-700 hover:text-primary-dark transition-colors"
+              className="lg:hidden p-2 rounded-lg text-white/70 hover:text-white transition-colors"
               whileTap={{ scale: 0.95 }}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

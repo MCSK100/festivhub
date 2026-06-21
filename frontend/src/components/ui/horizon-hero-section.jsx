@@ -566,40 +566,20 @@ export const HorizonHeroSection = () => {
 
       <div className="horizon-scroll-sections">
         {[...Array(2)].map((_, i) => {
-          const titles = {
-            0: 'FESTIVLINK',
-            1: 'EXPERIENCE',
-            2: 'EXCELLENCE'
-          };
-          
-          const subtitles = {
-            0: {
-              line1: 'Crafting experiences that leave',
-              line2: 'lasting impressions'
-            },
-            1: {
-              line1: 'Where vision meets reality,',
-              line2: 'we shape the future of events'
-            },
-            2: {
-              line1: 'Extraordinary events,',
-              line2: 'flawless execution'
-            }
-          };
+          const titles = ['EXPERIENCE', 'EXCELLENCE'];
+          const subtitles = [
+            { line1: 'Where vision meets reality,', line2: 'we shape the future of events' },
+            { line1: 'Extraordinary events,', line2: 'flawless execution' }
+          ];
           
           return (
             <section key={i} className="horizon-content-section">
-              <h1 ref={titleRef} className="horizon-hero-title">
-                {splitTitle(titles[i + 1] || 'FESTIVLINK')}
+              <h1 className="horizon-hero-title">
+                {splitTitle(titles[i])}
               </h1>
-          
-              <div ref={subtitleRef} className="horizon-hero-subtitle">
-                <p className="subtitle-line">
-                  {subtitles[i + 1].line1}
-                </p>
-                <p className="subtitle-line">
-                  {subtitles[i + 1].line2}
-                </p>
+              <div className="horizon-hero-subtitle">
+                <p className="subtitle-line">{subtitles[i].line1}</p>
+                <p className="subtitle-line">{subtitles[i].line2}</p>
               </div>
             </section>
           );
