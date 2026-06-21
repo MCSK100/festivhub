@@ -537,16 +537,6 @@ export const HorizonHeroSection = () => {
       </div>
 
       <div className="horizon-hero-content">
-
-        
-        <div ref={subtitleRef} className="horizon-hero-subtitle">
-          <p className="subtitle-line">
-            Crafting experiences that leave
-          </p>
-          <p className="subtitle-line">
-            lasting impressions
-          </p>
-        </div>
       </div>
 
       <div ref={scrollProgressRef} className="horizon-scroll-progress" style={{ visibility: 'hidden' }}>
