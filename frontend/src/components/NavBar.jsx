@@ -28,8 +28,8 @@ const NavBar = () => {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-20">
         <div className="flex justify-between items-center h-20 lg:h-24">
-          <Link to="/" className="text-3xl lg:text-4xl font-serif font-light italic gradient-gold hover:scale-110 transition-transform duration-300">
-            FestivLink
+          <Link to="/" className="hover:scale-110 transition-transform duration-300 flex items-center">
+            <img src="https://i.postimg.cc/6QrBSDmH/festivlivk-logo.png" alt="FestivLink" className="h-12 lg:h-14 w-auto" />
           </Link>
 
           {!isVendorDashboard && (
