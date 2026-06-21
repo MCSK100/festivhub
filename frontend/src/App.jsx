@@ -6,7 +6,7 @@ import About from './pages/About'
 import FAQ from './pages/FAQ'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-import RoleSelection from './pages/RoleSelection'
+
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import VendorDashboard from './pages/VendorDashboard'
@@ -30,7 +30,6 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/role-select" element={<RoleSelection />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password/:token" element={<ResetPassword />} />
