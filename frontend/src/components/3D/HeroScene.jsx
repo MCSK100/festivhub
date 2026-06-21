@@ -1,1 +1,223 @@
-import { useRef, useEffect, useState } from 'react';import { Canvas, useFrame, useThree } from '@react-three/fiber';import { PerspectiveCamera, OrbitControls, Sphere, Box, Cylinder, Plane } from '@react-three/drei';import * as THREE from 'three';/** * Floating Stage Component * Creates an animated 3D event stage with lighting effects */const FloatingStage = ({ scrollProgress }) => {  const stageRef = useRef();  const lightsRef = useRef([]);  useFrame(() => {    if (stageRef.current) {      // Subtle rotation based on scroll      stageRef.current.rotation.y += 0.001;      stageRef.current.position.y = Math.sin(Date.now() * 0.0005) * 0.5;    }    // Animate lights    lightsRef.current.forEach((light, index) => {      if (light) {        light.position.x = Math.sin(Date.now() * 0.0003 + index) * 3;        light.position.z = Math.cos(Date.now() * 0.0003 + index) * 3;      }    });  });  return (    <group ref={stageRef}>      {/* Stage Platform */}      <Cylinder args={[2, 2.5, 0.5, 32]} position={[0, 0, 0]}>        <meshStandardMaterial          color="#C59D5F"          metalness={0.8}          roughness={0.2}          emissive="#FFD27D"          emissiveIntensity={0.3}        />      </Cylinder>      {/* Stage Pillars */}      {[        [-1.5, 1, -1.5],        [1.5, 1, -1.5],        [-1.5, 1, 1.5],        [1.5, 1, 1.5],      ].map((pos, idx) => (        <Cylinder          key={idx}          args={[0.3, 0.3, 2, 16]}          position={pos}          castShadow        >          <meshStandardMaterial            color="#FFD27D"            metalness={0.6}            roughness={0.3}            emissive="#C59D5F"            emissiveIntensity={0.2}          />        </Cylinder>      ))}      {/* Center Sphere (Event Focus) */}      <Sphere args={[0.8, 32, 32]} position={[0, 2, 0]} castShadow>        <meshStandardMaterial          color="#FFFFFF"          metalness={0.9}          roughness={0.1}          emissive="#C59D5F"          emissiveIntensity={0.5}        />      </Sphere>      {/* Spotlight Beams */}      {[0, 1, 2, 3].map((idx) => {        const angle = (idx / 4) * Math.PI * 2;        const x = Math.cos(angle) * 3;        const z = Math.sin(angle) * 3;        return (          <group key={`beam-${idx}`}>            <pointLight              ref={(el) => {                if (el) lightsRef.current[idx] = el;              }}              position={[x, 3, z]}              intensity={2}              color="#FFD27D"              distance={10}              castShadow            />          </group>        );      })}      {/* Ambient Light */}      <ambientLight intensity={0.5} color="#FFFFFF" />      {/* Main Directional Light */}      <directionalLight        position={[5, 5, 5]}        intensity={1}        color="#FFFFFF"        castShadow        shadow-mapSize-width={2048}        shadow-mapSize-height={2048}      />    </group>  );};/** * Particle System Component * Creates floating particles around the stage */const ParticleSystem = () => {  const particlesRef = useRef();  const particleCount = 100;  useEffect(() => {    const geometry = new THREE.BufferGeometry();    const positions = new Float32Array(particleCount * 3);    for (let i = 0; i < particleCount * 3; i += 3) {      positions[i] = (Math.random() - 0.5) * 10;      positions[i + 1] = (Math.random() - 0.5) * 10;      positions[i + 2] = (Math.random() - 0.5) * 10;    }    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));    return () => geometry.dispose();  }, []);  useFrame(() => {    if (particlesRef.current) {      particlesRef.current.rotation.x += 0.0001;      particlesRef.current.rotation.y += 0.0002;    }  });  return (    <points ref={particlesRef}>      <bufferGeometry>        <bufferAttribute          attach="attributes-position"          count={particleCount}          array={new Float32Array(            Array.from({ length: particleCount }, () => [              (Math.random() - 0.5) * 10,              (Math.random() - 0.5) * 10,              (Math.random() - 0.5) * 10,            ]).flat()          )}          itemSize={3}        />      </bufferGeometry>      <pointsMaterial        size={0.05}        color="#FFD27D"        sizeAttenuation        transparent        opacity={0.6}      />    </points>  );};/** * Hero Scene Component * Main 3D canvas component for the hero section */const HeroScene = ({ scrollProgress = 0 }) => {  return (    <div className="w-full h-screen relative">      <Canvas        camera={{ position: [0, 2, 5], fov: 75 }}        shadows        gl={{ antialias: true, alpha: true }}      >        {/* Background */}        <color attach="background" args={['#050505']} />        {/* Fog for depth */}        <fog attach="fog" args={['#050505', 5, 15]} />        {/* Lighting */}        <ambientLight intensity={0.4} />        <pointLight position={[10, 10, 10]} intensity={1} />        {/* 3D Elements */}        <FloatingStage scrollProgress={scrollProgress} />        <ParticleSystem />        {/* Camera Controls */}        <OrbitControls          enableZoom={false}          enablePan={false}          autoRotate          autoRotateSpeed={2}          maxPolarAngle={Math.PI * 0.6}          minPolarAngle={Math.PI * 0.3}        />        {/* Plane for shadow */}        <Plane          args={[10, 10]}          position={[0, -2, 0]}          rotation={[-Math.PI / 2, 0, 0]}          receiveShadow        >          <shadowMaterial transparent opacity={0.3} />        </Plane>      </Canvas>      {/* Overlay gradient */}      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#050505] pointer-events-none" />    </div>  );};export default HeroScene;
+import { useRef, useEffect, useState } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { PerspectiveCamera, OrbitControls, Sphere, Box, Cylinder, Plane } from '@react-three/drei';
+import * as THREE from 'three';
+
+/**
+ * Floating Stage Component
+ * Creates an animated 3D event stage with lighting effects
+ */
+const FloatingStage = ({ scrollProgress }) => {
+  const stageRef = useRef();
+  const lightsRef = useRef([]);
+
+  useFrame(() => {
+    if (stageRef.current) {
+      // Subtle rotation based on scroll
+      stageRef.current.rotation.y += 0.001;
+      stageRef.current.position.y = Math.sin(Date.now() * 0.0005) * 0.5;
+    }
+
+    // Animate lights
+    lightsRef.current.forEach((light, index) => {
+      if (light) {
+        light.position.x = Math.sin(Date.now() * 0.0003 + index) * 3;
+        light.position.z = Math.cos(Date.now() * 0.0003 + index) * 3;
+      }
+    });
+  });
+
+  return (
+    <group ref={stageRef}>
+      {/* Stage Platform */}
+      <Cylinder args={[2, 2.5, 0.5, 32]} position={[0, 0, 0]}>
+        <meshStandardMaterial
+          color="#C59D5F"
+          metalness={0.8}
+          roughness={0.2}
+          emissive="#FFD27D"
+          emissiveIntensity={0.3}
+        />
+      </Cylinder>
+
+      {/* Stage Pillars */}
+      {[
+        [-1.5, 1, -1.5],
+        [1.5, 1, -1.5],
+        [-1.5, 1, 1.5],
+        [1.5, 1, 1.5],
+      ].map((pos, idx) => (
+        <Cylinder
+          key={idx}
+          args={[0.3, 0.3, 2, 16]}
+          position={pos}
+          castShadow
+        >
+          <meshStandardMaterial
+            color="#FFD27D"
+            metalness={0.6}
+            roughness={0.3}
+            emissive="#C59D5F"
+            emissiveIntensity={0.2}
+          />
+        </Cylinder>
+      ))}
+
+      {/* Center Sphere (Event Focus) */}
+      <Sphere args={[0.8, 32, 32]} position={[0, 2, 0]} castShadow>
+        <meshStandardMaterial
+          color="#FFFFFF"
+          metalness={0.9}
+          roughness={0.1}
+          emissive="#C59D5F"
+          emissiveIntensity={0.5}
+        />
+      </Sphere>
+
+      {/* Spotlight Beams */}
+      {[0, 1, 2, 3].map((idx) => {
+        const angle = (idx / 4) * Math.PI * 2;
+        const x = Math.cos(angle) * 3;
+        const z = Math.sin(angle) * 3;
+        return (
+          <group key={`beam-${idx}`}>
+            <pointLight
+              ref={(el) => {
+                if (el) lightsRef.current[idx] = el;
+              }}
+              position={[x, 3, z]}
+              intensity={2}
+              color="#FFD27D"
+              distance={10}
+              castShadow
+            />
+          </group>
+        );
+      })}
+
+      {/* Ambient Light */}
+      <ambientLight intensity={0.5} color="#FFFFFF" />
+
+      {/* Main Directional Light */}
+      <directionalLight
+        position={[5, 5, 5]}
+        intensity={1}
+        color="#FFFFFF"
+        castShadow
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+      />
+    </group>
+  );
+};
+
+/**
+ * Particle System Component
+ * Creates floating particles around the stage
+ */
+const ParticleSystem = () => {
+  const particlesRef = useRef();
+  const particleCount = 100;
+
+  useEffect(() => {
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      positions[i] = (Math.random() - 0.5) * 10;
+      positions[i + 1] = (Math.random() - 0.5) * 10;
+      positions[i + 2] = (Math.random() - 0.5) * 10;
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return () => geometry.dispose();
+  }, []);
+
+  useFrame(() => {
+    if (particlesRef.current) {
+      particlesRef.current.rotation.x += 0.0001;
+      particlesRef.current.rotation.y += 0.0002;
+    }
+  });
+
+  return (
+    <points ref={particlesRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={particleCount}
+          array={new Float32Array(
+            Array.from({ length: particleCount }, () => [
+              (Math.random() - 0.5) * 10,
+              (Math.random() - 0.5) * 10,
+              (Math.random() - 0.5) * 10,
+            ]).flat()
+          )}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.05}
+        color="#FFD27D"
+        sizeAttenuation
+        transparent
+        opacity={0.6}
+      />
+    </points>
+  );
+};
+
+/**
+ * Hero Scene Component
+ * Main 3D canvas component for the hero section
+ */
+const HeroScene = ({ scrollProgress = 0 }) => {
+  return (
+    <div className="w-full h-screen relative">
+      <Canvas
+        camera={{ position: [0, 2, 5], fov: 75 }}
+        shadows
+        gl={{ antialias: true, alpha: true }}
+      >
+        {/* Background */}
+        <color attach="background" args={['#050505']} />
+
+        {/* Fog for depth */}
+        <fog attach="fog" args={['#050505', 5, 15]} />
+
+        {/* Lighting */}
+        <ambientLight intensity={0.4} />
+        <pointLight position={[10, 10, 10]} intensity={1} />
+
+        {/* 3D Elements */}
+        <FloatingStage scrollProgress={scrollProgress} />
+        <ParticleSystem />
+
+        {/* Camera Controls */}
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          autoRotate
+          autoRotateSpeed={2}
+          maxPolarAngle={Math.PI * 0.6}
+          minPolarAngle={Math.PI * 0.3}
+        />
+
+        {/* Plane for shadow */}
+        <Plane
+          args={[10, 10]}
+          position={[0, -2, 0]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          receiveShadow
+        >
+          <shadowMaterial transparent opacity={0.3} />
+        </Plane>
+      </Canvas>
+
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#050505] pointer-events-none" />
+    </div>
+  );
+};
+
+export default HeroScene;

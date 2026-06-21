@@ -1,1 +1,219 @@
-import { useState } from 'react'import { motion, AnimatePresence } from 'framer-motion'import { CheckCircle, XCircle, Clock, User, Mail, Calendar, MessageSquare, AlertCircle } from 'lucide-react'import api from '../../services/api'import { useToast } from '../ui/Toast'const BookingsManagement = ({ bookings, onUpdate }) => {  const [loading, setLoading] = useState({})  const { success, error: toastError } = useToast()  const handleStatusUpdate = async (bookingId, newStatus) => {    setLoading(prev => ({ ...prev, [bookingId]: true }))    try {      await api.put(`/bookings/${bookingId}/status`, { status: newStatus })      const response = await api.get('/bookings/vendor-bookings')      onUpdate(response.data)      success(`Booking status updated to ${newStatus} successfully!`)    } catch (error) {      console.error('Error updating booking status:', error)      toastError(error.response?.data?.error || 'Failed to update booking status. Please try again.')    } finally {      setLoading(prev => ({ ...prev, [bookingId]: false }))    }  }  const getStatusColor = (status) => {    switch (status) {      case 'pending': return 'bg-amber-500/10 text-amber-400 border-amber-500/25'      case 'confirmed': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'      case 'completed': return 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25'      case 'cancelled': return 'bg-rose-500/10 text-rose-400 border-rose-500/25'      default: return 'bg-slate-500/10 text-slate-400 border-slate-500/25'    }  }  const getStatusIcon = (status) => {    switch (status) {      case 'pending': return <Clock className="w-4 h-4" />      case 'confirmed': return <CheckCircle className="w-4 h-4" />      case 'completed': return <CheckCircle className="w-4 h-4" />      case 'cancelled': return <XCircle className="w-4 h-4" />      default: return <AlertCircle className="w-4 h-4" />    }  }  return (    <div className="space-y-6">      <div className="flex items-center justify-between">        <h1 className="text-3xl font-bold gradient-gold-text">Bookings Management</h1>        <div className="text-sm text-slate-400 font-bold">          {bookings.length} Total Bookings        </div>      </div>      {bookings.length === 0 ? (        <motion.div          initial={{ opacity: 0, y: 20 }}          animate={{ opacity: 1, y: 0 }}          className="glass-dark rounded-3xl p-16 text-center border border-white/10"        >          <Calendar className="w-16 h-16 text-slate-500 mx-auto mb-4" />          <h3 className="text-xl font-semibold text-white mb-2">No bookings yet</h3>          <p className="text-slate-400 text-sm max-w-sm mx-auto">            When clients reserve your services, details of the event will show up here.          </p>        </motion.div>      ) : (        <div className="grid gap-6">          <AnimatePresence mode="popLayout">            {bookings.map((booking, index) => (              <motion.div                key={booking._id}                initial={{ opacity: 0, y: 25 }}                animate={{ opacity: 1, y: 0 }}                exit={{ opacity: 0, scale: 0.95 }}                transition={{ delay: index * 0.05 }}                className="glass-accent rounded-3xl p-6 border border-white/10"              >                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">                  {/* Customer Info */}                  <div className="flex-1">                    <div className="flex items-start gap-4 mb-5">                      <div className="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center border border-indigo-500/20">                        <User className="w-6 h-6 text-indigo-400" />                      </div>                      <div>                        <h3 className="text-lg font-bold text-white">                          {booking.customer?.name || 'Client Details'}                        </h3>                        <div className="flex items-center gap-4 text-sm text-slate-400 mt-1">                          <span className="flex items-center gap-1.5">                            <Mail className="w-4 h-4 text-indigo-400" />                            {booking.customer?.email || 'No email registered'}                          </span>                        </div>                      </div>                    </div>                    {/* Booking Details */}                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 bg-white/[0.02] border border-white/5 rounded-2xl p-4 mb-4">                      <div>                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Service Type</p>                        <p className="font-semibold text-white">{booking.serviceTitle}</p>                      </div>                      <div>                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Event Date</p>                        <p className="font-semibold text-white flex items-center gap-1.5">                          <Calendar className="w-4 h-4 text-yellow-500" />                          {new Date(booking.date).toLocaleDateString('en-US', {                            weekday: 'short',                            year: 'numeric',                            month: 'short',                            day: 'numeric'                          })}                        </p>                      </div>                      <div>                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Price Offer</p>                        <p className="font-bold text-emerald-400">₹{booking.price.toLocaleString()}</p>                      </div>                      <div>                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Reserved On</p>                        <p className="font-semibold text-slate-300">                          {new Date(booking.createdAt).toLocaleDateString()}                        </p>                      </div>                    </div>                    {/* Notes */}                    {booking.notes && (                      <div className="mt-4">                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1.5 flex items-center gap-1.5">                          <MessageSquare className="w-4 h-4 text-indigo-400" />                          Customer Requirements                        </p>                        <p className="text-slate-300 bg-white/[0.03] border border-white/5 p-4 rounded-xl text-sm italic">                          "{booking.notes}"                        </p>                      </div>                    )}                  </div>                  {/* Status and Actions */}                  <div className="lg:w-64 flex flex-col items-stretch lg:items-end justify-center">                    <div className="mb-4">                      <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wider ${getStatusColor(booking.status)}`}>                        {getStatusIcon(booking.status)}                        {booking.status}                      </span>                    </div>                    {/* Action Buttons */}                    {booking.status === 'pending' && (                      <div className="flex gap-3 w-full">                        <button                          onClick={() => handleStatusUpdate(booking._id, 'confirmed')}                          disabled={loading[booking._id]}                          className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"                        >                          {loading[booking._id] ? (                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>                          ) : (                            <>                              <CheckCircle className="w-4 h-4" />                              Accept                            </>                          )}                        </button>                        <button                          onClick={() => handleStatusUpdate(booking._id, 'cancelled')}                          disabled={loading[booking._id]}                          className="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"                        >                          {loading[booking._id] ? (                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>                          ) : (                            <>                              <XCircle className="w-4 h-4" />                              Reject                            </>                          )}                        </button>                      </div>                    )}                    {booking.status === 'confirmed' && (                      <button                        onClick={() => handleStatusUpdate(booking._id, 'completed')}                        disabled={loading[booking._id]}                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"                      >                        {loading[booking._id] ? (                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>                        ) : (                          <>                            <CheckCircle className="w-4 h-4" />                            Mark Complete                          </>                        )}                      </button>                    )}                    {(booking.status === 'completed' || booking.status === 'cancelled') && (                      <div className="text-center lg:text-right text-slate-500 font-bold text-sm py-2">                        Closed Order                      </div>                    )}                  </div>                </div>              </motion.div>            ))}          </AnimatePresence>        </div>      )}    </div>  )}export default BookingsManagement
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { CheckCircle, XCircle, Clock, User, Mail, Calendar, MessageSquare, AlertCircle } from 'lucide-react'
+import api from '../../services/api'
+import { useToast } from '../ui/Toast'
+
+const BookingsManagement = ({ bookings, onUpdate }) => {
+  const [loading, setLoading] = useState({})
+  const { success, error: toastError } = useToast()
+
+  const handleStatusUpdate = async (bookingId, newStatus) => {
+    setLoading(prev => ({ ...prev, [bookingId]: true }))
+    try {
+      await api.put(`/bookings/${bookingId}/status`, { status: newStatus })
+      const response = await api.get('/bookings/vendor-bookings')
+      onUpdate(response.data)
+      success(`Booking status updated to ${newStatus} successfully!`)
+    } catch (error) {
+      console.error('Error updating booking status:', error)
+      toastError(error.response?.data?.error || 'Failed to update booking status. Please try again.')
+    } finally {
+      setLoading(prev => ({ ...prev, [bookingId]: false }))
+    }
+  }
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'pending': return 'bg-amber-500/10 text-amber-400 border-amber-500/25'
+      case 'confirmed': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
+      case 'completed': return 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25'
+      case 'cancelled': return 'bg-rose-500/10 text-rose-400 border-rose-500/25'
+      default: return 'bg-slate-500/10 text-slate-400 border-slate-500/25'
+    }
+  }
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'pending': return <Clock className="w-4 h-4" />
+      case 'confirmed': return <CheckCircle className="w-4 h-4" />
+      case 'completed': return <CheckCircle className="w-4 h-4" />
+      case 'cancelled': return <XCircle className="w-4 h-4" />
+      default: return <AlertCircle className="w-4 h-4" />
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold gradient-gold-text">Bookings Management</h1>
+        <div className="text-sm text-slate-400 font-medium">
+          {bookings.length} Total Bookings
+        </div>
+      </div>
+
+      {bookings.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-dark rounded-3xl p-16 text-center border border-white/10"
+        >
+          <Calendar className="w-16 h-16 text-slate-500 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-white mb-2">No bookings yet</h3>
+          <p className="text-slate-400 text-sm max-w-sm mx-auto">
+            When clients reserve your services, details of the event will show up here.
+          </p>
+        </motion.div>
+      ) : (
+        <div className="grid gap-6">
+          <AnimatePresence mode="popLayout">
+            {bookings.map((booking, index) => (
+              <motion.div
+                key={booking._id}
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: index * 0.05 }}
+                className="glass-accent rounded-3xl p-6 border border-white/10"
+              >
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                  {/* Customer Info */}
+                  <div className="flex-1">
+                    <div className="flex items-start gap-4 mb-5">
+                      <div className="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center border border-indigo-500/20">
+                        <User className="w-6 h-6 text-indigo-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-white">
+                          {booking.customer?.name || 'Client Details'}
+                        </h3>
+                        <div className="flex items-center gap-4 text-sm text-slate-400 mt-1">
+                          <span className="flex items-center gap-1.5">
+                            <Mail className="w-4 h-4 text-indigo-400" />
+                            {booking.customer?.email || 'No email registered'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Booking Details */}
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 bg-white/[0.02] border border-white/5 rounded-2xl p-4 mb-4">
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Service Type</p>
+                        <p className="font-semibold text-white">{booking.serviceTitle}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Event Date</p>
+                        <p className="font-semibold text-white flex items-center gap-1.5">
+                          <Calendar className="w-4 h-4 text-yellow-500" />
+                          {new Date(booking.date).toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Price Offer</p>
+                        <p className="font-bold text-emerald-400">₹{booking.price.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Reserved On</p>
+                        <p className="font-semibold text-slate-300">
+                          {new Date(booking.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Notes */}
+                    {booking.notes && (
+                      <div className="mt-4">
+                        <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1.5 flex items-center gap-1.5">
+                          <MessageSquare className="w-4 h-4 text-indigo-400" />
+                          Customer Requirements
+                        </p>
+                        <p className="text-slate-300 bg-white/[0.03] border border-white/5 p-4 rounded-xl text-sm italic">
+                          "{booking.notes}"
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Status and Actions */}
+                  <div className="lg:w-64 flex flex-col items-stretch lg:items-end justify-center">
+                    <div className="mb-4">
+                      <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wider ${getStatusColor(booking.status)}`}>
+                        {getStatusIcon(booking.status)}
+                        {booking.status}
+                      </span>
+                    </div>
+
+                    {/* Action Buttons */}
+                    {booking.status === 'pending' && (
+                      <div className="flex gap-3 w-full">
+                        <button
+                          onClick={() => handleStatusUpdate(booking._id, 'confirmed')}
+                          disabled={loading[booking._id]}
+                          className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
+                        >
+                          {loading[booking._id] ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          ) : (
+                            <>
+                              <CheckCircle className="w-4 h-4" />
+                              Accept
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => handleStatusUpdate(booking._id, 'cancelled')}
+                          disabled={loading[booking._id]}
+                          className="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
+                        >
+                          {loading[booking._id] ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          ) : (
+                            <>
+                              <XCircle className="w-4 h-4" />
+                              Reject
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    )}
+
+                    {booking.status === 'confirmed' && (
+                      <button
+                        onClick={() => handleStatusUpdate(booking._id, 'completed')}
+                        disabled={loading[booking._id]}
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
+                      >
+                        {loading[booking._id] ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        ) : (
+                          <>
+                            <CheckCircle className="w-4 h-4" />
+                            Mark Complete
+                          </>
+                        )}
+                      </button>
+                    )}
+
+                    {(booking.status === 'completed' || booking.status === 'cancelled') && (
+                      <div className="text-center lg:text-right text-slate-500 font-medium text-sm py-2">
+                        Closed Order
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default BookingsManagement
