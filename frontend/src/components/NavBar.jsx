@@ -29,7 +29,7 @@ const NavBar = () => {
   }
 
   const isDashboard = location.pathname.includes('-dashboard')
-  const isDarkBg = scrolled || isDashboard || location.pathname === '/'
+  const isDarkBg = scrolled || isDashboard
   const isActive = (path) => location.pathname === path
 
   const navLinks = [
