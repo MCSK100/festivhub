@@ -124,8 +124,8 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold gradient-gold-text">Profile Settings</h1>
-        <div className="text-sm text-slate-400 font-medium">
+        <h1 className="text-3xl font-bold text-[#1e4137]">Profile Settings</h1>
+        <div className="text-sm text-[#0b1311]/60 font-medium">
           Completion Rate: {profileCompletion}%
         </div>
       </div>
@@ -134,19 +134,19 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-yellow-500/10 via-purple-500/5 to-indigo-500/10 rounded-3xl p-6 border border-yellow-500/20"
+        className="bg-gradient-to-r from-[#1e4137]/10 via-transparent to-[#bad6ff]/20 rounded-[var(--jak-border-radius)] p-6 border border-[#1e4137]/20"
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">Profile Progress</h2>
-          <span className="text-2xl font-extrabold text-yellow-400">{profileCompletion}%</span>
+          <h2 className="text-xl font-semibold text-[#0b1311]">Profile Progress</h2>
+          <span className="text-2xl font-extrabold text-[#1e4137]">{profileCompletion}%</span>
         </div>
-        <div className="w-full bg-white/5 rounded-full h-3 border border-white/5 overflow-hidden">
+        <div className="w-full bg-[#0b1311]/5 rounded-full h-3 border border-black/5 overflow-hidden">
           <div
-            className="bg-gradient-to-r from-yellow-500 to-amber-500 h-full rounded-full transition-all duration-500"
+            className="bg-[#1e4137] h-full rounded-full transition-all duration-500"
             style={{ width: `${profileCompletion}%` }}
           ></div>
         </div>
-        <p className="text-xs text-slate-400 mt-2">
+        <p className="text-xs text-[#0b1311]/60 mt-2">
           Complete your profile parameters to rank higher and attract more event planners.
         </p>
       </motion.div>
@@ -157,12 +157,12 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass-accent rounded-3xl p-6 border border-white/10"
+          className="bg-white rounded-[var(--jak-border-radius)] p-6 border border-black/5 shadow-sm"
         >
-          <h3 className="text-lg font-bold text-white mb-4">Profile Photo</h3>
+          <h3 className="text-lg font-bold text-[#0b1311] mb-4">Profile Photo</h3>
           <div className="flex items-center gap-6">
             <div className="relative">
-              <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-amber-600 rounded-full overflow-hidden border-2 border-white/10 flex items-center justify-center">
+              <div className="w-24 h-24 bg-[#1e4137] rounded-full overflow-hidden flex items-center justify-center">
                 {vendorProfile?.profileImage ? (
                   <img
                     src={vendorProfile.profileImage}
@@ -170,7 +170,7 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <User className="w-10 h-10 text-slate-900" />
+                  <User className="w-10 h-10 text-[#bad6ff]" />
                 )}
               </div>
               {profileImageLoading && (
@@ -191,12 +191,12 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={profileImageLoading}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors disabled:opacity-50 flex items-center gap-2 shadow-md"
+                className="bg-[#1e4137] hover:bg-[#142e27] text-[#bad6ff] px-5 py-2.5 rounded-full font-semibold text-sm transition-colors disabled:opacity-50 flex items-center gap-2 shadow-md"
               >
                 <Camera className="w-4 h-4" />
                 {profileImageLoading ? 'Uploading...' : 'Change Photo'}
               </button>
-              <p className="text-xs text-slate-500 mt-2">
+              <p className="text-xs text-[#0b1311]/50 mt-2">
                 Supported formats: JPG, PNG, WEBP. Max: 3MB.
               </p>
             </div>
@@ -208,12 +208,12 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="glass-accent rounded-3xl p-6 border border-white/10"
+          className="bg-white rounded-[var(--jak-border-radius)] p-6 border border-black/5 shadow-sm"
         >
-          <h3 className="text-lg font-bold text-white mb-6">Service Profile</h3>
+          <h3 className="text-lg font-bold text-[#0b1311] mb-6">Service Profile</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-semibold text-[#0b1311]/70 mb-2">
                 Full Name *
               </label>
               <div className="relative">
@@ -222,7 +222,7 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-slate-500 text-sm"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 placeholder-slate-500 text-sm"
                   placeholder="Your full name"
                   required
                 />
@@ -230,7 +230,7 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-semibold text-[#0b1311]/70 mb-2">
                 Company name
               </label>
               <div className="relative">
@@ -239,14 +239,14 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                   type="text"
                   value={formData.companyName}
                   onChange={(e) => handleInputChange('companyName', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-slate-500 text-sm"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 placeholder-slate-500 text-sm"
                   placeholder="e.g. Dream Weddings Co."
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-semibold text-[#0b1311]/70 mb-2">
                 Service category *
               </label>
               <div className="relative">
@@ -254,36 +254,36 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                 <select
                   value={formData.category}
                   onChange={(e) => handleInputChange('category', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white text-sm"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 text-sm"
                   required
                 >
-                  <option value="" disabled className="bg-[#0f1020]">Select Category</option>
-                  <option value="Photographer" className="bg-[#0f1020]">Photographer</option>
-                  <option value="Catering" className="bg-[#0f1020]">Catering</option>
-                  <option value="DJ" className="bg-[#0f1020]">DJ</option>
-                  <option value="Decorations" className="bg-[#0f1020]">Decorations</option>
-                  <option value="Florist" className="bg-[#0f1020]">Florist</option>
-                  <option value="Lighting" className="bg-[#0f1020]">Lighting</option>
+                  <option value="" disabled className="bg-white text-[#0b1311]">Select Category</option>
+                  <option value="Photographer" className="bg-white text-[#0b1311]">Photographer</option>
+                  <option value="Catering" className="bg-white text-[#0b1311]">Catering</option>
+                  <option value="DJ" className="bg-white text-[#0b1311]">DJ</option>
+                  <option value="Decorations" className="bg-white text-[#0b1311]">Decorations</option>
+                  <option value="Florist" className="bg-white text-[#0b1311]">Florist</option>
+                  <option value="Lighting" className="bg-white text-[#0b1311]">Lighting</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-semibold text-[#0b1311]/70 mb-2">
                 Experience Details
               </label>
               <input
                 type="text"
                 value={formData.experience}
                 onChange={(e) => handleInputChange('experience', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-slate-500 text-sm"
+                className="w-full px-4 py-3 rounded-xl focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 placeholder-slate-500 text-sm"
                 placeholder="e.g. 5+ years"
               />
             </div>
           </div>
 
           <div className="mt-6">
-            <label className="block text-sm font-semibold text-slate-300 mb-2">
+            <label className="block text-sm font-semibold text-[#0b1311]/70 mb-2">
               Business Bio / Description
             </label>
             <div className="relative">
@@ -292,7 +292,7 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={4}
-                className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-slate-500 text-sm resize-none"
+                className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 placeholder-slate-500 text-sm resize-none"
                 placeholder="Describe your service catalog, catering details, or photography package options..."
               />
             </div>
@@ -304,12 +304,12 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass-accent rounded-3xl p-6 border border-white/10"
+          className="bg-white rounded-[var(--jak-border-radius)] p-6 border border-black/5 shadow-sm"
         >
-          <h3 className="text-lg font-bold text-white mb-6">Social Portals</h3>
+          <h3 className="text-lg font-bold text-[#0b1311] mb-6">Social Portals</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-semibold text-[#0b1311]/70 mb-2">
                 Facebook Link
               </label>
               <div className="relative">
@@ -318,14 +318,14 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                   type="url"
                   value={formData.socialLinks.facebook}
                   onChange={(e) => handleInputChange('socialLinks.facebook', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-slate-500 text-sm"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 placeholder-slate-500 text-sm"
                   placeholder="https://facebook.com/page"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-semibold text-[#0b1311]/70 mb-2">
                 Instagram Link
               </label>
               <div className="relative">
@@ -334,14 +334,14 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                   type="url"
                   value={formData.socialLinks.instagram}
                   onChange={(e) => handleInputChange('socialLinks.instagram', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-slate-500 text-sm"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 placeholder-slate-500 text-sm"
                   placeholder="https://instagram.com/handle"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-2">
+              <label className="block text-sm font-semibold text-[#0b1311]/70 mb-2">
                 Personal / Business Website
               </label>
               <div className="relative">
@@ -350,7 +350,7 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                   type="url"
                   value={formData.socialLinks.website}
                   onChange={(e) => handleInputChange('socialLinks.website', e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-slate-500 text-sm"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 placeholder-slate-500 text-sm"
                   placeholder="https://yourwebsite.com"
                 />
               </div>
@@ -368,11 +368,11 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
           <button
             type="submit"
             disabled={loading}
-            className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-slate-950 px-8 py-3.5 rounded-xl font-bold transition-all duration-300 disabled:opacity-50 flex items-center gap-2 shadow-lg hover:shadow-xl"
+            className="bg-[#1e4137] hover:bg-[#142e27] text-[#bad6ff] px-8 py-3.5 rounded-full font-bold transition-all duration-300 disabled:opacity-50 flex items-center gap-2 shadow-lg hover:shadow-xl"
           >
             {loading ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-slate-950"></div>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#bad6ff]"></div>
                 Saving Profile...
               </>
             ) : (

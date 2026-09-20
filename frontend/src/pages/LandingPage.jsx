@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Quote } from 'lucide-react'
+import { ArrowRight, Instagram, Linkedin, Facebook } from 'lucide-react'
+import StudioButton from '../components/ui/StudioButton'
 
 /* ------------------------------------------------------------------ */
 /* Data — FestivLink mapped onto the Studio Modular structure          */
@@ -138,7 +139,7 @@ const INSIGHTS = [
 ]
 
 /* ------------------------------------------------------------------ */
-/* Small building blocks                                               */
+/* Small building blocks — exact Studio Modular patterns               */
 /* ------------------------------------------------------------------ */
 
 const reveal = {
@@ -150,121 +151,130 @@ const reveal = {
   }),
 }
 
-const Pretitle = ({ children }) => (
-  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#1e4137]/70 mb-4">
-    {children}
-  </p>
-)
-
-const PillButton = ({ to, children, dark = false }) => (
-  <Link
-    to={to}
-    className={`group inline-flex items-center gap-3 rounded-full pl-2 pr-7 py-2 text-sm font-semibold transition-all duration-300 ${
-      dark
-        ? 'bg-[#1e4137] text-[#FFF9F2] hover:bg-[#142e27]'
-        : 'bg-[#1e4137] text-[#FFF9F2] hover:bg-[#142e27]'
+/* h5 pretitle: uppercase, wide tracking, regular weight */
+const Pretitle = ({ children, light = false }) => (
+  <p
+    className={`mb-4 text-[clamp(15px,1.15vw,22px)] font-normal uppercase tracking-[0.08em] ${
+      light ? 'text-[#bad6ff]' : 'text-[#0b1311]'
     }`}
   >
-    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#C9A96A] text-[#1e4137] transition-transform duration-300 group-hover:rotate-45">
-      <ArrowUpRight className="h-5 w-5" />
-    </span>
     {children}
-  </Link>
-)
+  </p>
+);
 
+/* c-tag: white pill, small radius padding, icon dot + label */
 const Tag = ({ children }) => (
-  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#1e4137]/15 bg-white/60 px-3 py-1 text-xs font-medium text-[#1e4137]">
-    <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#C9A96A]" />
+  <span className="inline-flex items-center gap-2.5 rounded-full border border-transparent bg-white px-5 py-2.5 text-[15px] font-normal text-[#0b1311]">
+    <span className="inline-block h-2 w-2 rounded-full bg-[#1e4137]" />
     {children}
   </span>
-)
+);
+
+/* text link with underline, like their "Meer hierover" */
+const TextLink = ({ to, children }) => (
+  <Link
+    to={to}
+    className="inline-flex items-center gap-1 text-[1em] font-medium text-[#0b1311] underline decoration-[#1e4137]/30 decoration-1 underline-offset-[0.25em] transition-colors hover:text-[#1e4137]"
+  >
+    {children} <ArrowRight className="h-4 w-4" />
+  </Link>
+);
 
 /* ------------------------------------------------------------------ */
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
 
 const LandingPage = () => {
-  const [quoteIndex, setQuoteIndex] = useState(0)
-  const quote = TESTIMONIALS[quoteIndex]
+  const [quoteIndex, setQuoteIndex] = useState(0);
+  const quote = TESTIMONIALS[quoteIndex];
+  const prevQuote = () => setQuoteIndex((i) => (i - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
+  const nextQuote = () => setQuoteIndex((i) => (i + 1) % TESTIMONIALS.length);
 
   return (
-    <div className="bg-[#FFF9F2] text-[#14201c] antialiased">
-      {/* ============ HERO ============ */}
-      <header className="relative overflow-hidden pt-28 lg:pt-36">
+    <div className="bg-[#fff7f0] text-[#0b1311] antialiased">
+      {/* ============ HERO / BANNER ============ */}
+      <header className="relative overflow-hidden pt-44 lg:pt-56">
         {/* pastel blobs */}
         <div aria-hidden className="pointer-events-none absolute inset-0">
           <div className="absolute -left-40 top-10 h-[480px] w-[480px] rounded-full bg-[#C2D5F1]/50 blur-3xl" />
           <div className="absolute right-[-160px] top-64 h-[560px] w-[560px] rounded-full bg-[#F3D9C8]/60 blur-3xl" />
-          <div className="absolute left-1/3 top-[480px] h-[380px] w-[380px] rounded-full bg-[#C9A96A]/20 blur-3xl" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-          {/* giant wordmark */}
-          <motion.h1
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: 'easeOut' }}
-            className="font-serif font-black leading-[0.85] tracking-tight text-[#1e4137]"
-            style={{ fontSize: 'clamp(3.5rem, 13vw, 11rem)' }}
-          >
-            FESTIV
-            <br />
-            LINK
-          </motion.h1>
+        <div className="relative mx-auto max-w-[100rem] px-6 lg:px-10">
+          <h1 className="sr-only">FestivLink</h1>
+          {/* giant wordmark, slides in from both sides like theirs */}
+          <div aria-hidden className="relative z-[6] select-none">
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              transition={{ duration: 1, ease: 'easeOut' }}
+              className="text-[62%] font-black leading-[0.85] tracking-tight text-[#1e4137]"
+              style={{ fontSize: 'clamp(3rem, 12vw, 10rem)' }}
+            >
+              FESTIV
+            </motion.div>
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              transition={{ duration: 1, ease: 'easeOut' }}
+              className="ml-[21.5%] text-right font-black leading-[0.85] tracking-tight text-[#1e4137] lg:ml-[40%]"
+              style={{ fontSize: 'clamp(3rem, 12vw, 10rem)' }}
+            >
+              LINK
+            </motion.div>
+          </div>
 
           <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:items-end">
-            {/* small top image */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.15 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
               className="lg:col-span-2 lg:col-start-9"
             >
               <img
                 src={HERO_IMG_TOP}
                 alt="Wedding celebration"
-                className="h-44 w-full rounded-2xl object-cover shadow-xl lg:h-52"
+                className="r-card h-44 w-full object-cover shadow-xl lg:h-52"
                 loading="eager"
               />
             </motion.div>
 
-            {/* wide bottom image */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.25 }}
+              transition={{ duration: 0.8, delay: 0.55 }}
               className="lg:col-span-5 lg:col-start-2"
             >
               <img
                 src={HERO_IMG_BOTTOM}
                 alt="Concert crowd with lights"
-                className="h-52 w-full rounded-2xl object-cover shadow-xl lg:h-64"
+                className="r-card h-52 w-full object-cover shadow-xl lg:h-64"
                 loading="eager"
               />
             </motion.div>
 
-            {/* tagline + rotating badge */}
             <div className="flex items-end justify-between gap-6 lg:col-span-4">
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.35 }}
-                className="max-w-xs text-lg font-medium leading-snug text-[#1e4137]"
+                transition={{ duration: 0.8, delay: 0.7 }}
+                className="max-w-xs text-balance text-lg font-medium leading-snug text-[#0b1311]"
               >
                 Event management for hosts with a vision
               </motion.p>
-              <div aria-hidden className="relative hidden h-28 w-28 shrink-0 sm:block">
-                <svg viewBox="0 0 100 100" className="h-full w-full animate-spin-slow text-[#1e4137]">
+              {/* rotating scroll badge */}
+              <div aria-hidden className="relative hidden h-28 w-28 shrink-0 sm:block lg:h-[165px] lg:w-[165px]">
+                <svg viewBox="0 0 100 100" className="h-full w-full text-[#0b1311]" style={{ animation: 'scroll-text-rotate 16s linear infinite' }}>
                   <defs>
                     <path id="circlePath" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" />
                   </defs>
-                  <text className="fill-current text-[10px] font-semibold uppercase tracking-[0.2em]">
+                  <text className="fill-current text-[8.5px] font-semibold uppercase tracking-[0.18em]">
                     <textPath href="#circlePath">plan your event • plan your event •</textPath>
                   </text>
                 </svg>
                 <span className="absolute inset-0 flex items-center justify-center">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#C9A96A] text-[#1e4137]">
-                    <ArrowRight className="h-5 w-5" />
+                  <span className="flex h-[55%] w-[55%] items-center justify-center rounded-full bg-[#1e4137] text-[#bad6ff]">
+                    <ArrowRight className="h-5 w-5 rotate-90" />
                   </span>
                 </span>
               </div>
@@ -280,9 +290,9 @@ const LandingPage = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="font-serif text-2xl font-light leading-relaxed text-[#1e4137] lg:text-[2rem]"
+          className="text-[clamp(1.25rem,1rem+1vw,2.25rem)] font-light leading-[1.6] text-[#0b1311]"
         >
-          I plan celebrations that add an extra layer to life. Photography, catering,
+          We plan celebrations that add an extra layer to life. Photography, catering,
           music, decor, production: five services, one vision. What we make together
           gets a place in the world one day. Let’s make it more beautiful.
         </motion.p>
@@ -292,14 +302,14 @@ const LandingPage = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mt-8"
+          className="mt-10"
         >
-          <PillButton to="/join">Start your event</PillButton>
+          <StudioButton to="/join">Start your event</StudioButton>
         </motion.div>
       </section>
 
       {/* ============ CASES ============ */}
-      <section className="mx-auto max-w-7xl px-6 pb-24 lg:px-10 lg:pb-32">
+      <section className="mx-auto max-w-[100rem] px-6 pb-24 lg:px-10 lg:pb-32">
         <div className="mb-12 text-center">
           <Pretitle>Celebrations</Pretitle>
           <motion.h2
@@ -307,7 +317,7 @@ const LandingPage = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="mx-auto max-w-2xl font-serif text-4xl font-light text-[#1e4137] lg:text-5xl"
+            className="mx-auto max-w-3xl text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1] text-[#0b1311]"
           >
             Results for celebrations that ring true
           </motion.h2>
@@ -325,7 +335,7 @@ const LandingPage = () => {
               className="group break-inside-avoid"
             >
               <Link to="/join" className="block">
-                <div className="overflow-hidden rounded-3xl">
+                <div className="r-card overflow-hidden">
                   <img
                     src={c.image}
                     alt={c.title}
@@ -333,10 +343,10 @@ const LandingPage = () => {
                     className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
-                <h3 className="mt-4 font-serif text-2xl font-semibold text-[#1e4137] transition-colors group-hover:text-[#C9A96A]">
+                <h3 className="mt-6 text-[clamp(18px,1.66vw,32px)] font-semibold text-[#0b1311]">
                   {c.title}
                 </h3>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-4 flex flex-wrap gap-2.5">
                   <Tag>{c.sector}</Tag>
                   {c.services.map((s) => (
                     <Tag key={s}>{s}</Tag>
@@ -347,20 +357,20 @@ const LandingPage = () => {
           ))}
         </div>
 
-        <div className="mt-4 text-center">
-          <PillButton to="/signup">View all celebrations</PillButton>
+        <div className="mt-6 text-center">
+          <StudioButton to="/signup">View all celebrations</StudioButton>
         </div>
       </section>
 
       {/* ============ SCROLL TITLES + SERVICES ============ */}
-      <section className="bg-[#F6EFE3]/60 py-24 lg:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+      <section className="bg-[#f4f4f2]/60 py-24 lg:py-32">
+        <div className="mx-auto max-w-[100rem] px-6 lg:px-10">
           <motion.h2
             variants={reveal}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="font-serif text-5xl font-light italic text-[#1e4137]/90 lg:text-7xl"
+            className="text-[clamp(32px,5.2vw,100px)] font-semibold leading-[1.1] text-[#0b1311]"
           >
             From a first idea
           </motion.h2>
@@ -369,13 +379,13 @@ const LandingPage = () => {
               src={img('photo-1511795409834-ef04bbd61622', 400)}
               alt="Planner at work"
               loading="lazy"
-              className="h-20 w-32 rounded-xl object-cover"
+              className="r-card h-20 w-32 -rotate-3 object-cover"
             />
             <img
               src={img('photo-1552664730-d307ca884978', 400)}
               alt="Planning together"
               loading="lazy"
-              className="h-20 w-32 rounded-xl object-cover"
+              className="r-card h-20 w-32 object-cover"
             />
           </div>
           <motion.h2
@@ -383,7 +393,7 @@ const LandingPage = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-right font-serif text-5xl font-light italic text-[#1e4137]/90 lg:text-7xl"
+            className="text-right text-[clamp(32px,5.2vw,100px)] font-semibold leading-[1.1] text-[#0b1311]"
           >
             to celebration
           </motion.h2>
@@ -396,12 +406,10 @@ const LandingPage = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: '-80px' }}
-                className={`grid items-center gap-8 lg:grid-cols-2 lg:gap-16 ${
-                  i % 2 === 1 ? '' : ''
-                }`}
+                className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16"
               >
                 <div className={i % 2 === 1 ? 'lg:order-2' : ''}>
-                  <div className="overflow-hidden rounded-3xl shadow-lg">
+                  <div className="r-card overflow-hidden shadow-lg">
                     <img
                       src={s.image}
                       alt={s.title}
@@ -411,17 +419,16 @@ const LandingPage = () => {
                   </div>
                 </div>
                 <div className={i % 2 === 1 ? 'lg:order-1' : ''}>
-                  <h3 className="font-serif text-3xl font-semibold text-[#1e4137] lg:text-4xl">
+                  <h3 className="text-[clamp(24px,2.5vw,48px)] font-semibold leading-[1.1] text-[#0b1311]">
                     {s.title}
                   </h3>
-                  <p className="mt-4 leading-relaxed text-[#14201c]/80">{s.text}</p>
-                  <Link
-                    to="/signup"
-                    className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#1e4137] underline decoration-[#C9A96A] decoration-2 underline-offset-4 hover:text-[#C9A96A]"
-                  >
-                    More about this <ArrowRight className="h-4 w-4" />
-                  </Link>
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <p className="mt-4 text-[clamp(18px,1.35vw,26px)] font-normal leading-[1.6] text-[#0b1311]">
+                    {s.text}
+                  </p>
+                  <div className="mt-4">
+                    <TextLink to="/signup">More about this</TextLink>
+                  </div>
+                  <div className="mt-5 flex flex-wrap gap-2.5">
                     {s.tags.map((t) => (
                       <Tag key={t}>{t}</Tag>
                     ))}
@@ -434,7 +441,7 @@ const LandingPage = () => {
       </section>
 
       {/* ============ ABOUT + APPROACH ============ */}
-      <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+      <section className="mx-auto max-w-[100rem] px-6 py-24 lg:px-10 lg:py-32">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
           <motion.img
             variants={reveal}
@@ -444,20 +451,20 @@ const LandingPage = () => {
             src={img('photo-1522071820081-009f0129c71c', 800)}
             alt="FestivLink team at work"
             loading="lazy"
-            className="aspect-[4/3] w-full rounded-3xl object-cover shadow-lg"
+            className="r-card aspect-[4/3] w-full object-cover shadow-lg"
           />
           <motion.div variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <Pretitle>About</Pretitle>
-            <h2 className="font-serif text-4xl font-light text-[#1e4137] lg:text-5xl">Who we are</h2>
-            <p className="mt-5 leading-relaxed text-[#14201c]/80">
+            <h2 className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1]">Who we are</h2>
+            <p className="mt-5 text-[clamp(18px,1.35vw,26px)] font-normal leading-[1.6]">
               We are FestivLink, and we learned our craft across hundreds of weddings,
               summits and festivals — for hosts who expect agency-level polish without
               agency-level chaos. The same bar we set for the biggest stages, we now set
-              from our own studio for every host who understands that event management
-              is more than a checklist: no half work, every decision counts.
+              for every host who understands that event management is more than a
+              checklist: no half work, every decision counts.
             </p>
-            <div className="mt-6">
-              <PillButton to="/about">Read our story</PillButton>
+            <div className="mt-8">
+              <StudioButton to="/about">Read our story</StudioButton>
             </div>
           </motion.div>
         </div>
@@ -471,14 +478,14 @@ const LandingPage = () => {
             className="lg:order-1"
           >
             <Pretitle>Approach</Pretitle>
-            <h2 className="font-serif text-4xl font-light text-[#1e4137] lg:text-5xl">How we work</h2>
-            <p className="mt-5 leading-relaxed text-[#14201c]/80">
+            <h2 className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1]">How we work</h2>
+            <p className="mt-5 text-[clamp(18px,1.35vw,26px)] font-normal leading-[1.6]">
               We don’t work for you, we work with you. We design a thought-through
               proposal and take you along in our thinking. No colour here and line there.
               The whole thing has to ring true — from first call to final farewell.
             </p>
-            <div className="mt-6">
-              <PillButton to="/about">Discover our approach</PillButton>
+            <div className="mt-8">
+              <StudioButton to="/about">Discover our approach</StudioButton>
             </div>
           </motion.div>
           <motion.img
@@ -489,60 +496,83 @@ const LandingPage = () => {
             src={img('photo-1552664730-d307ca884978', 800)}
             alt="Planning session"
             loading="lazy"
-            className="aspect-[4/3] w-full rounded-3xl object-cover shadow-lg lg:order-2"
+            className="r-card aspect-[4/3] w-full object-cover shadow-lg lg:order-2"
           />
         </div>
       </section>
 
       {/* ============ TESTIMONIALS ============ */}
-      <section className="bg-[#1e4137] py-24 text-[#FFF9F2] lg:py-32">
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <Pretitle>
-            <span className="text-[#C9A96A]">Kind words</span>
-          </Pretitle>
-          <h2 className="font-serif text-3xl font-light lg:text-4xl">
+      <section className="mx-auto max-w-[100rem] px-6 pb-24 lg:px-10 lg:pb-32">
+        <div className="mb-12 text-center">
+          <Pretitle>Kind words</Pretitle>
+          <h2 className="mx-auto max-w-3xl text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1]">
             We could tell you everything here, but our hosts say it better
           </h2>
-          <Quote className="mx-auto mt-10 h-10 w-10 text-[#C9A96A]" />
-          <motion.blockquote
+        </div>
+
+        <div className="mx-auto max-w-4xl">
+          <motion.figure
             key={quoteIndex}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mt-6 font-serif text-xl font-light italic leading-relaxed lg:text-2xl"
+            className="r-card border border-[#1e4137] bg-white p-10 lg:p-14"
           >
-            “{quote.quote}”
-          </motion.blockquote>
-          <p className="mt-6 font-semibold">{quote.name}</p>
-          <p className="text-sm text-white/60">{quote.context}</p>
-          <div className="mt-8 flex items-center justify-center gap-3">
-            {TESTIMONIALS.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setQuoteIndex(i)}
-                aria-label={`Show testimonial ${i + 1}`}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  i === quoteIndex ? 'w-8 bg-[#C9A96A]' : 'w-2.5 bg-white/30 hover:bg-white/60'
-                }`}
-              />
-            ))}
+            <blockquote className="text-[clamp(18px,1.35vw,26px)] font-normal leading-[1.6]">
+              “{quote.quote}”
+            </blockquote>
+            <figcaption className="mt-8">
+              <p className="font-semibold">{quote.name}</p>
+              <p className="text-[#0b1311]/60">{quote.context}</p>
+            </figcaption>
+          </motion.figure>
+
+          <div className="mt-8 flex items-center justify-center gap-6">
+            <button
+              type="button"
+              onClick={prevQuote}
+              aria-label="Previous testimonial"
+              className="flex h-[68px] w-[68px] rotate-180 items-center justify-center rounded-full bg-[#1e4137] text-[#bad6ff] transition-transform hover:scale-105"
+            >
+              <ArrowRight className="h-5 w-5" />
+            </button>
+            <div className="flex items-center gap-3">
+              {TESTIMONIALS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setQuoteIndex(i)}
+                  aria-label={`Show testimonial ${i + 1}`}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    i === quoteIndex ? 'w-8 bg-[#1e4137]' : 'w-2.5 bg-[#0b1311]/20 hover:bg-[#0b1311]/40'
+                  }`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={nextQuote}
+              aria-label="Next testimonial"
+              className="flex h-[68px] w-[68px] items-center justify-center rounded-full bg-[#1e4137] text-[#bad6ff] transition-transform hover:scale-105"
+            >
+              <ArrowRight className="h-5 w-5" />
+            </button>
           </div>
         </div>
       </section>
 
       {/* ============ VENDOR WALL ============ */}
-      <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+      <section className="mx-auto max-w-[100rem] px-6 pb-24 lg:px-10 lg:pb-32">
         <div className="text-center">
           <Pretitle>Vendors</Pretitle>
-          <h2 className="mx-auto max-w-2xl font-serif text-4xl font-light text-[#1e4137] lg:text-5xl">
+          <h2 className="mx-auto max-w-3xl text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1]">
             Proud to work with these crafts
           </h2>
         </div>
-        <div className="mt-12 flex flex-wrap justify-center gap-3">
+        <div className="mt-12 flex flex-wrap justify-center gap-2.5">
           {VENDOR_WALL.map((v) => (
             <span
               key={v}
-              className="rounded-full border border-[#1e4137]/15 bg-white px-5 py-2.5 text-sm font-medium text-[#1e4137] transition-colors hover:border-[#C9A96A] hover:bg-[#C9A96A]/10"
+              className="rounded-full border border-[#0b1311]/20 bg-transparent px-5 py-2.5 text-[15px] text-[#0b1311] transition-colors hover:border-[#1e4137] hover:bg-white"
             >
               {v}
             </span>
@@ -551,10 +581,10 @@ const LandingPage = () => {
       </section>
 
       {/* ============ INSIGHTS ============ */}
-      <section className="mx-auto max-w-7xl px-6 pb-24 lg:px-10 lg:pb-32">
+      <section className="mx-auto max-w-[100rem] px-6 pb-24 lg:px-10 lg:pb-32">
         <div className="mb-12 text-center">
           <Pretitle>Insights</Pretitle>
-          <h2 className="mx-auto max-w-2xl font-serif text-4xl font-light text-[#1e4137] lg:text-5xl">
+          <h2 className="mx-auto max-w-3xl text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1]">
             How we look at celebrations
           </h2>
         </div>
@@ -567,7 +597,7 @@ const LandingPage = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="group overflow-hidden rounded-3xl bg-white shadow-sm transition-shadow hover:shadow-xl"
+              className="group flex flex-col overflow-hidden rounded-[var(--jak-border-radius)] bg-white shadow-sm transition-shadow hover:shadow-xl"
             >
               <div className="overflow-hidden">
                 <img
@@ -577,14 +607,14 @@ const LandingPage = () => {
                   className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="font-serif text-xl font-semibold leading-snug text-[#1e4137]">
+              <div className="flex flex-1 flex-col p-8">
+                <h3 className="text-[clamp(18px,1.66vw,32px)] font-semibold leading-[1.2]">
                   {a.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#14201c]/70">{a.text}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#1e4137] underline decoration-[#C9A96A] decoration-2 underline-offset-4">
-                  More about this <ArrowRight className="h-4 w-4" />
-                </span>
+                <p className="mt-3 leading-[1.6] text-[#0b1311]/70">{a.text}</p>
+                <div className="mt-auto pt-6">
+                  <TextLink to="/about">More about this</TextLink>
+                </div>
               </div>
             </motion.article>
           ))}
@@ -592,52 +622,62 @@ const LandingPage = () => {
       </section>
 
       {/* ============ CTA ============ */}
-      <section className="mx-auto max-w-7xl px-6 pb-24 lg:px-10 lg:pb-32">
-        <div className="relative overflow-hidden rounded-[2.5rem]">
-          <img
-            src={img('photo-1514525253161-7a46d19cd819', 1400)}
-            alt="Celebration lights"
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-[#1e4137]/70" />
-          <div className="relative px-8 py-20 text-center text-[#FFF9F2] lg:py-28">
-            <h2 className="mx-auto max-w-3xl font-serif text-4xl font-light leading-tight lg:text-6xl">
+      <section className="mx-auto max-w-[100rem] px-6 pb-24 lg:px-10 lg:pb-32">
+        <div className="grid items-center gap-10 overflow-hidden rounded-[var(--jak-border-radius)] bg-white p-8 lg:grid-cols-2 lg:p-14">
+          <div className="r-card overflow-hidden">
+            <img
+              src={img('photo-1514525253161-7a46d19cd819', 900)}
+              alt="Celebration lights"
+              loading="lazy"
+              className="aspect-[4/3] w-full object-cover"
+            />
+          </div>
+          <div>
+            <h2 className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1]">
               Ready to give your celebration a place in the world?
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-white/80">
+            <p className="mt-5 text-[clamp(18px,1.35vw,26px)] font-normal leading-[1.6]">
               Let’s sit together once. Tell us what you have in mind — we’ll both feel
               quickly whether it clicks.
             </p>
             <div className="mt-8">
-              <Link
-                to="/join"
-                className="group inline-flex items-center gap-3 rounded-full bg-[#FFF9F2] py-2 pl-2 pr-7 text-sm font-semibold text-[#1e4137] transition-all hover:bg-white"
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#C9A96A] text-[#1e4137] transition-transform duration-300 group-hover:rotate-45">
-                  <ArrowUpRight className="h-5 w-5" />
-                </span>
-                Plan a chat
-              </Link>
+              <StudioButton to="/join">Plan a chat</StudioButton>
             </div>
           </div>
         </div>
       </section>
 
       {/* ============ FOOTER ============ */}
-      <footer className="bg-[#1e4137] text-[#FFF9F2]">
-        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
-          <div className="grid gap-12 lg:grid-cols-4">
-            <div>
-              <p className="font-serif text-3xl font-black tracking-tight">FESTIVLINK</p>
-              <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">
+      <footer className="bg-[#1e4137] text-[#fff7f0]">
+        {/* cream curve into the green, like theirs */}
+        <div aria-hidden className="h-[clamp(2.5rem,2.3rem+0.6vw,3.125rem)] rounded-b-[clamp(1.25rem,1rem+0.6vw,1.875rem)] bg-[#fff7f0]" />
+        <div className="mx-auto max-w-[100rem] px-6 pb-10 pt-14 lg:px-10">
+          <div className="grid gap-12 lg:grid-cols-12">
+            <div className="lg:col-span-4">
+              <p className="text-[32px] font-black leading-none tracking-tight">FESTIVLINK</p>
+              <p className="mt-5 max-w-xs leading-[1.6] text-white/70">
                 Event management for hosts with a vision. Photography, catering, music,
                 decor, production — five services, one vision.
               </p>
+              <div className="mt-6 flex items-center gap-5">
+                {[
+                  { icon: Instagram, label: 'Instagram' },
+                  { icon: Linkedin, label: 'LinkedIn' },
+                  { icon: Facebook, label: 'Facebook' },
+                ].map(({ icon: Icon, label }) => (
+                  <a
+                    key={label}
+                    href="#"
+                    aria-label={label}
+                    className="flex h-[50px] w-[50px] items-center justify-center rounded-full bg-[#fff7f0] text-[#1e4137] transition-colors hover:bg-[#bad6ff]"
+                  >
+                    <Icon className="h-6 w-6" />
+                  </a>
+                ))}
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C9A96A]">Explore</p>
-              <ul className="mt-4 space-y-2.5 text-sm">
+            <nav aria-label="Footer" className="lg:col-span-2">
+              <ul className="flex flex-col gap-4">
                 {[
                   ['Celebrations', '/signup'],
                   ['Services', '/signup'],
@@ -653,10 +693,9 @@ const LandingPage = () => {
                   </li>
                 ))}
               </ul>
-            </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C9A96A]">Services</p>
-              <ul className="mt-4 space-y-2.5 text-sm text-white/80">
+            </nav>
+            <div className="lg:col-span-3">
+              <ul className="flex flex-col gap-4 text-white/80">
                 {['Photography', 'Catering', 'DJ & Music', 'Decor & Florals', 'Lighting & Production'].map(
                   (s) => (
                     <li key={s}>{s}</li>
@@ -664,21 +703,22 @@ const LandingPage = () => {
                 )}
               </ul>
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C9A96A]">Contact</p>
-              <ul className="mt-4 space-y-2.5 text-sm text-white/80">
-                <li>hello@festivlink.com</li>
-                <li>+91 98765 43210</li>
-                <li>Mumbai • Global</li>
-              </ul>
-              <div className="mt-6">
-                <PillButton to="/join">Start your event</PillButton>
+            <div className="flex flex-col gap-7 lg:col-span-3">
+              <div className="space-y-2 text-white/80">
+                <p>hello@festivlink.com</p>
+                <p>+91 98765 43210</p>
+                <p>Mumbai • Global</p>
+              </div>
+              <div className="mt-auto">
+                <StudioButton to="/join" variant="beige">
+                  Start your event
+                </StudioButton>
               </div>
             </div>
           </div>
-          <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-white/50 sm:flex-row">
+          <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-8 text-sm text-white/50 sm:flex-row sm:items-center sm:justify-between">
             <p>© {new Date().getFullYear()} FestivLink. All rights reserved.</p>
-            <div className="flex gap-6">
+            <div className="flex flex-wrap gap-x-5 gap-y-2">
               <Link to="/about" className="hover:text-white">Privacy & Cookies</Link>
               <Link to="/about" className="hover:text-white">Terms</Link>
             </div>

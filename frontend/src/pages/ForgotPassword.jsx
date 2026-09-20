@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Mail, CheckCircle } from 'lucide-react'
 import api from '../services/api'
+import StudioButton from '../components/ui/StudioButton'
 import { useToast } from '../components/ui/Toast'
 
 const ForgotPassword = () => {
@@ -56,11 +57,11 @@ const ForgotPassword = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
+      className="min-h-screen bg-[#fff7f0] flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-gold/10 to-transparent rounded-full blur-3xl"
+          className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
           animate={{ y: [0, 60, 0], x: [50, -50, 50] }}
           transition={{ duration: 20, repeat: Infinity }}
         />
@@ -71,14 +72,14 @@ const ForgotPassword = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="glass-card rounded-3xl p-8 lg:p-10 border border-primary/10"
+          className="bg-white rounded-[var(--jak-border-radius)] p-8 lg:p-10 border border-black/5 shadow-xl"
         >
           {/* Header */}
           <motion.div variants={itemVariants} className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-gold to-gold-dark rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-[#1e4137] rounded-full flex items-center justify-center mx-auto mb-4">
+              <Mail className="w-8 h-8 text-[#bad6ff]" />
             </div>
-            <h1 className="text-3xl font-serif font-light text-gray-900 mb-2">
+            <h1 className="text-[clamp(28px,3.33vw,48px)] font-semibold leading-[1.1] text-gray-900 mb-2">
               Reset Password
             </h1>
             <p className="text-gray-500 text-sm">
@@ -98,26 +99,23 @@ const ForgotPassword = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-all duration-300"
+                  className="w-full px-6 py-3.5 rounded-full bg-white border border-black/10 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] transition-all duration-300"
                   placeholder="your@email.com"
                 />
               </motion.div>
 
               {/* Submit Button */}
-              <motion.button
-                variants={itemVariants}
-                type="submit"
-                disabled={loading}
-                className="w-full btn-primary py-3 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Sending...' : 'Send Reset Link'}
-              </motion.button>
+              <motion.div variants={itemVariants}>
+                <StudioButton type="submit" disabled={loading} className="w-full studio-btn-block">
+                  {loading ? 'Sending...' : 'Send Reset Link'}
+                </StudioButton>
+              </motion.div>
 
               {/* Back to Login */}
               <motion.div variants={itemVariants} className="text-center">
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-2 text-primary-dark hover:text-primary-dark/80 font-medium transition-colors"
+                  className="inline-flex items-center gap-2 text-[#1e4137] hover:text-[#1e4137]/80 font-medium transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to Login
@@ -135,7 +133,7 @@ const ForgotPassword = () => {
                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               </motion.div>
               <motion.div variants={itemVariants}>
-                <h2 className="text-2xl font-serif font-light text-gray-900 mb-2">
+                <h2 className="text-2xl font-semibold text-gray-900 mb-2">
                   Check Your Email
                 </h2>
                 <p className="text-gray-500">
@@ -148,7 +146,7 @@ const ForgotPassword = () => {
               <motion.div variants={itemVariants}>
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-2 text-primary-dark hover:text-primary-dark/80 font-medium transition-colors"
+                  className="inline-flex items-center gap-2 text-[#1e4137] hover:text-[#1e4137]/80 font-medium transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to Login

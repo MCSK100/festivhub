@@ -26,8 +26,8 @@ export function StickyCTA() {
           className="fixed bottom-6 right-6 z-50"
         >
           <button
-            onClick={() => navigate('/contact')}
-            className="btn-primary flex items-center gap-2 shadow-lg"
+            onClick={() => navigate('/join')}
+            className="flex items-center gap-2 shadow-lg rounded-full bg-[#1e4137] text-[#bad6ff] font-semibold pl-2 pr-6 py-2"
           >
             <span>Plan Your Event</span>
             <ArrowRight className="w-4 h-4" />
@@ -54,14 +54,14 @@ export function WhatsAppButton() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="glass-card rounded-2xl p-4 mb-4 w-64"
+            className="bg-white rounded-[var(--jak-border-radius)] border border-black/10 shadow-xl p-4 mb-4 w-64"
           >
             <p className="text-gray-700 text-sm mb-3">
               Hi! How can we help you plan your event?
             </p>
             <button
               onClick={openWhatsApp}
-              className="w-full btn-primary text-sm py-2"
+              className="w-full text-sm py-2 rounded-full bg-[#1e4137] text-[#bad6ff] font-semibold"
             >
               Start Chat
             </button>
@@ -115,7 +115,7 @@ export function AIChatBot() {
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="glass-card rounded-2xl w-80 h-96 mb-4 flex flex-col"
+            className="bg-white rounded-[var(--jak-border-radius)] border border-black/10 shadow-xl w-80 h-96 mb-4 flex flex-col"
           >
             {/* Header */}
             <div className="p-4 border-b border-gray-200">
@@ -128,10 +128,10 @@ export function AIChatBot() {
               {messages.map((msg, i) => (
                 <div
                   key={i}
-                  className={`text-sm p-3 rounded-xl ${
+                  className={`text-sm p-3 rounded-[var(--jak-border-radius)] ${
                     msg.role === 'assistant'
-                      ? 'bg-primary/10 text-gray-700'
-                      : 'bg-primary-dark text-white'
+                      ? 'bg-[#1e4137]/10 text-gray-700'
+                      : 'bg-[#1e4137] text-[#bad6ff]'
                   }`}
                 >
                   {msg.content}
@@ -152,7 +152,7 @@ export function AIChatBot() {
                 />
                 <button
                   onClick={handleSend}
-                  className="p-2 rounded-lg bg-primary-dark text-white"
+                  className="p-2 rounded-full bg-[#1e4137] text-[#bad6ff]"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -166,7 +166,7 @@ export function AIChatBot() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="w-12 h-12 rounded-full bg-gold flex items-center justify-center shadow-lg"
+        className="w-12 h-12 rounded-full bg-[#1e4137] flex items-center justify-center shadow-lg"
       >
         {isOpen ? (
           <X className="w-5 h-5 text-white" />

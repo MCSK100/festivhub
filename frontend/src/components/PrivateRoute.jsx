@@ -6,10 +6,10 @@ const PrivateRoute = ({ children, requiredRole = null }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[#fff7f0]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-slate-700">Loading...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#1e4137] mx-auto mb-4"></div>
+          <p className="text-[#0b1311]/60">Loading...</p>
         </div>
       </div>
     );

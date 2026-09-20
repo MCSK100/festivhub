@@ -93,7 +93,7 @@ const GoogleSignIn = ({ role = 'customer', mode = 'signin', onError }) => {
 
   if (status === 'unconfigured') {
     return (
-      <div className="w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 bg-gray-50 text-center">
+      <div className="w-full px-4 py-3 rounded-full border border-dashed border-black/20 bg-[#fff7f0] text-center">
         <p className="text-sm text-gray-500 font-medium">Continue with Google</p>
         <p className="text-xs text-gray-400 mt-1">
           Not configured — set VITE_GOOGLE_CLIENT_ID + GOOGLE_CLIENT_ID to enable.

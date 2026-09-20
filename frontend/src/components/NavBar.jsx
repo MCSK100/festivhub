@@ -1,178 +1,240 @@
-import { motion, AnimatePresence } from 'framer-motion'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Menu, X, LayoutDashboard } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { useAuth } from '../contexts/AuthContext'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
+import StudioButton from './ui/StudioButton';
+
+/**
+ * Header rebuilt exactly like studiomodular.be:
+ * - fixed top row: wordmark left, double-circle pill CTA right
+ *   (light-blue "Menu" pill below 1440px)
+ * - centered frosted pill nav (desktop >= 1440px) with sliding
+ *   light-blue indicator behind the hovered / active link
+ * - full-screen deep-green circle-reveal overlay menu on smaller screens
+ */
+const NAV_LINKS = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/join', label: 'Contact' },
+];
 
 const NavBar = () => {
-  const { user, logout, dashboardPath } = useAuth()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const [imgSrc, setImgSrc] = useState('https://i.postimg.cc/6QrBSDmH/festivlivk-logo.png')
-  const location = useLocation()
-  const navigate = useNavigate()
+  const { user, logout, dashboardPath } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0, visible: false });
+  const pillRef = useRef(null);
+  const itemRefs = useRef({});
+
+  const isDashboard = location.pathname.includes('-dashboard');
+  const dark = isDashboard; // dark surfaces -> light header variant
+
+  const links = user ? [...NAV_LINKS, { href: dashboardPath, label: 'Dashboard' }] : NAV_LINKS;
+  const ctaTo = user ? dashboardPath : '/join';
+  const ctaLabel = user ? 'My dashboard' : 'Start your event';
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
-    setMobileMenuOpen(false)
-  }, [location.pathname])
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('menu-open', menuOpen);
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => {
+      document.documentElement.classList.remove('menu-open');
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
+
+  const moveIndicator = (href) => {
+    const el = itemRefs.current[href];
+    const pill = pillRef.current;
+    if (!el || !pill) return;
+    const pillRect = pill.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    setIndicator({ left: rect.left - pillRect.left, width: rect.width, visible: true });
+  };
+
+  const showFor = (href) => moveIndicator(href);
+  const hideToActive = () => {
+    const active = links.find((l) => l.href === location.pathname);
+    if (active) moveIndicator(active.href);
+    else setIndicator((s) => ({ ...s, visible: false }));
+  };
+
+  useLayoutEffect(() => {
+    hideToActive();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, user]);
 
   const handleLogout = () => {
-    logout()
-    navigate('/', { replace: true })
-  }
-
-  const isDashboard = location.pathname.includes('-dashboard')
-  const isDarkBg = scrolled || isDashboard
-  const isActive = (path) => location.pathname === path
-
-  const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
-    { href: '/faq', label: 'FAQ' },
-    ...(user ? [{ href: dashboardPath, label: 'Dashboard', icon: true }] : []),
-  ]
+    logout();
+    navigate('/', { replace: true });
+  };
 
   return (
-    <motion.nav
-      initial={{ opacity: 0, y: -24 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        isDarkBg
-          ? 'bg-[#0a0a12]/85 backdrop-blur-xl border-b border-white/10 shadow-lg'
-          : 'bg-white/85 backdrop-blur-xl border-b border-black/5'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 lg:h-20">
-          <Link to="/" className="hover:scale-105 transition-transform duration-300 flex items-center gap-2">
-            <img
-              src={imgSrc}
-              alt="FestivLink"
-              className="h-10 lg:h-12 w-auto"
-              onError={() => setImgSrc('/logo.png')}
-            />
+    <>
+      {/* ===== fixed top bar: logo left, CTA / Menu right ===== */}
+      <div
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled && !menuOpen
+            ? dark
+              ? 'bg-[#0a0a12]/85 backdrop-blur-xl'
+              : 'bg-[#fff7f0]/85 backdrop-blur-xl'
+            : 'bg-transparent'
+        }`}
+      >
+        <div className="mx-auto flex h-[68px] max-w-[100rem] items-center justify-between px-6 pt-[30px] lg:px-10">
+          <Link
+            to="/"
+            className={`text-[26px] font-black leading-none tracking-tight lg:text-[32px] ${
+              dark || menuOpen ? 'text-[#fff7f0]' : 'text-[#1e4137]'
+            }`}
+          >
+            FESTIVLINK
           </Link>
 
-          <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`text-sm font-medium transition-all duration-300 pb-1 border-b-2 flex items-center gap-1.5 ${
-                  isActive(link.href)
-                    ? 'text-yellow-500 border-yellow-500'
-                    : isDarkBg
-                      ? 'text-white/70 border-transparent hover:text-white hover:border-yellow-500/50'
-                      : 'text-gray-600 border-transparent hover:text-gray-900 hover:border-yellow-500/50'
+          <div className="flex items-center gap-4">
+            {user && (
+              <span
+                className={`hidden text-sm font-medium xl:block ${
+                  dark || menuOpen ? 'text-white/60' : 'text-[#0b1311]/60'
                 }`}
               >
-                {link.icon && <LayoutDashboard className="w-4 h-4" />}
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="hidden lg:flex items-center gap-3">
-            {!user ? (
-              <>
-                <Link
-                  to="/login"
-                  className={`px-5 py-2.5 font-medium transition-colors duration-300 text-sm ${
-                    isDarkBg ? 'text-white/70 hover:text-white' : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Sign In
-                </Link>
-                <Link to="/join" className="btn-primary px-6 py-2.5 text-sm font-semibold flex items-center justify-center !rounded-xl">
-                  Get Started
-                </Link>
-              </>
-            ) : (
-              <>
-                <span className={`text-sm font-medium hidden xl:block ${isDarkBg ? 'text-white/60' : 'text-gray-500'}`}>
-                  {user.name || user.email}
-                </span>
-                <motion.button
-                  onClick={handleLogout}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="px-5 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl font-medium text-sm transition-all duration-300 border border-red-500/20"
-                >
-                  Logout
-                </motion.button>
-              </>
+                {user.name || user.email}
+              </span>
             )}
+            {/* CTA pill on very wide screens, like theirs */}
+            <div className="show-wide">
+              <StudioButton to={ctaTo} variant={dark ? 'beige' : 'primary'}>
+                {ctaLabel}
+              </StudioButton>
+            </div>
+            {/* Menu trigger below 1440px */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-expanded={menuOpen}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              className="studio-menu-btn hide-wide"
+            >
+              {menuOpen ? 'Close' : 'Menu'}
+            </button>
           </div>
-
-          <motion.button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`lg:hidden p-2 rounded-lg transition-colors ${isDarkBg ? 'text-white/70 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </motion.button>
         </div>
 
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden overflow-hidden"
+        {/* ===== centered frosted pill nav (desktop) ===== */}
+        {!isDashboard && (
+          <nav aria-label="Main navigation" className="show-wide pointer-events-none absolute left-1/2 top-[30px] -translate-x-1/2">
+            <div
+              ref={pillRef}
+              onMouseLeave={hideToActive}
+              className="frost-pill pointer-events-auto relative flex h-[68px] items-center overflow-hidden"
             >
-              <div className={`flex flex-col gap-2 rounded-xl p-4 mb-4 shadow-lg border ${
-                isDarkBg ? 'bg-[#12131f] border-white/10' : 'bg-white border-black/5'
-              }`}>
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className={`text-sm font-medium py-2.5 px-3 rounded-lg transition-all duration-300 ${
-                      isActive(link.href)
-                        ? 'text-yellow-500 bg-yellow-500/10'
-                        : isDarkBg
-                          ? 'text-white/70 hover:text-white hover:bg-white/5'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                <div className="pt-3 mt-2 border-t border-white/10 flex flex-col gap-2">
-                  {!user ? (
-                    <>
-                      <Link to="/login" className={`px-5 py-2.5 text-center font-medium text-sm ${isDarkBg ? 'text-white/70' : 'text-gray-600'}`}>
-                        Sign In
-                      </Link>
-                      <Link to="/join" className="btn-primary px-5 py-2.5 text-sm font-semibold w-full text-center block !rounded-xl">
-                        Get Started
-                      </Link>
-                    </>
-                  ) : (
-                    <button
-                      onClick={handleLogout}
-                      className="px-5 py-2.5 bg-red-500/10 text-red-500 rounded-xl font-medium text-sm w-full border border-red-500/20"
-                    >
-                      Logout ({user.email})
-                    </button>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              {/* sliding indicator */}
+              <span
+                aria-hidden
+                className="absolute top-1/2 h-[52px] -translate-y-1/2 rounded-full bg-[#bad6ff] transition-all duration-300 ease-out"
+                style={{
+                  left: indicator.left,
+                  width: indicator.width,
+                  opacity: indicator.visible ? 1 : 0,
+                }}
+              />
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  ref={(el) => {
+                    if (el) itemRefs.current[link.href] = el;
+                  }}
+                  to={link.href}
+                  onMouseEnter={() => showFor(link.href)}
+                  onFocus={() => showFor(link.href)}
+                  className={`relative z-10 block px-7 text-[17px] font-medium transition-colors ${
+                    dark ? 'text-[#0b1311]' : 'text-[#0b1311]'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </nav>
+        )}
       </div>
-    </motion.nav>
-  )
-}
 
-export default NavBar
+      {/* ===== full-screen overlay menu ===== */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ clipPath: 'circle(0% at 50% 50%)' }}
+            animate={{ clipPath: 'circle(142% at 50% 50%)' }}
+            exit={{ clipPath: 'circle(0% at 50% 50%)' }}
+            transition={{ duration: 0.45, ease: 'linear' }}
+            className="fixed inset-0 z-40 overflow-hidden bg-[#1e4137]"
+          >
+            <div className="flex h-full flex-col items-center justify-center overflow-auto px-6 py-28 text-center">
+              <nav aria-label="Main navigation">
+                <ul className="flex flex-col gap-2">
+                  {links.map((link, i) => (
+                    <motion.li
+                      key={link.href}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.15 + i * 0.06 }}
+                    >
+                      <Link
+                        to={link.href}
+                        className="block py-1 text-[clamp(2rem,8vw,4.375rem)] font-semibold leading-tight text-[#fff7f0] transition-colors hover:text-[#bad6ff]"
+                      >
+                        {link.label}
+                      </Link>
+                    </motion.li>
+                  ))}
+                </ul>
+              </nav>
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45 }}
+                className="mt-12"
+              >
+                <StudioButton to={ctaTo} variant="beige">
+                  {ctaLabel}
+                </StudioButton>
+              </motion.div>
+              {user ? (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="mt-6 text-sm font-medium text-[#fff7f0]/70 underline underline-offset-4 hover:text-[#fff7f0]"
+                >
+                  Log out ({user.email})
+                </button>
+              ) : (
+                <p className="mt-6 text-sm text-[#fff7f0]/70">
+                  New here?{' '}
+                  <Link to="/signup" className="font-semibold text-[#bad6ff] underline underline-offset-4">
+                    Create an account
+                  </Link>
+                </p>
+              )}
+              <p className="mt-10 text-sm text-[#fff7f0]/50">hello@festivlink.com</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+export default NavBar;

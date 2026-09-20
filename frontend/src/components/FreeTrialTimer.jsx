@@ -36,16 +36,16 @@ const FreeTrialTimer = () => {
     <motion.div 
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="group relative px-6 py-3 bg-gradient-to-r from-primary/20 to-purple-500/20 backdrop-blur-xl rounded-3xl border border-primary/50 shadow-glow ring-2 ring-primary/30 hover:shadow-glow-lg hover:scale-105 transition-all duration-500 flex items-center space-x-3"
+      className="group relative px-6 py-3 bg-gradient-to-r from-[#1e4137]/15 to-[#bad6ff]/30 backdrop-blur-xl rounded-3xl border border-[#1e4137]/30 shadow-glow ring-2 ring-[#1e4137]/20 hover:shadow-glow-lg hover:scale-105 transition-all duration-500 flex items-center space-x-3"
       whileHover={{ y: -2 }}
     >
       <motion.div 
         animate={{ rotate: [0, 360] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-        className="w-6 h-6 bg-primary rounded-full shadow-glow"
+        className="w-6 h-6 bg-[#1e4137] rounded-full shadow-glow"
       />
       <div className="flex items-baseline space-x-1 text-sm font-bold">
-        <span className="text-blue-600 drop-shadow-lg">🎉 Free for 30 Days</span>
+        <span className="text-[#1e4137] drop-shadow-lg">🎉 Free for 30 Days</span>
         <span className="text-xs text-slate-600">– Limited Offer</span>
       </div>
       <div className="text-xs font-mono text-slate-700 ml-2 space-x-1">

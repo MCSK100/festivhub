@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Playfair+Display:ital,wght@0,300..700;1,300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:wght@300..700&family=Playfair+Display:ital,wght@0,300..700;1,300..700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +6,16 @@
 
 :root {
   color-scheme: light;
+
+  /* ---- Studio Modular exact tokens ---- */
+  --jak-color-light: #fff;
+  --jak-color-dark: #0b1311;
+  --jak-color-primary: #1e4137;
+  --jak-color-secondary: #bad6ff;
+  --jak-color-beige: #fff7f0;
+  --jak-color-grey-light: #f4f4f2;
+  --jak-btn-height: 68px;
+  --jak-border-radius: clamp(15px, 1.6vw, 30px);
 
   --color-primary: #FACC15;
   --color-primary-light: #FDE047;
@@ -28,12 +38,107 @@
 
 /* Base Styles */
 body {
-  background-color: #FFFFFF;
-  color: #111827;
-  font-family: var(--font-body);
+  background-color: #FFF7F0;
+  color: #0b1311;
+  font-family: 'Figtree', 'Helvetica', 'Arial', sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- Studio Modular button: deep-green pill, light-blue label,
+   arrow circles on both ends that trade places on hover ---- */
+.studio-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: var(--jak-btn-height);
+  border-radius: 999px;
+  background: var(--jak-color-primary);
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+  padding-left: 0;
+  padding-right: var(--jak-btn-height);
+  transition: padding 0.25s ease-in, background 0.25s ease-in;
+  will-change: padding;
+  white-space: nowrap;
+}
+.studio-btn .sb-label {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 30px;
+  border-radius: 999px;
+  color: var(--jak-color-secondary);
+  transition: color 0.25s ease-in;
+}
+.studio-btn .sb-circle {
+  position: absolute;
+  top: 0;
+  width: var(--jak-btn-height);
+  height: var(--jak-btn-height);
+  border-radius: 50%;
+  background: var(--jak-color-secondary);
+  color: var(--jak-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease-in, background 0.25s ease-in, color 0.25s ease-in;
+}
+.studio-btn .sb-circle-left { left: 0; transform: scale(0); }
+.studio-btn .sb-circle-right { right: 0; transform: scale(1); }
+@media (hover: hover) {
+  .studio-btn:hover { padding-left: var(--jak-btn-height); padding-right: 0; }
+  .studio-btn:hover .sb-circle-left { transform: scale(1); }
+  .studio-btn:hover .sb-circle-right { transform: scale(0); }
+}
+/* beige variant for use on dark green backgrounds */
+.studio-btn--beige { background: var(--jak-color-beige); }
+.studio-btn--beige .sb-label { color: var(--jak-color-primary); }
+.studio-btn--beige .sb-circle { background: var(--jak-color-primary); color: var(--jak-color-secondary); }
+
+/* full-width variant: keep label centered between the circles */
+.studio-btn-block .sb-label { margin: 0 auto; }
+
+/* menu trigger pill */
+.studio-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--jak-btn-height);
+  padding: 0 30px;
+  border-radius: 999px;
+  background: var(--jak-color-secondary);
+  color: var(--jak-color-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.25s ease-in, color 0.25s ease-in;
+}
+.menu-open .studio-menu-btn { background: var(--jak-color-primary); color: var(--jak-color-secondary); }
+
+/* card / image radius */
+.r-card { border-radius: var(--jak-border-radius); }
+
+/* frosted nav pill */
+.frost-pill {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+}
+
+@keyframes scroll-text-rotate {
+  0% { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+
+/* desktop-only header elements (their nav appears >= 1440px) */
+.show-wide { display: none; }
+@media screen and (min-width: 90em) {
+  .show-wide { display: block; }
+  .hide-wide { display: none !important; }
 }
 
 /* Light Background */

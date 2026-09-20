@@ -126,14 +126,14 @@ const VendorDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center dashboard-dark pt-20">
+      <div className="min-h-screen flex items-center justify-center bg-[#fff7f0] pt-20">
         <div className="text-center">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-            className="w-14 h-14 border-2 border-white/10 border-t-yellow-400 rounded-full mx-auto mb-4"
+            className="w-14 h-14 border-2 border-[#1e4137]/10 border-t-[#1e4137] rounded-full mx-auto mb-4"
           />
-          <p className="text-slate-400 font-medium">Loading your workspace…</p>
+          <p className="text-[#0b1311]/60 font-medium">Loading your workspace…</p>
         </div>
       </div>
     )
@@ -144,14 +144,14 @@ const VendorDashboard = () => {
       {/* Header */}
       <div className="p-6 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400/20 to-amber-600/20 border border-yellow-500/30 flex items-center justify-center text-yellow-400 font-bold text-lg">
+          <div className="w-10 h-10 rounded-full bg-[#bad6ff] flex items-center justify-center text-[#1e4137] font-bold text-lg">
             {(vendorProfile?.name || 'V').charAt(0).toUpperCase()}
           </div>
           <div>
-            <h1 className="text-base font-bold text-white leading-tight truncate max-w-[160px]">
+            <h1 className="text-base font-bold text-[#fff7f0] leading-tight truncate max-w-[160px]">
               {vendorProfile?.companyName || vendorProfile?.name || 'FestivLink Vendor'}
             </h1>
-            <p className="text-xs text-slate-500 mt-0.5">Vendor Portal</p>
+            <p className="text-xs text-[#fff7f0]/60 mt-0.5">Vendor Portal</p>
           </div>
         </div>
       </div>
@@ -169,16 +169,16 @@ const VendorDashboard = () => {
                     setActiveTab(item.id)
                     setSidebarOpen(false)
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-full transition-all duration-200 text-sm font-medium ${
                     isActive
-                      ? 'bg-gradient-to-r from-yellow-500/20 to-amber-500/10 text-yellow-400 border border-yellow-500/30'
-                      : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                      ? 'bg-[#bad6ff] text-[#1e4137]'
+                      : 'text-[#fff7f0]/70 hover:bg-white/10 hover:text-[#fff7f0]'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-yellow-400' : ''}`} />
+                  <Icon className="w-5 h-5" />
                   {item.label}
                   {item.id === 'bookings' && unreadCount > 0 && (
-                    <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                    <span className="ml-auto bg-[#ff643c] text-white text-xs px-2 py-0.5 rounded-full font-bold">
                       {unreadCount}
                     </span>
                   )}
@@ -193,7 +193,7 @@ const VendorDashboard = () => {
       <div className="p-4 border-t border-white/10">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 rounded-xl transition-all duration-200 text-sm font-medium"
+          className="w-full flex items-center gap-3 px-4 py-3 text-[#fff7f0]/70 hover:bg-white/10 hover:text-[#fff7f0] rounded-full transition-all duration-200 text-sm font-medium"
         >
           <LogOut className="w-5 h-5" />
           Logout
@@ -203,10 +203,10 @@ const VendorDashboard = () => {
   )
 
   return (
-    <div className="min-h-screen pt-16 lg:pt-20 dashboard-dark">
+    <div className="min-h-screen pt-16 lg:pt-20 bg-[#fff7f0]">
       <div className="flex">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex flex-col fixed top-16 lg:top-20 left-0 w-72 h-[calc(100vh-4rem)] lg:h-[calc(100vh-5rem)] glass-dark border-r border-white/10 z-20">
+        <aside className="hidden lg:flex flex-col fixed top-16 lg:top-20 left-0 w-72 h-[calc(100vh-4rem)] lg:h-[calc(100vh-5rem)] bg-[#1e4137] z-20">
           <SidebarContent />
         </aside>
 
@@ -226,13 +226,13 @@ const VendorDashboard = () => {
                 animate={{ x: 0 }}
                 exit={{ x: -280 }}
                 transition={{ type: 'spring', damping: 25 }}
-                className="fixed top-0 left-0 w-72 h-full glass-dark border-r border-white/10 z-40 flex flex-col"
+                className="fixed top-0 left-0 w-72 h-full bg-[#1e4137] z-40 flex flex-col"
               >
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
-                  <span className="text-white font-bold text-sm">Menu</span>
+                  <span className="text-[#fff7f0] font-bold text-sm">Menu</span>
                   <button
                     onClick={() => setSidebarOpen(false)}
-                    className="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                    className="p-2 rounded-full hover:bg-white/10 text-[#fff7f0]/70 hover:text-[#fff7f0] transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -246,13 +246,13 @@ const VendorDashboard = () => {
         {/* Main Content */}
         <main className="flex-1 lg:ml-72 flex flex-col min-w-0">
           {/* Mobile Header */}
-          <div className="lg:hidden glass-dark border-b border-white/10 px-5 py-4 flex items-center justify-between">
-            <h2 className="text-base font-semibold text-white">
+          <div className="lg:hidden bg-white border-b border-black/5 px-5 py-4 flex items-center justify-between">
+            <h2 className="text-base font-semibold text-[#0b1311]">
               {sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
             </h2>
             <button
               onClick={() => setSidebarOpen(true)}
-              className="p-2 rounded-xl glass-accent border border-white/10 text-slate-400 hover:text-white transition-colors"
+              className="p-2 rounded-full bg-[#1e4137] text-[#bad6ff] transition-colors"
             >
               <Menu className="w-5 h-5" />
             </button>

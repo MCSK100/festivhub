@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { CheckCircle, Heart, Zap, Globe, Users, Target, Award } from 'lucide-react'
+import StudioButton from '../components/ui/StudioButton'
 
 const About = () => {
   const containerVariants = {
@@ -26,18 +27,18 @@ const About = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-white overflow-hidden"
+      className="min-h-screen bg-[#fff7f0] overflow-hidden"
     >
       {/* Hero Section */}
       <section className="relative pt-40 pb-24 lg:py-48 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
-            className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-gold/15 to-transparent rounded-full blur-3xl"
+            className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
             animate={{ y: [0, 100, 0], x: [-50, 50, -50] }}
             transition={{ duration: 20, repeat: Infinity }}
           />
           <motion.div
-            className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-tl from-gold/15 to-transparent rounded-full blur-3xl"
+            className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-tl from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
             animate={{ y: [0, -100, 0], x: [50, -50, 50] }}
             transition={{ duration: 25, repeat: Infinity, delay: 2 }}
           />
@@ -53,9 +54,7 @@ const About = () => {
           >
             <motion.h1
               variants={itemVariants}
-              className="text-6xl md:text-7xl lg:text-8xl font-serif font-light mb-8 text-gray-900"
-            >
-              About <span className="gradient-gold font-semibold">FestivLink</span>
+              className="text-[clamp(32px,5.2vw,100px)] font-semibold leading-[1.1] text-[#1e4137]">About FestivLink
             </motion.h1>
             <motion.p
               variants={itemVariants}
@@ -82,9 +81,9 @@ const About = () => {
               variants={itemVariants}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-gold/10 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-              <div className="relative glass-card rounded-3xl p-10 lg:p-12 border border-primary/10">
-                <Target className="w-12 h-12 text-primary-dark mb-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1e4137]/10 to-[#bad6ff]/20 rounded-[var(--jak-border-radius)] blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
+              <div className="relative bg-white rounded-[var(--jak-border-radius)] p-10 lg:p-12 border border-black/5 shadow-sm">
+                <Target className="w-12 h-12 text-[#1e4137] mb-6" />
                 <h3 className="text-3xl font-semibold text-gray-900 mb-4">Our Mission</h3>
                 <p className="text-gray-500 leading-relaxed text-lg">
                   To revolutionize event planning by connecting organizers with verified professionals, making quality accessible and stress-free.
@@ -97,9 +96,9 @@ const About = () => {
               variants={itemVariants}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-gold/10 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-              <div className="relative glass-card rounded-3xl p-10 lg:p-12 border border-primary/10">
-                <Globe className="w-12 h-12 text-primary-dark mb-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1e4137]/10 to-[#bad6ff]/20 rounded-[var(--jak-border-radius)] blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
+              <div className="relative bg-white rounded-[var(--jak-border-radius)] p-10 lg:p-12 border border-black/5 shadow-sm">
+                <Globe className="w-12 h-12 text-[#1e4137] mb-6" />
                 <h3 className="text-3xl font-semibold text-gray-900 mb-4">Our Vision</h3>
                 <p className="text-gray-500 leading-relaxed text-lg">
                   A world where every celebration is powered by excellence, trust, and genuine human connection.
@@ -112,9 +111,9 @@ const About = () => {
               variants={itemVariants}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-gold/10 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
-              <div className="relative glass-card rounded-3xl p-10 lg:p-12 border border-primary/10">
-                <Heart className="w-12 h-12 text-primary-dark mb-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1e4137]/10 to-[#bad6ff]/20 rounded-[var(--jak-border-radius)] blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
+              <div className="relative bg-white rounded-[var(--jak-border-radius)] p-10 lg:p-12 border border-black/5 shadow-sm">
+                <Heart className="w-12 h-12 text-[#1e4137] mb-6" />
                 <h3 className="text-3xl font-semibold text-gray-900 mb-4">Our Purpose</h3>
                 <p className="text-gray-500 leading-relaxed text-lg">
                   Empowering both customers and professionals to create meaningful moments without compromise.
@@ -126,7 +125,7 @@ const About = () => {
       </section>
 
       {/* Story Section */}
-      <section className="relative py-24 lg:py-32 bg-gradient-to-br from-gold/5 via-transparent to-gold/5 overflow-hidden">
+      <section className="relative py-24 lg:py-32 bg-gradient-to-br from-[#1e4137]/5 via-transparent to-[#bad6ff]/20 overflow-hidden">
         <div className="max-w-5xl mx-auto px-6 lg:px-20 relative z-10">
           <motion.div
             variants={containerVariants}
@@ -136,9 +135,9 @@ const About = () => {
           >
             <motion.h2
               variants={itemVariants}
-              className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-12 text-gray-900"
+              className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1] mb-12 text-[#1e4137]"
             >
-              Our <span className="gradient-gold font-semibold">Story</span>
+              Our Story
             </motion.h2>
             
             <motion.div
@@ -170,9 +169,9 @@ const About = () => {
           >
             <motion.h2
               variants={itemVariants}
-              className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-16 text-gray-900 text-center"
+              className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1] mb-16 text-[#1e4137] text-center"
             >
-              Our <span className="gradient-gold font-semibold">Values</span>
+              Our Values
             </motion.h2>
 
             <motion.div
@@ -211,10 +210,10 @@ const About = () => {
                     variants={itemVariants}
                     className="group relative"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-gold/10 rounded-2xl blur-2xl opacity-0 group-hover:opacity-30 transition-all duration-500" />
-                    <div className="relative glass-card rounded-2xl p-8 group-hover:border-primary/30 transition-all duration-300 border border-primary/10">
-                      <div className="w-10 h-10 mb-4 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <Icon className="w-6 h-6 text-primary-dark" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#1e4137]/10 to-[#bad6ff]/20 rounded-[var(--jak-border-radius)] blur-2xl opacity-0 group-hover:opacity-30 transition-all duration-500" />
+                    <div className="relative bg-white rounded-[var(--jak-border-radius)] p-8 hover:border-[#1e4137]/30 transition-all duration-300 border border-black/5 shadow-sm">
+                      <div className="w-10 h-10 mb-4 rounded-xl bg-[#1e4137]/10 flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-[#1e4137]" />
                       </div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-3">{value.title}</h3>
                       <p className="text-gray-500 text-sm leading-relaxed">{value.description}</p>
@@ -228,7 +227,7 @@ const About = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="relative py-24 lg:py-32 bg-gradient-to-r from-gold/10 via-gold/5 to-gold/10 overflow-hidden">
+      <section className="relative py-24 lg:py-32 bg-gradient-to-r from-[#1e4137]/10 via-transparent to-[#bad6ff]/20 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-20 relative z-10">
           <motion.div
             variants={containerVariants}
@@ -254,7 +253,7 @@ const About = () => {
                 >
                   {stat.icon}
                 </motion.div>
-                <h3 className="text-4xl md:text-5xl font-serif font-light text-gray-900 mb-3">
+                <h3 className="text-4xl md:text-5xl font-semibold text-[#1e4137] mb-3">
                   {stat.number}
                 </h3>
                 <p className="text-lg text-gray-500 font-light">{stat.label}</p>
@@ -268,7 +267,7 @@ const About = () => {
       <section className="relative py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <motion.div
-            className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-gold/10 to-transparent rounded-full blur-3xl"
+            className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
             animate={{ y: [-50, 50, -50] }}
             transition={{ duration: 12, repeat: Infinity }}
           />
@@ -283,9 +282,9 @@ const About = () => {
           >
             <motion.h2
               variants={itemVariants}
-              className="text-5xl md:text-6xl lg:text-7xl font-serif font-light mb-8 text-gray-900"
+              className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1] mb-8 text-[#1e4137]"
             >
-              Ready to <span className="gradient-gold font-semibold">Join Us?</span>
+              Ready to Join Us?
             </motion.h2>
             <motion.p
               variants={itemVariants}
@@ -297,12 +296,12 @@ const About = () => {
               variants={itemVariants}
               className="flex flex-col sm:flex-row gap-6 justify-center"
             >
-              <button className="btn-primary px-10 py-4 text-lg font-semibold">
+              <StudioButton to="/signup">
                 Browse Professionals
-              </button>
-              <button className="btn-secondary px-10 py-4 text-lg font-semibold">
+              </StudioButton>
+              <StudioButton to="/join">
                 Become a Professional
-              </button>
+              </StudioButton>
             </motion.div>
           </motion.div>
         </div>

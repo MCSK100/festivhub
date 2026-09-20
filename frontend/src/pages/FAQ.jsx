@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import StudioButton from '../components/ui/StudioButton'
 
 const faqs = [
   {
@@ -42,10 +43,10 @@ const FAQ = () => (
         transition={{ duration: 0.8 }}
         className="text-center mb-24 lg:mb-36"
       >
-        <h2 className="text-5xl lg:text-7xl font-serif font-light italic gradient-gold mb-8 leading-tight">
+        <h2 className="text-[clamp(32px,5.2vw,100px)] font-semibold leading-[1.1] text-[#1e4137] mb-8">
           Questions?
         </h2>
-        <p className="text-2xl lg:text-3xl xl:text-4xl font-light text-slate-700 max-w-4xl mx-auto leading-[1.6] backdrop-blur-xl">
+        <p className="text-2xl lg:text-3xl xl:text-4xl font-light text-[#0b1311]/70 max-w-4xl mx-auto leading-[1.6] backdrop-blur-xl">
           Everything you need to know before joining thousands of successful events
         </p>
       </motion.div>
@@ -56,7 +57,7 @@ e-y-10">
         {faqs.map((faq, index) => (
           <motion.div 
             key={index}
-            className="group glass-card rounded-3xl p-8 lg:p-10 border border-black/5 hover:border-yellow-500/40 hover:shadow-xl transition-all duration-500 overflow-hidden relative"
+            className="group bg-white rounded-[var(--jak-border-radius)] p-8 lg:p-10 border border-black/5 hover:border-[#1e4137]/40 hover:shadow-xl transition-all duration-500 overflow-hidden relative"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -64,11 +65,11 @@ e-y-10">
             whileHover={{ scale: 1.01 }}
           >
             {/* Glow Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/8 to-blue-500/8 opacity-0 group-hover:opacity-100 blur-xl rounded-[3rem] transition-all duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1e4137]/[.07] to-[#bad6ff]/20 opacity-0 group-hover:opacity-100 blur-xl rounded-[var(--jak-border-radius)] transition-all duration-700" />
             
             {/* Question */}
             <motion.h3 
-              className="text-xl lg:text-2xl font-serif font-bold mb-4 text-gray-900 relative z-10"
+              className="text-xl lg:text-2xl font-semibold mb-4 text-gray-900 relative z-10"
               whileHover={{ x: 8 }}
             >
               {faq.q}
@@ -93,13 +94,10 @@ e-y-10">
         transition={{ duration: 0.8, delay: 0.2 }}
         className="text-center mt-32 lg:mt-48"
       >
-        <motion.button 
-          whileHover={{ scale: 1.04, y: -4 }}
-          className="btn-primary px-10 lg:px-14 py-5 lg:py-6 text-xl lg:text-2xl font-semibold"
-        >
+        <StudioButton to="/join">
           Still Have Questions?
-        </motion.button>
-        <p className="mt-12 text-xl lg:text-2xl text-slate-400 font-light">
+        </StudioButton>
+        <p className="mt-12 text-xl lg:text-2xl text-[#0b1311]/50 font-light">
           Our support team responds within 2 hours • 24/7
         </p>
       </motion.div>

@@ -3,7 +3,8 @@ import { motion } from 'framer-motion'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import GoogleSignIn from '../components/GoogleSignIn'
-import { Eye, EyeOff, ArrowRight, AlertCircle, Check } from 'lucide-react'
+import StudioButton from '../components/ui/StudioButton'
+import { Eye, EyeOff, AlertCircle, Check } from 'lucide-react'
 
 const Signup = () => {
   const [searchParams] = useSearchParams()
@@ -101,12 +102,12 @@ const Signup = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
+      className="min-h-screen bg-[#fff7f0] flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
     >
       {/* Animated Background Gradients */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-gold/10 to-transparent rounded-full blur-3xl"
+          className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
           animate={{
             y: [0, 60, 0],
             x: [50, -50, 50],
@@ -114,7 +115,7 @@ const Signup = () => {
           transition={{ duration: 20, repeat: Infinity }}
         />
         <motion.div
-          className="absolute bottom-0 left-1/3 w-96 h-96 bg-gradient-to-tl from-gold/10 to-transparent rounded-full blur-3xl"
+          className="absolute bottom-0 left-1/3 w-96 h-96 bg-gradient-to-tl from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
           animate={{
             y: [0, -60, 0],
             x: [-50, 50, -50],
@@ -132,7 +133,7 @@ const Signup = () => {
             transition={{ duration: 0.8 }}
             className="hidden lg:block relative h-[600px] rounded-3xl overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-100 rounded-3xl overflow-hidden border border-primary/20 shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-100 rounded-3xl overflow-hidden border border-black/10 shadow-xl">
               <img
                 src="https://images.unsplash.com/photo-1587603323459-ba478f963aa3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fHByZW1pdW0lMjBldmVudCUyMHNlcnZpY2VzfGVufDB8MXwwfHx8Mg%3D%3D"
                 alt="Premium event services"
@@ -143,13 +144,13 @@ const Signup = () => {
 
             {/* Floating Badge */}
             <motion.div
-              className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-xl rounded-2xl p-6 border border-primary/20 shadow-lg"
+              className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-xl rounded-[var(--jak-border-radius)] p-6 border border-black/10 shadow-lg"
               animate={{ y: [0, -8, 0] }}
               transition={{ duration: 4, repeat: Infinity }}
             >
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-                <p className="text-xs text-gold font-semibold uppercase tracking-wider">
+                <p className="text-xs text-[#1e4137] font-semibold uppercase tracking-wider">
                   Join our community
                 </p>
               </div>
@@ -167,7 +168,7 @@ const Signup = () => {
           >
             {/* Header */}
             <motion.div variants={itemVariants} className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-serif font-light text-gray-900 mb-3">
+              <h1 className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1] text-gray-900 mb-3">
                 Get Started Today
               </h1>
               <p className="text-lg text-gray-500">
@@ -179,7 +180,7 @@ const Signup = () => {
             <motion.form
               variants={itemVariants}
               onSubmit={handleSubmit}
-              className="glass-card rounded-2xl p-8 lg:p-10 border border-primary/10 shadow-xl space-y-5"
+              className="bg-white rounded-[var(--jak-border-radius)] p-8 lg:p-10 border border-black/5 shadow-xl space-y-5"
             >
               {/* Success Message */}
               {success && (
@@ -219,10 +220,10 @@ const Signup = () => {
                       key={option.value}
                       type="button"
                       onClick={() => setRole(option.value)}
-                      className={`py-3 px-4 rounded-lg border-2 font-medium transition-all duration-300 ${
+                      className={`py-3 px-4 rounded-full border-2 font-medium transition-all duration-300 ${
                         role === option.value
-                          ? 'border-primary-dark bg-primary/10 text-primary-dark'
-                          : 'border-gray-200 text-gray-500 hover:border-primary/50'
+                          ? 'border-[#1e4137] bg-[#1e4137]/10 text-[#1e4137]'
+                          : 'border-gray-200 text-gray-500 hover:border-[#1e4137]/50'
                       }`}
                     >
                       {option.label}
@@ -243,7 +244,7 @@ const Signup = () => {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
                   required
-                  className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
+                  className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
                 />
               </motion.div>
 
@@ -259,7 +260,7 @@ const Signup = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
+                  className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
                 />
               </motion.div>
 
@@ -276,12 +277,12 @@ const Signup = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
+                    className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary-dark transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#1e4137] transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -322,12 +323,12 @@ const Signup = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
+                    className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary-dark transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#1e4137] transition-colors"
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -341,30 +342,18 @@ const Signup = () => {
               </motion.div>
 
               {/* Submit Button */}
-              <motion.button
-                variants={itemVariants}
-                type="submit"
-                disabled={loading}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full btn-primary py-3 lg:py-4 text-lg font-semibold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 mt-6"
-              >
-                {loading ? (
-                  <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                    />
-                    Creating account...
-                  </>
-                ) : (
-                  <>
-                    <span>Create Account</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </motion.button>
+              <motion.div variants={itemVariants} className="mt-6">
+                <StudioButton type="submit" disabled={loading} className="w-full studio-btn-block">
+                  {loading ? (
+                    <span className="inline-flex items-center gap-2">
+                      <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Creating account...
+                    </span>
+                  ) : (
+                    'Create Account'
+                  )}
+                </StudioButton>
+              </motion.div>
 
               {/* Google SSO */}
               <motion.div variants={itemVariants}>
@@ -391,7 +380,7 @@ const Signup = () => {
                 Already have an account?{' '}
                 <Link
                   to="/login"
-                  className="text-primary-dark hover:text-primary-dark/80 font-bold transition-colors underline underline-offset-2"
+                  className="text-[#1e4137] hover:text-[#1e4137]/80 font-semibold transition-colors underline underline-offset-4"
                 >
                   Sign in here
                 </Link>

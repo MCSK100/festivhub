@@ -3,7 +3,8 @@ import { motion } from 'framer-motion'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import GoogleSignIn from '../components/GoogleSignIn'
-import { Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react'
+import StudioButton from '../components/ui/StudioButton'
+import { Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react'
 
 const Login = () => {
   const [searchParams] = useSearchParams()
@@ -73,12 +74,12 @@ const Login = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-50 flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
+      className="min-h-screen bg-[#fff7f0] flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
     >
       {/* Animated Background Gradients */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-gold/10 to-transparent rounded-full blur-3xl"
+          className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
           animate={{
             y: [0, 60, 0],
             x: [50, -50, 50],
@@ -86,7 +87,7 @@ const Login = () => {
           transition={{ duration: 20, repeat: Infinity }}
         />
         <motion.div
-          className="absolute bottom-0 left-1/3 w-96 h-96 bg-gradient-to-tl from-gold/10 to-transparent rounded-full blur-3xl"
+          className="absolute bottom-0 left-1/3 w-96 h-96 bg-gradient-to-tl from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
           animate={{
             y: [0, -60, 0],
             x: [-50, 50, -50],
@@ -104,7 +105,7 @@ const Login = () => {
             transition={{ duration: 0.8 }}
             className="hidden lg:block relative h-[600px] rounded-3xl overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-100 rounded-3xl overflow-hidden border border-primary/20 shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-100 rounded-3xl overflow-hidden border border-black/10 shadow-xl">
               <img
                 src="https://images.unsplash.com/photo-1662483818635-c07ee6f2fa3c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z2lybCUyMHVzaW5nJTIwcGhvbmVzJTIwb2ZmaWNlfGVufDB8fDB8fHwy"
                 alt="Premium event professionals"
@@ -115,13 +116,13 @@ const Login = () => {
 
             {/* Floating Badge */}
             <motion.div
-              className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-xl rounded-2xl p-6 border border-primary/20 shadow-lg"
+              className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-xl rounded-[var(--jak-border-radius)] p-6 border border-black/10 shadow-lg"
               animate={{ y: [0, -8, 0] }}
               transition={{ duration: 4, repeat: Infinity }}
             >
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-                <p className="text-xs text-gold font-semibold uppercase tracking-wider">
+                <p className="text-xs text-[#1e4137] font-semibold uppercase tracking-wider">
                   Trusted by professionals
                 </p>
               </div>
@@ -139,7 +140,7 @@ const Login = () => {
           >
             {/* Header */}
             <motion.div variants={itemVariants} className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-serif font-light text-gray-900 mb-3">
+              <h1 className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1] text-gray-900 mb-3">
                 Welcome Back
               </h1>
               <p className="text-lg text-gray-500">
@@ -151,7 +152,7 @@ const Login = () => {
             <motion.form
               variants={itemVariants}
               onSubmit={handleSubmit}
-              className="glass-card rounded-2xl p-8 lg:p-10 border border-primary/10 shadow-xl space-y-6"
+              className="bg-white rounded-[var(--jak-border-radius)] p-8 lg:p-10 border border-black/5 shadow-xl space-y-6"
             >
               {/* Success Message */}
               {sessionExpired && !success && !error && (
@@ -199,7 +200,7 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
+                  className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
                 />
               </motion.div>
 
@@ -211,7 +212,7 @@ const Login = () => {
                   </label>
                   <Link
                     to="/forgot-password"
-                    className="text-sm text-primary-dark hover:text-primary-dark/80 font-medium transition-colors"
+                    className="text-sm text-[#1e4137] hover:text-[#1e4137]/80 font-medium transition-colors"
                   >
                     Forgot?
                   </Link>
@@ -224,12 +225,12 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full px-4 py-3 bg-gray-100 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 font-medium"
+                    className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary-dark transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#1e4137] transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -243,10 +244,10 @@ const Login = () => {
                 onClick={() => setRememberMe(!rememberMe)}
               >
                 <div
-                  className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all duration-300 ${
+                  className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-300 ${
                     rememberMe
-                      ? 'bg-primary-dark border-primary-dark'
-                      : 'border-gray-300 group-hover:border-primary bg-gray-100'
+                      ? 'bg-[#1e4137] border-[#1e4137]'
+                      : 'border-gray-300 group-hover:border-[#1e4137] bg-white'
                   }`}
                 >
                   {rememberMe && (
@@ -261,30 +262,18 @@ const Login = () => {
               </motion.div>
 
               {/* Submit Button */}
-              <motion.button
-                variants={itemVariants}
-                type="submit"
-                disabled={loading}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full btn-primary py-3 lg:py-4 text-lg font-semibold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-              >
-                {loading ? (
-                  <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                    />
-                    Signing in...
-                  </>
-                ) : (
-                  <>
-                    <span>Sign In</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </motion.button>
+              <motion.div variants={itemVariants}>
+                <StudioButton type="submit" disabled={loading} className="w-full studio-btn-block">
+                  {loading ? (
+                    <span className="inline-flex items-center gap-2">
+                      <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Signing in...
+                    </span>
+                  ) : (
+                    'Sign In'
+                  )}
+                </StudioButton>
+              </motion.div>
 
               {/* Divider */}
               <motion.div variants={itemVariants} className="relative py-2">
@@ -324,7 +313,7 @@ const Login = () => {
                   Don't have an account?{' '}
                   <Link
                     to="/signup"
-                    className="text-primary-dark hover:text-primary-dark/80 font-bold transition-colors underline underline-offset-2"
+                    className="text-[#1e4137] hover:text-[#1e4137]/80 font-semibold transition-colors underline underline-offset-4"
                   >
                     Create one now
                   </Link>

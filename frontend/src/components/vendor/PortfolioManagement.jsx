@@ -78,8 +78,8 @@ const PortfolioManagement = ({ vendorProfile, onUpdate }) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold gradient-gold-text">Portfolio Management</h1>
-        <div className="text-sm text-slate-400 font-medium">
+        <h1 className="text-3xl font-bold text-[#1e4137]">Portfolio Management</h1>
+        <div className="text-sm text-[#0b1311]/60 font-medium">
           {vendorProfile?.portfolioImages?.length || 0} Images Published
         </div>
       </div>
@@ -88,10 +88,10 @@ const PortfolioManagement = ({ vendorProfile, onUpdate }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-accent rounded-3xl p-8 border border-white/10 relative overflow-hidden"
+        className="bg-white rounded-[var(--jak-border-radius)] p-8 border border-black/5 shadow-sm relative overflow-hidden"
       >
-        <h3 className="text-xl font-semibold text-white mb-6">Add New Work</h3>
-        <div className="border-2 border-dashed border-indigo-500/25 rounded-2xl p-10 text-center bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300">
+        <h3 className="text-xl font-semibold text-[#0b1311] mb-6">Add New Work</h3>
+        <div className="border-2 border-dashed border-[#1e4137]/25 rounded-[var(--jak-border-radius)] p-10 text-center bg-[#0b1311]/[0.02] hover:bg-[#0b1311]/[0.04] transition-all duration-300">
           <input
             ref={fileInputRef}
             type="file"
@@ -102,26 +102,26 @@ const PortfolioManagement = ({ vendorProfile, onUpdate }) => {
 
           {uploading ? (
             <div className="flex flex-col items-center py-6">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mb-4"></div>
-              <p className="text-slate-300 font-medium">Uploading to cloud gallery...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1e4137] mb-4"></div>
+              <p className="text-[#0b1311]/70 font-medium">Uploading to cloud gallery...</p>
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              <div className="w-16 h-16 bg-indigo-500/10 rounded-full flex items-center justify-center mb-4 border border-indigo-500/20">
-                <Upload className="w-8 h-8 text-indigo-400" />
+              <div className="w-16 h-16 bg-[#1e4137]/10 rounded-full flex items-center justify-center mb-4 border border-[#1e4137]/20">
+                <Upload className="w-8 h-8 text-[#1e4137]" />
               </div>
-              <h4 className="text-lg font-medium text-white mb-2">Drag and drop or click to upload</h4>
-              <p className="text-slate-400 mb-6 max-w-sm text-sm">
+              <h4 className="text-lg font-medium text-[#0b1311] mb-2">Drag and drop or click to upload</h4>
+              <p className="text-[#0b1311]/60 mb-6 max-w-sm text-sm">
                 Add premium snaps of events, locations, or decor setups to showcase your skills.
               </p>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="btn-primary px-8 py-3 rounded-xl flex items-center gap-2 font-bold transition-all shadow-lg"
+                className="bg-[#1e4137] hover:bg-[#142e27] text-[#bad6ff] px-8 py-3 rounded-full flex items-center gap-2 font-bold transition-all shadow-lg"
               >
                 <Plus className="w-5 h-5" />
                 Select Photo
               </button>
-              <p className="text-xs text-slate-500 mt-4">
+              <p className="text-xs text-[#0b1311]/50 mt-4">
                 Supported: JPG, PNG, WEBP. Max size: 3MB
               </p>
             </div>
@@ -134,20 +134,20 @@ const PortfolioManagement = ({ vendorProfile, onUpdate }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="glass-dark rounded-3xl p-8 border border-white/10"
+        className="bg-white rounded-[var(--jak-border-radius)] p-8 border border-black/5 shadow-sm"
       >
-        <h3 className="text-xl font-semibold text-white mb-6">Gallery</h3>
+        <h3 className="text-xl font-semibold text-[#0b1311] mb-6">Gallery</h3>
 
         {!vendorProfile?.portfolioImages || vendorProfile.portfolioImages.length === 0 ? (
           <div className="text-center py-16">
-            <ImageIcon className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-            <h4 className="text-lg font-medium text-white mb-2">No portfolio images yet</h4>
-            <p className="text-slate-400 mb-8 max-w-md mx-auto text-sm">
+            <ImageIcon className="w-16 h-16 text-[#0b1311]/30 mx-auto mb-4" />
+            <h4 className="text-lg font-medium text-[#0b1311] mb-2">No portfolio images yet</h4>
+            <p className="text-[#0b1311]/60 mb-8 max-w-md mx-auto text-sm">
               Upload images of your past events to let customers see your work firsthand.
             </p>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="btn-primary px-8 py-3 rounded-xl flex items-center gap-2 font-bold transition-all mx-auto"
+              className="bg-[#1e4137] hover:bg-[#142e27] text-[#bad6ff] px-8 py-3 rounded-full flex items-center gap-2 font-bold transition-all mx-auto"
             >
               <Plus className="w-5 h-5" />
               Add First Image
@@ -161,7 +161,7 @@ const PortfolioManagement = ({ vendorProfile, onUpdate }) => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.05 }}
-                className="relative group bg-white/[0.03] rounded-2xl overflow-hidden border border-white/5 shadow-md hover:border-indigo-500/30 transition-all duration-300"
+                className="relative group bg-[#0b1311]/[0.03] rounded-[var(--jak-border-radius)] overflow-hidden border border-black/5 shadow-md hover:border-[#1e4137]/30 transition-all duration-300"
               >
                 <div className="aspect-square">
                   <img
@@ -201,30 +201,30 @@ const PortfolioManagement = ({ vendorProfile, onUpdate }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-gradient-to-r from-yellow-500/10 via-purple-500/5 to-indigo-500/10 rounded-3xl p-6 border border-yellow-500/20"
+        className="bg-gradient-to-r from-[#1e4137]/10 via-transparent to-[#bad6ff]/20 rounded-[var(--jak-border-radius)] p-6 border border-[#1e4137]/20"
       >
-        <h3 className="text-lg font-semibold text-yellow-400 mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-[#1e4137] mb-4 flex items-center gap-2">
           <Info className="w-5 h-5" />
           Pro Portfolio Tips
         </h3>
-        <div className="grid md:grid-cols-2 gap-6 text-sm text-slate-300">
+        <div className="grid md:grid-cols-2 gap-6 text-sm text-[#0b1311]/70">
           <div className="space-y-2">
             <p className="flex items-start gap-2">
-              <span className="text-yellow-400">•</span>
+              <span className="text-[#1e4137]">•</span>
               Upload crisp, high-resolution snapshots of your actual event setups.
             </p>
             <p className="flex items-start gap-2">
-              <span className="text-yellow-400">•</span>
+              <span className="text-[#1e4137]">•</span>
               Provide visual variety (decor, active staging, close-up details).
             </p>
           </div>
           <div className="space-y-2">
             <p className="flex items-start gap-2">
-              <span className="text-yellow-400">•</span>
+              <span className="text-[#1e4137]">•</span>
               Maintain file compression (under 3MB) to ensure pages load instantly for customers.
             </p>
             <p className="flex items-start gap-2">
-              <span className="text-yellow-400">•</span>
+              <span className="text-[#1e4137]">•</span>
               Update your gallery at least once a month with fresh bookings.
             </p>
           </div>
@@ -245,26 +245,26 @@ const PortfolioManagement = ({ vendorProfile, onUpdate }) => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-[#0f1020] border border-white/10 rounded-2xl max-w-sm w-full p-6 text-center"
+              className="bg-white border border-black/10 rounded-[var(--jak-border-radius)] max-w-sm w-full p-6 text-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-12 h-12 bg-rose-500/10 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-500/20">
+              <div className="w-12 h-12 bg-red-500/10 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
                 <Trash2 className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Delete Portfolio Image?</h3>
-              <p className="text-slate-400 text-sm mb-6">
+              <h3 className="text-xl font-bold text-[#0b1311] mb-2">Delete Portfolio Image?</h3>
+              <p className="text-[#0b1311]/60 text-sm mb-6">
                 Are you sure you want to remove this photo from your catalog? This action cannot be undone.
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowConfirmDelete({ open: false, imageUrl: null })}
-                  className="flex-1 py-3 border border-white/10 text-white rounded-xl hover:bg-white/5 transition-colors font-semibold"
+                  className="flex-1 py-3 border border-black/10 text-[#0b1311] rounded-full hover:bg-[#0b1311]/5 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleDeleteImage}
-                  className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl transition-all font-semibold shadow-lg"
+                  className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all font-semibold shadow-lg"
                 >
                   Delete
                 </button>

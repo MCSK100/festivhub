@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Inter"', 'ui-sans-serif', 'system-ui'],
+        sans: ['"Figtree"', '"Helvetica"', '"Arial"', 'ui-sans-serif', 'system-ui'],
         serif: ['"Playfair Display"', 'serif'],
         display: ['"Playfair Display"', 'serif'],
       },
@@ -41,6 +41,11 @@ export default {
         error: '#F87171',
         warning: '#FBBF24',
         info: '#60A5FA',
+        pine: '#1e4137',
+        ink: '#0b1311',
+        cream: '#fff7f0',
+        mist: '#bad6ff',
+        sand: '#f4f4f2',
       },
       boxShadow: {
         'glow': '0 0 40px rgba(250, 204, 21, 0.25)',
