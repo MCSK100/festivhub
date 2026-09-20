@@ -38,6 +38,11 @@ const ResetPassword = () => {
   }
 
   const validatePassword = () => {
+    if (!token) {
+      error('Reset link is missing or invalid. Please request a new one.')
+      setTokenError(true)
+      return false
+    }
     if (password.length < 6) {
       error('Password must be at least 6 characters long')
       return false
@@ -73,7 +78,7 @@ const ResetPassword = () => {
   }
 
   const passwordStrength = {
-    weak: password.length < 6,
+    weak: password.length > 0 && password.length < 6,
     medium: password.length >= 6 && password.length < 10,
     strong: password.length >= 10,
   }

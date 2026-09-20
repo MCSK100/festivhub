@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import GoogleSignIn from '../components/GoogleSignIn'
 import { Eye, EyeOff, ArrowRight, AlertCircle, Check } from 'lucide-react'
 
 const Signup = () => {
   const [searchParams] = useSearchParams()
-  const roleFromUrl = searchParams.get('role') || 'customer'
+  const roleFromUrl = ['customer', 'vendor'].includes(searchParams.get('role'))
+    ? searchParams.get('role')
+    : 'customer'
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -22,7 +25,7 @@ const Signup = () => {
   const navigate = useNavigate()
 
   const passwordStrength = {
-    weak: password.length < 6,
+    weak: password.length > 0 && password.length < 6,
     medium: password.length >= 6 && password.length < 10,
     strong: password.length >= 10,
   }
@@ -32,8 +35,8 @@ const Signup = () => {
       setError('Name is required')
       return false
     }
-    if (!email.includes('@')) {
-      setError('Valid email is required')
+    if (!/\S+@\S+\.\S+/.test(email.trim())) {
+      setError('Please enter a valid email address')
       return false
     }
     if (password.length < 6) {
@@ -58,15 +61,18 @@ const Signup = () => {
     const result = await register(email, password, role, name)
     if (result.success) {
       setSuccess('Account created successfully! Redirecting...')
+      const newRole = result.user?.role || role
       setTimeout(() => {
-        if (role === 'vendor') {
-          navigate('/vendor-dashboard')
+        if (newRole === 'vendor') {
+          navigate('/vendor-dashboard', { replace: true })
         } else {
-          navigate('/customer-dashboard')
+          navigate('/customer-dashboard', { replace: true })
         }
-      }, 1500)
+      }, 600)
     } else {
       setError(result.error || 'Registration failed. Please try again.')
+      setLoading(false)
+      return
     }
     setLoading(false)
   }
@@ -281,20 +287,26 @@ const Signup = () => {
                   </button>
                 </div>
                 {/* Password Strength */}
-                <div className="flex gap-2 mb-2">
-                  <div className={`flex-1 h-1.5 rounded-full transition-all ${
-                    passwordStrength.weak 
-                      ? 'bg-red-400' 
-                      : passwordStrength.medium 
-                      ? 'bg-yellow-400' 
-                      : 'bg-green-500'
-                  }`} />
-                </div>
-                <p className="text-xs text-gray-500">
-                  {passwordStrength.weak && 'Weak password (min 6 characters)'}
-                  {passwordStrength.medium && 'Medium strength'}
-                  {passwordStrength.strong && 'Strong password'}
-                </p>
+                {password.length > 0 ? (
+                  <>
+                    <div className="flex gap-2 mb-2">
+                      <div className={`flex-1 h-1.5 rounded-full transition-all ${
+                        passwordStrength.weak
+                          ? 'bg-red-400'
+                          : passwordStrength.medium
+                          ? 'bg-yellow-400'
+                          : 'bg-green-500'
+                      }`} />
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      {passwordStrength.weak && 'Weak password (min 6 characters)'}
+                      {passwordStrength.medium && 'Medium strength'}
+                      {passwordStrength.strong && 'Strong password'}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-xs text-gray-400">Use at least 6 characters.</p>
+                )}
               </motion.div>
 
               {/* Confirm Password Field */}
@@ -353,6 +365,23 @@ const Signup = () => {
                   </>
                 )}
               </motion.button>
+
+              {/* Google SSO */}
+              <motion.div variants={itemVariants}>
+                <div className="relative py-1">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-200" />
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="px-3 bg-white text-gray-500 text-xs font-medium">
+                      or continue with
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <GoogleSignIn mode="signup" role={role} onError={(msg) => setError(msg)} />
+                </div>
+              </motion.div>
 
               {/* Sign In Link */}
               <motion.p

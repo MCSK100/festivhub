@@ -22,19 +22,25 @@ const authLimiter = rateLimit({
 })
 
 // Middleware
-const allowedOrigins = (process.env.CORS_ORIGIN || process.env.FRONTEND_URL || 'http://localhost:3000')
-  .split(',')
-  .map(o => o.trim())
+const allowedOrigins = [...new Set(
+  `${process.env.CORS_ORIGIN || ''},${process.env.FRONTEND_URL || ''},http://localhost:3000,http://localhost:5173`
+    .split(',')
+    .map(o => o.trim().replace(/\/$/, ''))
+    .filter(Boolean)
+)]
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
 }))
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
@@ -55,6 +61,24 @@ app.use('/api/password', authLimiter, passwordRoutes)
 
 // Health
 app.get('/', (req, res) => res.json({ message: 'FestivLink Backend Running!' }))
+
+// 404 handler (JSON, must be after routes)
+app.use((req, res) => res.status(404).json({ error: 'Route not found' }))
+
+// Central error handler (CORS, multer, JSON parse → clean JSON)
+app.use((err, req, res, next) => {
+  if (err && err.message === 'Not allowed by CORS') {
+    return res.status(403).json({ error: 'CORS blocked: origin not allowed' })
+  }
+  if (err && (err.code === 'LIMIT_FILE_SIZE' || err.message === 'Only image files are allowed')) {
+    return res.status(400).json({ error: err.message || 'File upload rejected (max 3MB, images only)' })
+  }
+  if (err && err.type === 'entity.parse.failed') {
+    return res.status(400).json({ error: 'Invalid JSON body' })
+  }
+  console.error('Unhandled error:', err)
+  res.status(err.status || 500).json({ error: err.message || 'Server error' })
+})
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)

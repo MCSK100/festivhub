@@ -16,8 +16,24 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
+    // Required for local accounts only — Google SSO users have no password
+    required: [function() { return this.authProvider === 'local' }, 'Password is required'],
     minlength: 6
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local'
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true,
+    default: undefined
+  },
+  avatar: {
+    type: String,
+    default: ''
   },
   role: {
     type: String,
@@ -51,8 +67,9 @@ userSchema.pre('save', async function(next) {
   next()
 })
 
-// Compare password method
+// Compare password method (SSO users may have no password set)
 userSchema.methods.comparePassword = async function(candidatePassword) {
+  if (!this.password || !candidatePassword) return false
   return bcrypt.compare(candidatePassword, this.password)
 }
 

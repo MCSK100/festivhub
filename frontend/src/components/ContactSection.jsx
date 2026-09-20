@@ -1,14 +1,53 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Mail, Phone, MapPin, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react'
 
 const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }
 const itemVariants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } } }
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', eventType: '', message: '' })
-  const handleSubmit = (e) => { e.preventDefault(); console.log(formData) }
-  const handleChange = (e) => { setFormData({ ...formData, [e.target.name]: e.target.value }) }
+  const [errors, setErrors] = useState({})
+  const [status, setStatus] = useState({ type: '', message: '' })
+  const [submitting, setSubmitting] = useState(false)
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+    if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: '' })
+  }
+
+  const validate = () => {
+    const next = {}
+    if (!formData.name.trim()) next.name = 'Name is required.'
+    if (!/\S+@\S+\.\S+/.test(formData.email.trim())) next.email = 'Enter a valid email.'
+    if (formData.phone.trim() && !/^[+\d][\d\s\-()]{6,}$/.test(formData.phone.trim())) {
+      next.phone = 'Enter a valid phone number.'
+    }
+    if (!formData.eventType) next.eventType = 'Select an event type.'
+    if (!formData.message.trim() || formData.message.trim().length < 10) {
+      next.message = 'Tell us a little more (min 10 characters).'
+    }
+    setErrors(next)
+    return Object.keys(next).length === 0
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setStatus({ type: '', message: '' })
+    if (!validate()) {
+      setStatus({ type: 'error', message: 'Please fix the highlighted fields.' })
+      return
+    }
+    setSubmitting(true)
+    // No backend endpoint yet — simulate async submit so UX is testable
+    setTimeout(() => {
+      setSubmitting(false)
+      setStatus({ type: 'success', message: `Thanks ${formData.name.trim()}! We'll reach out at ${formData.email.trim()} within 24 hours.` })
+      setFormData({ name: '', email: '', phone: '', eventType: '', message: '' })
+    }, 800)
+  }
+
+  const fieldClass = (hasError) =>
+    `w-full px-4 py-3 rounded-xl ${hasError ? 'border-red-400 !border-red-400' : ''}`
 
   return (
     <section className="relative py-24 lg:py-32 bg-white overflow-hidden">
@@ -47,25 +86,46 @@ const ContactSection = () => {
           </motion.div>
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={containerVariants}>
-            <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-8 lg:p-10">
+            <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-8 lg:p-10" noValidate>
+              <AnimatePresence>
+                {status.message && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className={`mb-6 px-4 py-3 rounded-xl text-sm font-medium flex items-center gap-2 ${
+                      status.type === 'success'
+                        ? 'bg-green-50 border border-green-300 text-green-700'
+                        : 'bg-red-50 border border-red-300 text-red-600'
+                    }`}
+                    role={status.type === 'success' ? 'status' : 'alert'}
+                  >
+                    {status.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+                    {status.message}
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2 font-medium">Name</label>
-                  <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 rounded-xl" placeholder="Your name" />
+                  <label className="block text-sm text-gray-600 mb-2 font-medium">Name *</label>
+                  <input type="text" name="name" value={formData.name} onChange={handleChange} className={fieldClass(errors.name)} placeholder="Your name" />
+                  {errors.name && <p className="text-xs text-red-600 mt-1">{errors.name}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2 font-medium">Email</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl" placeholder="your@email.com" />
+                  <label className="block text-sm text-gray-600 mb-2 font-medium">Email *</label>
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} className={fieldClass(errors.email)} placeholder="your@email.com" />
+                  {errors.email && <p className="text-xs text-red-600 mt-1">{errors.email}</p>}
                 </div>
               </div>
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-sm text-gray-600 mb-2 font-medium">Phone</label>
-                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 rounded-xl" placeholder="+1 (555) 000-0000" />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className={fieldClass(errors.phone)} placeholder="+1 (555) 000-0000" />
+                  {errors.phone && <p className="text-xs text-red-600 mt-1">{errors.phone}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2 font-medium">Event Type</label>
-                  <select name="eventType" value={formData.eventType} onChange={handleChange} className="w-full px-4 py-3 rounded-xl">
+                  <label className="block text-sm text-gray-600 mb-2 font-medium">Event Type *</label>
+                  <select name="eventType" value={formData.eventType} onChange={handleChange} className={fieldClass(errors.eventType)}>
                     <option value="">Select event type</option>
                     <option value="corporate">Corporate Event</option>
                     <option value="wedding">Wedding</option>
@@ -77,15 +137,17 @@ const ContactSection = () => {
                     <option value="conference">Conference</option>
                     <option value="other">Other</option>
                   </select>
+                  {errors.eventType && <p className="text-xs text-red-600 mt-1">{errors.eventType}</p>}
                 </div>
               </div>
               <div className="mb-8">
-                <label className="block text-sm text-gray-600 mb-2 font-medium">Message</label>
-                <textarea name="message" value={formData.message} onChange={handleChange} rows={4} className="w-full px-4 py-3 rounded-xl resize-none" placeholder="Tell us about your event vision..." />
+                <label className="block text-sm text-gray-600 mb-2 font-medium">Message *</label>
+                <textarea name="message" value={formData.message} onChange={handleChange} rows={4} className={`${fieldClass(errors.message)} resize-none`} placeholder="Tell us about your event vision..." />
+                {errors.message && <p className="text-xs text-red-600 mt-1">{errors.message}</p>}
               </div>
-              <button type="submit" className="btn-primary w-full flex items-center justify-center gap-2">
-                <span>Schedule Consultation</span>
-                <ArrowRight className="w-5 h-5" />
+              <button type="submit" disabled={submitting} className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50">
+                <span>{submitting ? 'Sending…' : 'Schedule Consultation'}</span>
+                {!submitting && <ArrowRight className="w-5 h-5" />}
               </button>
             </form>
           </motion.div>

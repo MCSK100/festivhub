@@ -19,21 +19,27 @@ const transporter = nodemailer.createTransport({
 router.post('/forgot', async (req, res) => {
   try {
     const { email } = req.body
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' })
+    }
+    const normalized = String(email).toLowerCase().trim()
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email: normalized })
+    // Always return generic success → prevent user enumeration
     if (!user) {
-      return res.status(404).json({ error: 'User not found' })
+      return res.json({ message: 'If an account exists for this email, a reset link has been sent.' })
     }
 
-    // Generate reset token (valid for 1 hour)
+    // Generate reset token with purpose claim (valid for 1 hour)
     const resetToken = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id, email: user.email, purpose: 'password-reset' },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     )
 
     // Send reset email
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
+    const baseUrl = (process.env.FRONTEND_URL || process.env.CORS_ORIGIN || 'http://localhost:3000').split(',')[0].trim().replace(/\/$/, '')
+    const resetUrl = `${baseUrl}/reset-password/${resetToken}`
     
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -51,7 +57,8 @@ router.post('/forgot', async (req, res) => {
     res.json({ message: 'Password reset email sent successfully' })
   } catch (error) {
     console.error('Forgot password error:', error)
-    res.status(500).json({ error: 'Failed to process password reset request' })
+    // Still return generic message to avoid leaking state
+    res.json({ message: 'If an account exists for this email, a reset link has been sent.' })
   }
 })
 
@@ -60,9 +67,18 @@ router.post('/forgot', async (req, res) => {
 router.post('/reset', async (req, res) => {
   try {
     const { token, newPassword } = req.body
+    if (!token || !newPassword) {
+      return res.status(400).json({ error: 'Token and new password are required' })
+    }
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' })
+    }
 
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    if (decoded.purpose !== 'password-reset') {
+      return res.status(400).json({ error: 'Invalid reset token' })
+    }
     
     const user = await User.findById(decoded.id)
     if (!user) {
@@ -91,6 +107,12 @@ router.post('/reset', async (req, res) => {
 router.post('/change', authMiddleware, async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ error: 'Old and new passwords are required' })
+    }
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' })
+    }
     const user = await User.findById(req.user._id)
 
     // Verify old password

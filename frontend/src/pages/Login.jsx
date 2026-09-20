@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import GoogleSignIn from '../components/GoogleSignIn'
 import { Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react'
 
 const Login = () => {
+  const [searchParams] = useSearchParams()
+  const sessionExpired = searchParams.get('session') === 'expired'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -17,6 +20,14 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!email.trim() || !/\S+@\S+\.\S+/.test(email.trim())) {
+      setError('Please enter a valid email address.')
+      return
+    }
+    if (!password) {
+      setError('Please enter your password.')
+      return
+    }
     setLoading(true)
     setError('')
     setSuccess('')
@@ -24,18 +35,18 @@ const Login = () => {
     const result = await login(email, password)
     if (result.success) {
       setSuccess('Login successful! Redirecting...')
+      const role = result.user?.role || JSON.parse(localStorage.getItem('user') || '{}')?.role
       setTimeout(() => {
-        const user = JSON.parse(localStorage.getItem('user') || '{}')
-        if (user.role === 'vendor') {
-          navigate('/vendor-dashboard')
+        if (role === 'vendor') {
+          navigate('/vendor-dashboard', { replace: true })
         } else {
-          navigate('/customer-dashboard')
+          navigate('/customer-dashboard', { replace: true })
         }
-      }, 1500)
+      }, 600)
     } else {
       setError(result.error || 'Login failed. Please try again.')
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   const containerVariants = {
@@ -143,6 +154,16 @@ const Login = () => {
               className="glass-card rounded-2xl p-8 lg:p-10 border border-primary/10 shadow-xl space-y-6"
             >
               {/* Success Message */}
+              {sessionExpired && !success && !error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-amber-50 border border-amber-300 text-amber-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2"
+                >
+                  <AlertCircle className="w-5 h-5" />
+                  Session expired. Please sign in again.
+                </motion.div>
+              )}
               {success && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
@@ -264,6 +285,23 @@ const Login = () => {
                   </>
                 )}
               </motion.button>
+
+              {/* Divider */}
+              <motion.div variants={itemVariants} className="relative py-2">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="px-3 bg-white text-gray-500 text-xs font-medium">
+                    or continue with
+                  </span>
+                </div>
+              </motion.div>
+
+              {/* Google SSO */}
+              <motion.div variants={itemVariants}>
+                <GoogleSignIn mode="signin" onError={(msg) => setError(msg)} />
+              </motion.div>
 
               {/* Divider */}
               <motion.div variants={itemVariants} className="relative py-2">

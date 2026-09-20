@@ -82,7 +82,7 @@ router.get('/vendor-bookings', authMiddleware, async (req, res) => {
     // Find vendor profile for this user
     const vendorProfile = await ServiceProvider.findOne({ userId: req.user._id });
     if (!vendorProfile) {
-      return res.status(403).json({ error: 'Vendor profile not found' });
+      return res.status(404).json({ error: 'Vendor profile not found' });
     }
 
     const bookings = await Booking.find({ vendor: vendorProfile._id })

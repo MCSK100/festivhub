@@ -35,13 +35,18 @@ const createProviderSchema = z.object({
   priceRange: z.string()
 })
 
-const uploadSchema = z.object({
-  gallery: z.array(z.instanceof(File)) // Frontend form-data
-})
+const uploadSchema = null // removed: File is not defined in Node; uploads use multer memory storage
 
 // Create provider
 router.post('/', authMiddleware, async (req, res) => {
   try {
+    if (req.user.role !== 'vendor') {
+      return res.status(403).json({ error: 'Only vendors can create a provider profile' })
+    }
+    const existing = await ServiceProvider.findOne({ userId: req.user._id })
+    if (existing) {
+      return res.status(400).json({ error: 'Provider profile already exists. Use PUT /profile to update.' })
+    }
     const data = createProviderSchema.parse(req.body)
     const provider = new ServiceProvider({
       ...data,
@@ -132,22 +137,40 @@ router.get('/me', authMiddleware, async (req, res) => {
 // Get all with filters
 router.get('/', async (req, res) => {
   try {
-    const { category, location, priceMin, priceMax } = req.query
+    const { category, location } = req.query
     const filters = {}
     if (category) filters.category = category
     if (location) filters['location.city'] = { $regex: location, $options: 'i' }
-    
-    const providers = await ServiceProvider.find(filters).sort({ ratings: -1 })
+
+    const providers = await ServiceProvider.find(filters).sort({ 'ratings.average': -1, createdAt: -1 })
     res.json(providers)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
+// Get single provider by id (public detail page)
+router.get('/:id', async (req, res) => {
+  try {
+    const provider = await ServiceProvider.findById(req.params.id)
+    if (!provider) {
+      return res.status(404).json({ error: 'Provider not found' })
+    }
+    res.json(provider)
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid provider id' })
+  }
+})
+
 // Update vendor profile
 router.put('/profile', authMiddleware, async (req, res) => {
   try {
-    const updateData = req.body
+    // Allowlist → prevent mass-assignment of userId/bookings/ratings/_id
+    const ALLOWED = ['name', 'category', 'experience', 'companyName', 'description', 'profileImage', 'location', 'priceRange', 'portfolioImages', 'gallery']
+    const updateData = {}
+    for (const key of ALLOWED) {
+      if (req.body[key] !== undefined) updateData[key] = req.body[key]
+    }
     
     const provider = await ServiceProvider.findOneAndUpdate(
       { userId: req.user._id },

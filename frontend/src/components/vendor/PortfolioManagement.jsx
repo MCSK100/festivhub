@@ -116,7 +116,7 @@ const PortfolioManagement = ({ vendorProfile, onUpdate }) => {
               </p>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="btn-premium-gold px-8 py-3 rounded-xl flex items-center gap-2 font-bold transition-all shadow-lg"
+                className="btn-primary px-8 py-3 rounded-xl flex items-center gap-2 font-bold transition-all shadow-lg"
               >
                 <Plus className="w-5 h-5" />
                 Select Photo
@@ -147,7 +147,7 @@ const PortfolioManagement = ({ vendorProfile, onUpdate }) => {
             </p>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="btn-premium-gold px-8 py-3 rounded-xl flex items-center gap-2 font-bold transition-all mx-auto"
+              className="btn-primary px-8 py-3 rounded-xl flex items-center gap-2 font-bold transition-all mx-auto"
             >
               <Plus className="w-5 h-5" />
               Add First Image

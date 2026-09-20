@@ -102,6 +102,51 @@ body {
   background-clip: text;
 }
 
+/* Alias used across dashboards (was missing → invisible headings) */
+.gradient-gold-text {
+  background: linear-gradient(135deg, #FDE68A 0%, #FACC15 30%, #EAB308 70%, #CA8A04 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dark glass surfaces used by dashboards (were missing → transparent bg) */
+.glass-dark {
+  background: rgba(15, 16, 32, 0.85);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.glass-accent {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark-theme form controls (opt-out of global light input rule) */
+.input-dark, .glass-dark input, .glass-dark textarea, .glass-dark select,
+.glass-accent input, .glass-accent textarea {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+
+.input-dark::placeholder, .glass-dark input::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Dashboard dark shell */
+.dashboard-dark {
+  background: radial-gradient(1200px 600px at 80% -10%, rgba(250,204,21,0.08), transparent),
+    radial-gradient(900px 500px at 10% 110%, rgba(99,102,241,0.12), transparent),
+    #0a0a12;
+  color: #fff;
+}
+
 .gradient-gold-light {
   background: linear-gradient(135deg, #FEF9C3 0%, #FDE68A 30%, #FACC15 70%, #EAB308 100%);
   -webkit-background-clip: text;

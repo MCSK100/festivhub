@@ -20,7 +20,7 @@ import ProfileSettings from '../components/vendor/ProfileSettings'
 import PortfolioManagement from '../components/vendor/PortfolioManagement'
 
 const VendorDashboard = () => {
-  const { user, logout } = useAuth()
+  const { user, logout, loading: authLoading } = useAuth()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -30,16 +30,18 @@ const VendorDashboard = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (authLoading) return
     if (!user) {
-      navigate('/login')
+      navigate('/login', { replace: true })
       return
     }
     if (user.role !== 'vendor') {
-      navigate('/customer-dashboard')
+      navigate('/customer-dashboard', { replace: true })
       return
     }
     fetchVendorData()
-  }, [user, navigate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, user?.role, authLoading])
 
   const fetchVendorData = async () => {
     try {
@@ -61,7 +63,7 @@ const VendorDashboard = () => {
 
   const handleLogout = () => {
     logout()
-    navigate('/login')
+    navigate('/login', { replace: true })
   }
 
   const updateVendorProfile = (updatedProfile) => {
@@ -124,7 +126,7 @@ const VendorDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center dashboard-dark pt-20">
         <div className="text-center">
           <motion.div
             animate={{ rotate: 360 }}
@@ -201,10 +203,10 @@ const VendorDashboard = () => {
   )
 
   return (
-    <div className="min-h-screen pt-24 lg:pt-28 bg-gray-50">
+    <div className="min-h-screen pt-16 lg:pt-20 dashboard-dark">
       <div className="flex">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:flex flex-col fixed top-24 left-0 w-72 h-[calc(100vh-6rem)] glass-dark border-r border-white/10 z-20">
+        <aside className="hidden lg:flex flex-col fixed top-16 lg:top-20 left-0 w-72 h-[calc(100vh-4rem)] lg:h-[calc(100vh-5rem)] glass-dark border-r border-white/10 z-20">
           <SidebarContent />
         </aside>
 

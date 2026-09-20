@@ -19,13 +19,20 @@ api.interceptors.request.use((config) => {
 });
 
 // Response interceptor for error handling
+// NOTE: never auto-redirect on /auth/* failures (login 401 is expected UX),
+// only on authenticated API calls with a stored token.
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    const url = error.config?.url || '';
+    const isAuthRoute = url.includes('/auth/login') || url.includes('/auth/register') || url.includes('/auth/me');
+    if (status === 401 && !isAuthRoute && localStorage.getItem('token')) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login?session=expired';
+      }
     }
     return Promise.reject(error);
   }

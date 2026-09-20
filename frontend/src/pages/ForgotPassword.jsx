@@ -33,11 +33,17 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    const normalized = email.trim().toLowerCase()
+    if (!/\S+@\S+\.\S+/.test(normalized)) {
+      error('Please enter a valid email address.')
+      return
+    }
     setLoading(true)
 
     try {
-      await api.post('/password/forgot', { email })
+      await api.post('/password/forgot', { email: normalized })
       success('Password reset link sent to your email!')
+      setEmail(normalized)
       setSubmitted(true)
     } catch (err) {
       error(err.response?.data?.error || 'Failed to send reset email. Please try again.')

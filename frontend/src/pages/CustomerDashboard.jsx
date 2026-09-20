@@ -7,7 +7,7 @@ import api from '../services/api'
 import { useToast } from '../components/ui/Toast'
 
 const CustomerDashboard = () => {
-  const { user, logout } = useAuth()
+  const { user, logout, loading: authLoading } = useAuth()
   const { success, error: toastError, info } = useToast()
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
@@ -26,17 +26,23 @@ const CustomerDashboard = () => {
   const [bookingTab, setBookingTab] = useState('all')
 
   useEffect(() => {
+    if (authLoading) return
     if (!user) {
-      navigate('/login')
+      navigate('/login', { replace: true })
+      return
+    }
+    if (user.role === 'vendor') {
+      navigate('/vendor-dashboard', { replace: true })
       return
     }
     fetchVendors()
     fetchBookings()
-  }, [user, navigate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, user?.role, authLoading])
 
   const handleLogout = () => {
     logout()
-    navigate('/login')
+    navigate('/', { replace: true })
   }
 
   const filteredVendors = vendors.filter((vendor) => {
@@ -95,10 +101,12 @@ const CustomerDashboard = () => {
 
     setBookingLoading(true)
     try {
+      // Extract FIRST number from priceRange ("₹5000-₹10000" → 5000, not 500010000)
+      const priceDigits = String(bookingModal.vendor.priceRange || '').match(/[\d,]+/g) || ['5000']
       const bookingData = {
         vendorId: bookingModal.vendor._id,
         serviceTitle: bookingModal.vendor.category,
-        price: parseInt(bookingModal.vendor.priceRange?.replace(/[^\d]/g, '') || '5000'),
+        price: parseInt(priceDigits[0].replace(/,/g, ''), 10) || 5000,
         date: bookingForm.date,
         notes: bookingForm.notes
       }
@@ -168,7 +176,7 @@ const CustomerDashboard = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen pt-28 lg:pt-32 bg-gray-50 pb-20 relative z-10"
+      className="min-h-screen pt-24 lg:pt-28 dashboard-dark pb-20 relative z-10"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 xl:px-20">
         {/* Header */}
@@ -227,7 +235,7 @@ const CustomerDashboard = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search vendors by name, category, or location..."
-              className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all shadow-lg text-lg"
+              className="input-dark w-full pl-12 pr-6 py-4 border rounded-2xl placeholder-slate-500 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all shadow-lg text-lg"
             />
           </div>
         </motion.div>
@@ -298,7 +306,7 @@ const CustomerDashboard = () => {
                     {/* Image */}
                     <div className="relative h-48 overflow-hidden bg-slate-950">
                       <img
-                        src={vendor.gallery?.[0] || 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&w=400&fit=crop'}
+                        src={vendor.portfolioImages?.[0] || vendor.gallery?.[0] || vendor.profileImage || 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&w=400&fit=crop'}
                         alt={vendor.name}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       />
