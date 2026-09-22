@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Instagram, Linkedin, Facebook } from 'lucide-react'
+import { ArrowRight, Instagram, Linkedin, Facebook, Star, MapPin, BadgeCheck, Sparkles, CalendarCheck } from 'lucide-react'
 import StudioButton from '../components/ui/StudioButton'
 
 /* ------------------------------------------------------------------ */
@@ -11,8 +11,20 @@ import StudioButton from '../components/ui/StudioButton'
 const img = (id, w = 900) =>
   `https://images.unsplash.com/${id}?q=80&w=${w}&auto=format&fit=crop`
 
-const HERO_IMG_TOP = img('photo-1519741497674-611481863552', 500) // wedding
+const HERO_IMG_TOP = img('photo-1519741497674-611481863552', 800) // wedding couple
+const HERO_IMG_MAIN = img('photo-1511795409834-ef04bbd61622', 1000) // table celebration
 const HERO_IMG_BOTTOM = img('photo-1470229722913-7c0e2dbbafd3', 800) // concert
+
+/* Hero trust stats — FestivLink marketplace positioning */
+const HERO_STATS = [
+  { value: '2K+', label: 'Events powered' },
+  { value: '850+', label: 'Verified vendors' },
+  { value: '40+', label: 'Cities served' },
+]
+
+const TRUSTED_CATEGORIES = [
+  'Weddings', 'Corporate Summits', 'Sangeet Nights', 'Festivals', 'Product Launches', 'Concerts',
+]
 
 const CASES = [
   {
@@ -192,78 +204,171 @@ const LandingPage = () => {
 
   return (
     <div className="bg-[#fff7f0] text-[#0b1311] antialiased">
-      {/* ============ HERO / BANNER ============ */}
-      <header className="relative overflow-hidden pt-44 lg:pt-56">
-        {/* pastel blobs */}
+      {/* ============ HERO — redesigned: marketplace-first, single idea ============ */}
+      <header className="relative overflow-hidden pt-36 lg:pt-44">
+        {/* pastel blobs + faint wordmark */}
         <div aria-hidden className="pointer-events-none absolute inset-0">
           <div className="absolute -left-40 top-10 h-[480px] w-[480px] rounded-full bg-[#C2D5F1]/50 blur-3xl" />
           <div className="absolute right-[-160px] top-64 h-[560px] w-[560px] rounded-full bg-[#F3D9C8]/60 blur-3xl" />
+          <div className="absolute inset-x-0 top-24 select-none text-center font-black leading-none tracking-tight text-[#1e4137]/[0.05]" style={{ fontSize: 'clamp(4rem, 14vw, 12rem)' }}>
+            FESTIVLINK
+          </div>
         </div>
 
         <div className="relative mx-auto max-w-[100rem] px-6 lg:px-10">
-          <h1 className="sr-only">FestivLink</h1>
-          {/* giant wordmark, slides in from both sides like theirs */}
-          <div aria-hidden className="relative z-[6] select-none">
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              transition={{ duration: 1, ease: 'easeOut' }}
-              className="text-[62%] font-black leading-[0.85] tracking-tight text-[#1e4137]"
-              style={{ fontSize: 'clamp(3rem, 12vw, 10rem)' }}
-            >
-              FESTIV
-            </motion.div>
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              transition={{ duration: 1, ease: 'easeOut' }}
-              className="ml-[21.5%] text-right font-black leading-[0.85] tracking-tight text-[#1e4137] lg:ml-[40%]"
-              style={{ fontSize: 'clamp(3rem, 12vw, 10rem)' }}
-            >
-              LINK
-            </motion.div>
-          </div>
+          <div className="grid items-center gap-12 lg:grid-cols-12">
+            {/* Copy */}
+            <div className="lg:col-span-6">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="inline-flex items-center gap-2 rounded-full border border-[#1e4137]/15 bg-white px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.12em] text-[#1e4137] shadow-sm"
+              >
+                <Sparkles className="h-4 w-4" />
+                Weddings • Corporate • Concerts
+              </motion.div>
 
-          <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:items-end">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="lg:col-span-2 lg:col-start-9"
-            >
-              <img
-                src={HERO_IMG_TOP}
-                alt="Wedding celebration"
-                className="r-card h-44 w-full object-cover shadow-xl lg:h-52"
-                loading="eager"
-              />
-            </motion.div>
+              <motion.h1
+                initial={{ opacity: 0, y: 32 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="mt-6 text-balance text-[clamp(2.5rem,5.2vw,5rem)] font-semibold leading-[1.04] tracking-tight text-[#0b1311]"
+              >
+                One hub for every{' '}
+                <span className="relative whitespace-nowrap text-[#1e4137]">
+                  celebration
+                  <svg aria-hidden viewBox="0 0 220 14" className="absolute -bottom-2 left-0 w-full text-[#bad6ff]" fill="none">
+                    <path d="M3 10.5C60 3.5 160 3.5 217 10.5" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+                  </svg>
+                </span>{' '}
+                in India
+              </motion.h1>
 
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.55 }}
-              className="lg:col-span-5 lg:col-start-2"
-            >
-              <img
-                src={HERO_IMG_BOTTOM}
-                alt="Concert crowd with lights"
-                className="r-card h-52 w-full object-cover shadow-xl lg:h-64"
-                loading="eager"
-              />
-            </motion.div>
-
-            <div className="flex items-end justify-between gap-6 lg:col-span-4">
               <motion.p
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="mt-6 max-w-xl text-[clamp(1.05rem,1.35vw,1.35rem)] font-normal leading-[1.65] text-[#0b1311]/70"
+              >
+                FestivLink connects hosts with verified photographers, caterers, DJs,
+                decorators and production teams — compare, chat, and book in one place,
+                from intimate haldis to 10,000-guest festivals.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.3 }}
+                className="mt-8 flex flex-wrap items-center gap-4"
+              >
+                <StudioButton to="/join">Find your vendor</StudioButton>
+                <Link
+                  to="/about"
+                  className="inline-flex h-[68px] items-center gap-2 rounded-full border border-[#0b1311]/15 bg-white/70 px-8 font-semibold text-[#0b1311] backdrop-blur transition-colors hover:border-[#1e4137] hover:text-[#1e4137]"
+                >
+                  <CalendarCheck className="h-5 w-5" />
+                  How it works
+                </Link>
+              </motion.div>
+
+              {/* trust row */}
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.7 }}
-                className="max-w-xs text-balance text-lg font-medium leading-snug text-[#0b1311]"
+                transition={{ duration: 0.7, delay: 0.45 }}
+                className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4"
               >
-                Event management for hosts with a vision
-              </motion.p>
-              {/* rotating scroll badge */}
-              <div aria-hidden className="relative hidden h-28 w-28 shrink-0 sm:block lg:h-[165px] lg:w-[165px]">
+                <div className="flex items-center gap-3">
+                  <div className="flex -space-x-2">
+                    {[
+                      img('photo-1494790108377-be9c29b29330', 100),
+                      img('photo-1507003211169-0a1dd7228f2d', 100),
+                      img('photo-1438761681033-6461ffad8d80', 100),
+                    ].map((src) => (
+                      <img key={src} src={src} alt="Happy customer" className="h-9 w-9 rounded-full border-2 border-[#fff7f0] object-cover" loading="lazy" />
+                    ))}
+                  </div>
+                  <div className="text-sm leading-tight">
+                    <div className="flex items-center gap-1 font-bold text-[#0b1311]">
+                      <Star className="h-4 w-4 fill-[#1e4137] text-[#1e4137]" /> 4.9/5
+                    </div>
+                    <p className="text-[#0b1311]/60">from 3,200+ reviews</p>
+                  </div>
+                </div>
+                <div className="hidden h-10 w-px bg-[#0b1311]/10 sm:block" />
+                <div className="flex items-center gap-2 text-sm font-medium text-[#0b1311]/70">
+                  <BadgeCheck className="h-5 w-5 text-[#1e4137]" />
+                  Verified vendors only
+                </div>
+                <div className="flex items-center gap-2 text-sm font-medium text-[#0b1311]/70">
+                  <MapPin className="h-5 w-5 text-[#1e4137]" />
+                  Mumbai • Delhi • Bengaluru + 37 more
+                </div>
+              </motion.div>
+
+              {/* stats */}
+              <motion.dl
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.55 }}
+                className="mt-10 grid max-w-lg grid-cols-3 gap-4"
+              >
+                {HERO_STATS.map((s) => (
+                  <div key={s.label} className="r-card border border-[#1e4137]/10 bg-white/80 px-4 py-4 text-center shadow-sm backdrop-blur">
+                    <dt className="order-2 mt-1 block text-[13px] font-medium text-[#0b1311]/60">{s.label}</dt>
+                    <dd className="text-[clamp(1.5rem,2vw,2rem)] font-black text-[#1e4137]">{s.value}</dd>
+                  </div>
+                ))}
+              </motion.dl>
+            </div>
+
+            {/* Visual collage */}
+            <div className="relative lg:col-span-6">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.25 }}
+                className="r-card relative overflow-hidden shadow-2xl"
+              >
+                <img
+                  src={HERO_IMG_MAIN}
+                  alt="Decorated celebration table with flowers and lights"
+                  className="aspect-[4/3] w-full object-cover"
+                  loading="eager"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0b1311]/45 via-transparent to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5 flex flex-wrap items-center gap-2.5">
+                  {['Verified Decorator', 'Udaipur • 4.9 ★', '₹85k onwards'].map((t) => (
+                    <span key={t} className="rounded-full bg-white/95 px-4 py-2 text-[13px] font-semibold text-[#0b1311] shadow backdrop-blur">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* floating cards */}
+              <motion.div
+                initial={{ opacity: 0, x: -24 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.5 }}
+                className="absolute -left-4 top-8 hidden w-52 rotate-[-4deg] overflow-hidden rounded-[var(--jak-border-radius)] border border-black/5 bg-white shadow-xl sm:block lg:-left-10"
+              >
+                <img src={HERO_IMG_TOP} alt="Wedding celebration" className="h-32 w-full object-cover" loading="eager" />
+                <p className="px-4 py-3 text-[13px] font-semibold text-[#0b1311]">Aarav & Diya • Udaipur <span className="block font-normal text-[#0b1311]/60">Photography + Decor booked</span></p>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="absolute -bottom-6 right-4 w-60 rotate-[3deg] overflow-hidden rounded-[var(--jak-border-radius)] border border-black/5 bg-white shadow-xl lg:right-8"
+              >
+                <img src={HERO_IMG_BOTTOM} alt="Concert crowd with lights" className="h-28 w-full object-cover" loading="eager" />
+                <p className="px-4 py-3 text-[13px] font-semibold text-[#0b1311]">Sunburn Arena Night <span className="block font-normal text-[#0b1311]/60">Sound • Lights • Staging</span></p>
+              </motion.div>
+
+              {/* rotating badge */}
+              <div aria-hidden className="absolute -top-8 right-6 hidden h-28 w-28 lg:block lg:h-[140px] lg:w-[140px]">
                 <svg viewBox="0 0 100 100" className="h-full w-full text-[#0b1311]" style={{ animation: 'scroll-text-rotate 16s linear infinite' }}>
                   <defs>
                     <path id="circlePath" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" />
@@ -280,21 +385,35 @@ const LandingPage = () => {
               </div>
             </div>
           </div>
+
+          {/* trusted strip */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.65 }}
+            className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-t border-[#0b1311]/10 pt-6 text-sm font-semibold uppercase tracking-[0.14em] text-[#0b1311]/45"
+          >
+            <span className="tracking-normal normal-case text-[#0b1311]/50 font-medium">Hosts book us for</span>
+            {TRUSTED_CATEGORIES.map((c) => (
+              <span key={c}>{c}</span>
+            ))}
+          </motion.div>
         </div>
       </header>
 
-      {/* ============ STATEMENT ============ */}
-      <section className="mx-auto max-w-4xl px-6 py-24 text-center lg:py-32">
+      {/* ============ STATEMENT — marketplace promise ============ */}
+      <section className="mx-auto max-w-4xl px-6 py-20 text-center lg:py-28">
+        <Pretitle>Why FestivLink</Pretitle>
         <motion.p
           variants={reveal}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="text-[clamp(1.25rem,1rem+1vw,2.25rem)] font-light leading-[1.6] text-[#0b1311]"
+          className="text-[clamp(1.35rem,1rem+1.1vw,2.3rem)] font-light leading-[1.55] text-[#0b1311]"
         >
-          We plan celebrations that add an extra layer to life. Photography, catering,
-          music, decor, production: five services, one vision. What we make together
-          gets a place in the world one day. Let’s make it more beautiful.
+          Planning a wedding, offsite or festival shouldn&apos;t mean 40 phone calls.
+          Tell us your date, city and budget — we match you with verified vendors,
+          transparent pricing and one booking thread. You celebrate, we coordinate.
         </motion.p>
         <motion.div
           variants={reveal}
@@ -319,8 +438,11 @@ const LandingPage = () => {
             viewport={{ once: true }}
             className="mx-auto max-w-3xl text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1] text-[#0b1311]"
           >
-            Results for celebrations that ring true
+            Real celebrations, booked through FestivLink
           </motion.h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-[#0b1311]/60">
+            Weddings in Udaipur, summits in Bengaluru, arena nights in Mumbai — every story below started with one search.
+          </p>
         </div>
 
         <div className="columns-1 gap-8 md:columns-2 [&>*]:mb-8">
@@ -372,7 +494,7 @@ const LandingPage = () => {
             viewport={{ once: true }}
             className="text-[clamp(32px,5.2vw,100px)] font-semibold leading-[1.1] text-[#0b1311]"
           >
-            From a first idea
+            From first idea,
           </motion.h2>
           <div className="my-10 flex items-center gap-6">
             <img
@@ -395,8 +517,11 @@ const LandingPage = () => {
             viewport={{ once: true }}
             className="text-right text-[clamp(32px,5.2vw,100px)] font-semibold leading-[1.1] text-[#0b1311]"
           >
-            to celebration
+            to booked vendor.
           </motion.h2>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[#0b1311]/60 lg:ml-auto lg:text-right">
+            Five core crafts, hundreds of verified pros. Browse portfolios, compare honest pricing, request dates — all in your dashboard.
+          </p>
 
           <div className="mt-20 space-y-20">
             {SERVICES.map((s, i) => (
@@ -634,15 +759,16 @@ const LandingPage = () => {
           </div>
           <div>
             <h2 className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1]">
-              Ready to give your celebration a place in the world?
+              Ready to meet your vendor?
             </h2>
             <p className="mt-5 text-[clamp(18px,1.35vw,26px)] font-normal leading-[1.6]">
-              Let’s sit together once. Tell us what you have in mind — we’ll both feel
-              quickly whether it clicks.
+              Create a free account, tell us your date and city, and get matched in
+              minutes. No brokerage, no spam — just confirmed bookings.
             </p>
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap gap-4">
               <StudioButton to="/join">Plan a chat</StudioButton>
             </div>
+            <p className="mt-4 text-sm text-[#0b1311]/60">Free to join • 30-day trial for new hosts • Cancel anytime</p>
           </div>
         </div>
       </section>

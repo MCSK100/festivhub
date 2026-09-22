@@ -4,7 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import GoogleSignIn from '../components/GoogleSignIn'
 import StudioButton from '../components/ui/StudioButton'
-import { Eye, EyeOff, AlertCircle, Check } from 'lucide-react'
+import { Eye, EyeOff, AlertCircle, Check, Sparkles } from 'lucide-react'
 
 const Signup = () => {
   const [searchParams] = useSearchParams()
@@ -25,11 +25,7 @@ const Signup = () => {
   const { register } = useAuth()
   const navigate = useNavigate()
 
-  const passwordStrength = {
-    weak: password.length > 0 && password.length < 6,
-    medium: password.length >= 6 && password.length < 10,
-    strong: password.length >= 10,
-  }
+  const strength = password.length === 0 ? 'empty' : password.length < 6 ? 'weak' : password.length < 10 ? 'medium' : 'strong'
 
   const validateForm = () => {
     if (!name.trim()) {
@@ -61,358 +57,223 @@ const Signup = () => {
 
     const result = await register(email, password, role, name)
     if (result.success) {
-      setSuccess('Account created successfully! Redirecting...')
+      setSuccess('Account created! Redirecting to your dashboard...')
       const newRole = result.user?.role || role
       setTimeout(() => {
-        if (newRole === 'vendor') {
-          navigate('/vendor-dashboard', { replace: true })
-        } else {
-          navigate('/customer-dashboard', { replace: true })
-        }
+        navigate(newRole === 'vendor' ? '/vendor-dashboard' : '/customer-dashboard', { replace: true })
       }, 600)
     } else {
       setError(result.error || 'Registration failed. Please try again.')
       setLoading(false)
-      return
     }
-    setLoading(false)
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: 'easeOut' },
-    },
-  }
+  const inputCls =
+    'w-full rounded-full border border-black/10 bg-white px-6 py-3.5 font-medium text-[#0b1311] placeholder-gray-400 transition-all focus:border-[#1e4137] focus:outline-none focus:ring-2 focus:ring-[#1e4137]/20'
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-[#fff7f0] flex items-center justify-center relative overflow-hidden py-12 pt-40 lg:pt-32"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#fff7f0] px-6 py-16 pt-36 lg:pt-40"
     >
-      {/* Animated Background Gradients */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
-          animate={{
-            y: [0, 60, 0],
-            x: [50, -50, 50],
-          }}
-          transition={{ duration: 20, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-0 left-1/3 w-96 h-96 bg-gradient-to-tl from-[#1e4137]/10 to-transparent rounded-full blur-3xl"
-          animate={{
-            y: [0, -60, 0],
-            x: [-50, 50, -50],
-          }}
-          transition={{ duration: 25, repeat: Infinity, delay: 2 }}
-        />
+      {/* theme blobs */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-40 top-10 h-[420px] w-[420px] rounded-full bg-[#C2D5F1]/50 blur-3xl" />
+        <div className="absolute -right-40 bottom-0 h-[480px] w-[480px] rounded-full bg-[#F3D9C8]/60 blur-3xl" />
       </div>
 
-      <div className="w-full max-w-6xl mx-auto px-6 lg:px-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Image Section */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, x: -40 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="hidden lg:block relative h-[600px] rounded-3xl overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-100 rounded-3xl overflow-hidden border border-black/10 shadow-xl">
-              <img
-                src="https://images.unsplash.com/photo-1587603323459-ba478f963aa3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fHByZW1pdW0lMjBldmVudCUyMHNlcnZpY2VzfGVufDB8MXwwfHx8Mg%3D%3D"
-                alt="Premium event services"
-                className="w-full h-full object-cover transition-transform duration-1000 hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent" />
+      {/* single centered form */}
+      <motion.div
+        initial={{ opacity: 0, y: 28 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="relative z-10 w-full max-w-md"
+      >
+        <div className="rounded-[var(--jak-border-radius)] border border-[#1e4137]/10 bg-white p-8 shadow-xl sm:p-10">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#1e4137]/5 px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-[#1e4137]">
+              <Sparkles className="h-4 w-4" />
+              Join FestivLink
+            </span>
+            <h1 className="mt-4 text-[clamp(1.9rem,4vw,2.6rem)] font-semibold leading-tight text-[#0b1311]">
+              Create your account
+            </h1>
+            <p className="mt-2 text-[15px] text-[#0b1311]/60">
+              One account for booking vendors or growing your business.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            {success && (
+              <div className="flex items-center gap-2 rounded-xl border border-green-300 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+                <Check className="h-5 w-5" />
+                {success}
+              </div>
+            )}
+            {error && (
+              <div className="flex items-start gap-3 rounded-xl border border-red-300 bg-red-50 p-4">
+                <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
+                <span className="text-sm text-red-600">{error}</span>
+              </div>
+            )}
+
+            <div>
+              <span className="mb-2 block text-sm font-semibold text-[#0b1311]">I&apos;m joining as</span>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { value: 'customer', label: 'Customer', hint: 'Book events' },
+                  { value: 'vendor', label: 'Vendor', hint: 'Offer services' },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setRole(option.value)}
+                    aria-pressed={role === option.value}
+                    className={`rounded-2xl border-2 px-4 py-3 text-left transition-all ${
+                      role === option.value
+                        ? 'border-[#1e4137] bg-[#1e4137]/5 text-[#1e4137]'
+                        : 'border-black/10 text-[#0b1311]/60 hover:border-[#1e4137]/40'
+                    }`}
+                  >
+                    <span className="block text-sm font-bold">{option.label}</span>
+                    <span className="block text-xs font-medium opacity-70">{option.hint}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Floating Badge */}
-            <motion.div
-              className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-xl rounded-[var(--jak-border-radius)] p-6 border border-black/10 shadow-lg"
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 4, repeat: Infinity }}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-                <p className="text-xs text-[#1e4137] font-semibold uppercase tracking-wider">
-                  Join our community
-                </p>
+            <div>
+              <label htmlFor="name" className="mb-2 block text-sm font-semibold text-[#0b1311]">
+                Full name
+              </label>
+              <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Aarav Sharma" required autoComplete="name" className={inputCls} />
+            </div>
+
+            <div>
+              <label htmlFor="email" className="mb-2 block text-sm font-semibold text-[#0b1311]">
+                Email address
+              </label>
+              <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required autoComplete="email" className={inputCls} />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-[#0b1311]">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Minimum 6 characters"
+                  required
+                  autoComplete="new-password"
+                  className={inputCls}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-[#1e4137]"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
               </div>
-              <p className="text-2xl font-bold text-gray-900">2K+ Bookings</p>
-              <p className="text-sm text-gray-500 mt-1">Professional events powered by our platform</p>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Form Section */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col justify-center"
-          >
-            {/* Header */}
-            <motion.div variants={itemVariants} className="mb-8">
-              <h1 className="text-[clamp(28px,3.33vw,64px)] font-semibold leading-[1.1] text-gray-900 mb-3">
-                Get Started Today
-              </h1>
-              <p className="text-lg text-gray-500">
-                Create your account and start discovering premium services
-              </p>
-            </motion.div>
-
-            {/* Form Card */}
-            <motion.form
-              variants={itemVariants}
-              onSubmit={handleSubmit}
-              className="bg-white rounded-[var(--jak-border-radius)] p-8 lg:p-10 border border-black/5 shadow-xl space-y-5"
-            >
-              {/* Success Message */}
-              {success && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2"
-                >
-                  <Check className="w-5 h-5" />
-                  {success}
-                </motion.div>
-              )}
-
-              {/* Error Message */}
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-red-50 border border-red-300 rounded-lg p-4 flex items-start gap-3"
-                >
-                  <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-red-600 text-sm">{error}</span>
-                </motion.div>
-              )}
-
-              {/* Role Selection */}
-              <motion.div variants={itemVariants}>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  I'm joining as
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { value: 'customer', label: 'Customer' },
-                    { value: 'vendor', label: 'Vendor' },
-                  ].map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => setRole(option.value)}
-                      className={`py-3 px-4 rounded-full border-2 font-medium transition-all duration-300 ${
-                        role === option.value
-                          ? 'border-[#1e4137] bg-[#1e4137]/10 text-[#1e4137]'
-                          : 'border-gray-200 text-gray-500 hover:border-[#1e4137]/50'
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Name Field */}
-              <motion.div variants={itemVariants}>
-                <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-3">
-                  Full Name
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="John Doe"
-                  required
-                  className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
-                />
-              </motion.div>
-
-              {/* Email Field */}
-              <motion.div variants={itemVariants}>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                  className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
-                />
-              </motion.div>
-
-              {/* Password Field */}
-              <motion.div variants={itemVariants}>
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-3">
-                  Password
-                </label>
-                <div className="relative mb-2">
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#1e4137] transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-                {/* Password Strength */}
-                {password.length > 0 ? (
-                  <>
-                    <div className="flex gap-2 mb-2">
-                      <div className={`flex-1 h-1.5 rounded-full transition-all ${
-                        passwordStrength.weak
-                          ? 'bg-red-400'
-                          : passwordStrength.medium
-                          ? 'bg-yellow-400'
-                          : 'bg-green-500'
-                      }`} />
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      {passwordStrength.weak && 'Weak password (min 6 characters)'}
-                      {passwordStrength.medium && 'Medium strength'}
-                      {passwordStrength.strong && 'Strong password'}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-xs text-gray-400">Use at least 6 characters.</p>
-                )}
-              </motion.div>
-
-              {/* Confirm Password Field */}
-              <motion.div variants={itemVariants}>
-                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-3">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    className="w-full px-6 py-3.5 bg-white border border-black/10 rounded-full text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] focus:ring-2 focus:ring-[#1e4137]/20 transition-all duration-300 font-medium"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#1e4137] transition-colors"
-                  >
-                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-                {confirmPassword && password === confirmPassword && (
-                  <p className="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
-                    <Check className="w-4 h-4" />
-                    Passwords match
+              {strength !== 'empty' && (
+                <div className="mt-2">
+                  <div className="flex gap-1.5">
+                    {['weak', 'medium', 'strong'].map((level) => (
+                      <span
+                        key={level}
+                        className={`h-1.5 flex-1 rounded-full ${
+                          (strength === 'weak' && level === 'weak' && 'bg-red-400') ||
+                          (strength === 'medium' && (level === 'weak' || level === 'medium') && 'bg-yellow-400') ||
+                          (strength === 'strong' && 'bg-green-500') ||
+                          'bg-black/10'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <p className="mt-1 text-xs text-[#0b1311]/50">
+                    {strength === 'weak' && 'Weak — use at least 6 characters'}
+                    {strength === 'medium' && 'Good — add length for extra strength'}
+                    {strength === 'strong' && 'Strong password'}
                   </p>
-                )}
-              </motion.div>
-
-              {/* Submit Button */}
-              <motion.div variants={itemVariants} className="mt-6">
-                <StudioButton type="submit" disabled={loading} className="w-full studio-btn-block">
-                  {loading ? (
-                    <span className="inline-flex items-center gap-2">
-                      <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Creating account...
-                    </span>
-                  ) : (
-                    'Create Account'
-                  )}
-                </StudioButton>
-              </motion.div>
-
-              {/* Google SSO */}
-              <motion.div variants={itemVariants}>
-                <div className="relative py-1">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-200" />
-                  </div>
-                  <div className="relative flex justify-center">
-                    <span className="px-3 bg-white text-gray-500 text-xs font-medium">
-                      or continue with
-                    </span>
-                  </div>
                 </div>
-                <div className="mt-4">
-                  <GoogleSignIn mode="signup" role={role} onError={(msg) => setError(msg)} />
-                </div>
-              </motion.div>
+              )}
+            </div>
 
-              {/* Sign In Link */}
-              <motion.p
-                variants={itemVariants}
-                className="text-center text-gray-500 text-sm pt-4"
-              >
-                Already have an account?{' '}
-                <Link
-                  to="/login"
-                  className="text-[#1e4137] hover:text-[#1e4137]/80 font-semibold transition-colors underline underline-offset-4"
+            <div>
+              <label htmlFor="confirmPassword" className="mb-2 block text-sm font-semibold text-[#0b1311]">
+                Confirm password
+              </label>
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Repeat your password"
+                  required
+                  autoComplete="new-password"
+                  className={inputCls}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-[#1e4137]"
                 >
-                  Sign in here
-                </Link>
-              </motion.p>
-
-              {/* Terms and Privacy */}
-              <motion.p
-                variants={itemVariants}
-                className="text-center text-gray-600 text-xs"
-              >
-                By creating an account, you agree to our Terms of Service and Privacy Policy
-              </motion.p>
-            </motion.form>
-
-            {/* Trust Indicators */}
-            <motion.div
-              variants={itemVariants}
-              className="mt-8 flex items-center justify-center gap-4 text-xs text-gray-500"
-            >
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-green-500 rounded-full" />
-                Secure Registration
+                  {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
               </div>
-              <div className="w-1 h-1 bg-gray-300 rounded-full" />
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-green-500 rounded-full" />
-                Privacy Protected
+              {confirmPassword && password === confirmPassword && (
+                <p className="mt-2 flex items-center gap-1 text-xs font-medium text-green-600">
+                  <Check className="h-4 w-4" /> Passwords match
+                </p>
+              )}
+            </div>
+
+            <StudioButton type="submit" disabled={loading} className="studio-btn-block w-full">
+              {loading ? (
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Creating account...
+                </span>
+              ) : (
+                `Create ${role === 'vendor' ? 'vendor' : 'customer'} account`
+              )}
+            </StudioButton>
+
+            <div className="relative py-1">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-black/10" />
               </div>
-            </motion.div>
-          </motion.div>
+              <div className="relative flex justify-center">
+                <span className="bg-white px-3 text-xs font-medium text-[#0b1311]/50">or continue with</span>
+              </div>
+            </div>
+
+            <GoogleSignIn mode="signup" role={role} onError={(msg) => setError(msg)} />
+
+            <p className="pt-1 text-center text-sm text-[#0b1311]/60">
+              Already have an account?{' '}
+              <Link to="/login" className="font-semibold text-[#1e4137] underline underline-offset-4 hover:text-[#1e4137]/80">
+                Sign in
+              </Link>
+            </p>
+            <p className="text-center text-xs text-[#0b1311]/45">
+              By creating an account, you agree to our Terms of Service and Privacy Policy.
+            </p>
+          </form>
         </div>
-      </div>
+
+        <p className="mt-6 text-center text-xs font-medium text-[#0b1311]/50">
+          Vendors get a free provider profile • Customers get a 30-day trial
+        </p>
+      </motion.div>
     </motion.div>
   )
 }
