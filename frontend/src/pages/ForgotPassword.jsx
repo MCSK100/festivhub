@@ -114,7 +114,7 @@ const ForgotPassword = () => {
               {/* Back to Login */}
               <motion.div variants={itemVariants} className="text-center">
                 <Link
-                  to="/login"
+                  to="/vendor/login"
                   className="inline-flex items-center gap-2 text-[#1e4137] hover:text-[#1e4137]/80 font-medium transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
@@ -145,7 +145,7 @@ const ForgotPassword = () => {
               </motion.p>
               <motion.div variants={itemVariants}>
                 <Link
-                  to="/login"
+                  to="/vendor/login"
                   className="inline-flex items-center gap-2 text-[#1e4137] hover:text-[#1e4137]/80 font-medium transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />

@@ -30,8 +30,8 @@ api.interceptors.response.use(
     if (status === 401 && !isAuthRoute && localStorage.getItem('token')) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login?session=expired';
+      if (window.location.pathname.startsWith('/vendor/')) {
+        window.location.href = '/vendor/login?session=expired';
       }
     }
     return Promise.reject(error);

@@ -16,16 +16,17 @@ const PrivateRoute = ({ children, requiredRole = null }) => {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/vendor/login" replace />;
   }
 
   // Check if user has the required role
   if (requiredRole && user.role !== requiredRole) {
-    // Redirect to appropriate dashboard based on user's actual role
+    // Vendors go to their dashboard; anyone else lands on the
+    // public marketplace (customers need no account).
     if (user.role === 'vendor') {
-      return <Navigate to="/vendor-dashboard" replace />;
+      return <Navigate to="/vendor/dashboard" replace />;
     } else {
-      return <Navigate to="/customer-dashboard" replace />;
+      return <Navigate to="/" replace />;
     }
   }
 

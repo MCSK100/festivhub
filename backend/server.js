@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit')
 const providerRoutes = require('./routes/providers')
 const authRoutes = require('./routes/auth')
 const bookingRoutes = require('./routes/bookings')
+const enquiryRoutes = require('./routes/enquiries')
 const passwordRoutes = require('./routes/password')
 
 const app = express()
@@ -57,6 +58,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/providers', providerRoutes)
 app.use('/api/auth', authLimiter, authRoutes)
 app.use('/api/bookings', bookingRoutes)
+app.use('/api/enquiries', enquiryRoutes)
 app.use('/api/password', authLimiter, passwordRoutes)
 
 // Health

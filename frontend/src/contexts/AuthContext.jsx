@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, password, role = 'customer', name = '') => {    try {
+  const register = async (email, password, role = 'vendor', name = '') => {    try {
       const response = await api.post('/auth/register', {
         email: String(email || '').toLowerCase().trim(),
         password,
@@ -131,7 +131,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const dashboardPath = user?.role === 'vendor' ? '/vendor-dashboard' : '/customer-dashboard';
+  const dashboardPath = '/vendor/dashboard';
 
   const value = {
     user,

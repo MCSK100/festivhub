@@ -1,88 +1,123 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import NavBar from './components/NavBar'
-import LandingPage from './pages/LandingPage'
-import About from './pages/About'
-import FAQ from './pages/FAQ'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
-import RoleSelection from './pages/RoleSelection'
-import ForgotPassword from './pages/ForgotPassword'
-import ResetPassword from './pages/ResetPassword'
-import VendorDashboard from './pages/VendorDashboard'
-import CustomerDashboard from './pages/CustomerDashboard'
+import { HelmetProvider } from 'react-helmet-async'
+import Header from './components/layout/Header'
+import Footer from './components/layout/Footer'
 import PrivateRoute from './components/PrivateRoute'
 import { ThemeProvider } from './utils/ThemeContext'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { ToastProvider } from './components/ui/Toast'
-import { WhatsAppButton, AIChatBot } from './components/FloatingElements'
 
-// Redirect logged-in users away from auth pages → their dashboard
+// Marketplace (public, NO login)
+import Home from './pages/Home'
+import Vendors from './pages/Vendors'
+import VendorProfilePage from './pages/VendorProfilePage'
+import CategoryPage from './pages/CategoryPage'
+import BookingPage from './pages/BookingPage'
+
+// Vendor auth (only login in the product)
+import VendorLogin from './pages/vendor/VendorLogin'
+import VendorRegister from './pages/vendor/VendorRegister'
+import { VendorLayout } from './pages/vendor/VendorLayout'
+import VendorOverview from './pages/vendor/VendorOverview'
+import VendorProfile from './pages/vendor/VendorProfile'
+import VendorPortfolio from './pages/vendor/VendorPortfolio'
+import VendorServices from './pages/vendor/VendorServices'
+import VendorPackages from './pages/vendor/VendorPackages'
+import VendorBookings from './pages/vendor/VendorBookings'
+import VendorEnquiries from './pages/vendor/VendorEnquiries'
+import VendorSettings from './pages/vendor/VendorSettings'
+
+// Legacy pages kept for password recovery only. All other legacy
+// customer-auth routes redirect to the new structure below.
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
+
 function PublicOnly({ children }) {
   const { user, loading } = useAuth()
   const location = useLocation()
   if (loading) return children
-  if (user) {
-    const target = user.role === 'vendor' ? '/vendor-dashboard' : '/customer-dashboard'
-    return <Navigate to={target} replace state={{ from: location }} />
+  if (user?.role === 'vendor') {
+    return <Navigate to="/vendor/dashboard" replace state={{ from: location }} />
   }
+  // Any legacy logged-in customer session lands back on the marketplace:
+  // customers need no account, so never keep them on auth pages.
+  if (user) return <Navigate to="/" replace state={{ from: location }} />
   return children
 }
 
 function AppShell() {
   const location = useLocation()
-  const isDashboard = location.pathname.includes('-dashboard')
+  const isVendorArea = location.pathname.startsWith('/vendor/')
+
   return (
-    <div className={`min-h-screen ${isDashboard ? 'bg-[#0a0a12]' : 'bg-white'}`}>
-      <NavBar />
+    <div className="min-h-screen bg-[#fff7f0]">
+      <Header />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/join" element={<RoleSelection />} />
-        <Route path="/role-selection" element={<Navigate to="/join" replace />} />
-        <Route path="/login" element={<PublicOnly><Login /></PublicOnly>} />
-        <Route path="/signup" element={<PublicOnly><Signup /></PublicOnly>} />
-        <Route path="/forgot-password" element={<PublicOnly><ForgotPassword /></PublicOnly>} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        {/* Public marketplace */}
+        <Route path="/" element={<Home />} />
+        <Route path="/vendors" element={<Vendors />} />
+        <Route path="/vendors/:vendorId" element={<VendorProfilePage />} />
+        <Route path="/category/:category" element={<CategoryPage />} />
+        <Route path="/book/:vendorId" element={<BookingPage />} />
+
+        {/* Vendor auth */}
+        <Route path="/vendor/login" element={<PublicOnly><VendorLogin /></PublicOnly>} />
+        <Route path="/vendor/register" element={<PublicOnly><VendorRegister /></PublicOnly>} />
+
+        {/* Vendor dashboard (protected, vendor role only) */}
         <Route
-          path="/vendor-dashboard"
+          path="/vendor"
           element={
             <PrivateRoute requiredRole="vendor">
-              <VendorDashboard />
+              <VendorLayout />
             </PrivateRoute>
           }
-        />
-        <Route
-          path="/customer-dashboard"
-          element={
-            <PrivateRoute requiredRole="customer">
-              <CustomerDashboard />
-            </PrivateRoute>
-          }
-        />
+        >
+          <Route path="dashboard" element={<VendorOverview />} />
+          <Route path="profile" element={<VendorProfile />} />
+          <Route path="portfolio" element={<VendorPortfolio />} />
+          <Route path="services" element={<VendorServices />} />
+          <Route path="packages" element={<VendorPackages />} />
+          <Route path="bookings" element={<VendorBookings />} />
+          <Route path="enquiries" element={<VendorEnquiries />} />
+          <Route path="settings" element={<VendorSettings />} />
+          <Route index element={<Navigate to="dashboard" replace />} />
+        </Route>
+
+        {/* Password recovery (shared, vendor use) */}
+        <Route path="/forgot-password" element={<PublicOnly><ForgotPassword /></PublicOnly>} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+        {/* Legacy redirects — customer auth is removed */}
+        <Route path="/login" element={<Navigate to="/vendor/login" replace />} />
+        <Route path="/signup" element={<Navigate to="/vendor/register" replace />} />
+        <Route path="/join" element={<Navigate to="/vendor/register" replace />} />
+        <Route path="/role-selection" element={<Navigate to="/vendor/register" replace />} />
+        <Route path="/vendor-dashboard" element={<Navigate to="/vendor/dashboard" replace />} />
+        <Route path="/customer-dashboard" element={<Navigate to="/" replace />} />
+        <Route path="/about" element={<Navigate to="/" replace />} />
+        <Route path="/faq" element={<Navigate to="/" replace />} />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      {!isDashboard && (
-        <>
-          <WhatsAppButton />
-          <AIChatBot />
-        </>
-      )}
+      {!isVendorArea && <Footer />}
     </div>
   )
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <ToastProvider>
-          <Router>
-            <AppShell />
-          </Router>
-        </ToastProvider>
-      </ThemeProvider>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <Router>
+              <AppShell />
+            </Router>
+          </ToastProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </HelmetProvider>
   )
 }
 

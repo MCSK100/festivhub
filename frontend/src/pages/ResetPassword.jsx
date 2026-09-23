@@ -65,7 +65,7 @@ const ResetPassword = () => {
       await api.post('/password/reset', { token, newPassword: password })
       success('Password reset successfully!')
       setResetSuccess(true)
-      setTimeout(() => navigate('/login'), 2000)
+      setTimeout(() => navigate('/vendor/login'), 2000)
     } catch (err) {
       if (err.response?.status === 400) {
         setTokenError(true)
@@ -224,7 +224,7 @@ const ResetPassword = () => {
               {/* Back to Login */}
               <motion.div variants={itemVariants} className="text-center">
                 <Link
-                  to="/login"
+                  to="/vendor/login"
                   className="text-[#1e4137] hover:text-[#1e4137]/80 font-medium text-sm transition-colors underline underline-offset-4"
                 >
                   Back to Login
