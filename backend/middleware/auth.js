@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models/User')
+const Users = require('../db/users')
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -18,20 +18,18 @@ const authMiddleware = async (req, res, next) => {
     if (decoded.purpose && decoded.purpose !== 'auth') {
       return res.status(401).json({ error: 'Token is not valid' })
     }
-    
-    const user = await User.findById(decoded.id).select('-password')
-    
-    if (!user) {
+
+    const row = await Users.findById(decoded.id)
+    if (!row || row.is_active === false) {
       return res.status(401).json({ error: 'Token is not valid' })
     }
 
-    req.user = user
+    req.user = { ...Users.mapUser(row), _id: row.id }
     next()
   } catch (err) {
-    console.error('Auth middleware error:', err)
+    console.error('Auth middleware error:', err.message)
     res.status(401).json({ error: 'Token is not valid' })
   }
 }
 
 module.exports = authMiddleware
-

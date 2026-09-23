@@ -1,11 +1,35 @@
 const express = require('express')
 const router = express.Router()
-const ServiceProvider = require('../models/ServiceProvider')
-const { CATEGORIES } = require('../models/ServiceProvider')
 const { z } = require('zod')
-const cloudinary = require('../utils/cloudinary')
+const { getSupabase } = require('../utils/supabase')
+const { uploadImage, deleteImageIfOwned } = require('../utils/storage')
+const Providers = require('../db/providers')
+const Users = require('../db/users')
 const authMiddleware = require('../middleware/auth')
 const multer = require('multer')
+
+// Canonical marketplace categories (kept in sync with supabase/schema docs).
+const CATEGORIES = [
+  'Photography',
+  'Videography',
+  'Catering',
+  'Decoration',
+  'Makeup & Beauty',
+  'DJ & Music',
+  'Event Planning',
+  'Venues',
+  'Mehendi',
+  'Invitation & Printing',
+  'Florists',
+  'Entertainment',
+  // legacy (existing data)
+  'Photographer',
+  'Catering',
+  'DJ',
+  'Decorations',
+  'Florist',
+  'Lighting',
+]
 
 // Multer configuration with file size limits
 const storage = multer.memoryStorage()
@@ -65,16 +89,21 @@ router.post('/', authMiddleware, async (req, res) => {
     if (req.user.role !== 'vendor') {
       return res.status(403).json({ error: 'Only vendors can create a provider profile' })
     }
-    const existing = await ServiceProvider.findOne({ userId: req.user._id })
+    const existing = await Providers.findRawByUserId(req.user._id)
     if (existing) {
       return res.status(400).json({ error: 'Provider profile already exists. Use PUT /profile to update.' })
     }
     const data = createProviderSchema.parse(req.body)
-    const provider = new ServiceProvider({
-      ...data,
-      userId: req.user._id
+    const provider = await Providers.create({
+      user_id: req.user._id,
+      name: data.name,
+      category: data.category,
+      experience: String(data.experience),
+      city: data.location.city,
+      state: data.location.state,
+      price_range: data.priceRange,
     })
-    await provider.save()
+    await Users.update(req.user._id, { provider_profile_id: provider.id }).catch(() => {})
     res.status(201).json(provider)
   } catch (error) {
     if (error.name === 'ZodError') {
@@ -84,7 +113,7 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 })
 
-// Upload gallery image/video
+// Upload gallery image (Supabase Storage → public URL appended to portfolio)
 router.post('/:id/gallery', authMiddleware, upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params
@@ -92,30 +121,22 @@ router.post('/:id/gallery', authMiddleware, upload.single('image'), async (req, 
       return res.status(400).json({ error: 'No file uploaded' })
     }
 
-    const provider = await ServiceProvider.findOne({ _id: id, userId: req.user._id })
-    if (!provider) {
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw || raw.id !== id) {
       return res.status(403).json({ error: 'Not authorized for this provider' })
     }
 
-    // Upload to Cloudinary
-    const result = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        {
-          folder: 'festivlink/providers',
-          resource_type: 'auto'
-        },
-        (error, result) => {
-          if (error) reject(error)
-          else resolve(result)
-        }
-      )
-      stream.end(req.file.buffer)
-    })
+    const url = await uploadImage(req.file.buffer, req.file, 'portfolio', raw.id)
+    const next = [...(raw.portfolio_images || []), url]
+    const { data, error } = await getSupabase()
+      .from('service_providers')
+      .update({ portfolio_images: next })
+      .eq('id', raw.id)
+      .select('*')
+      .single()
+    if (error) throw error
 
-    provider.portfolioImages.push(result.secure_url)
-    await provider.save()
-
-    res.json({ url: result.secure_url })
+    res.json({ url })
   } catch (error) {
     console.error('Upload error:', error)
     res.status(500).json({ error: error.message })
@@ -125,28 +146,26 @@ router.post('/:id/gallery', authMiddleware, upload.single('image'), async (req, 
 // Get current vendor's profile
 router.get('/me', authMiddleware, async (req, res) => {
   try {
-    let provider = await ServiceProvider.findOne({ userId: req.user._id })
+    let provider = await Providers.findByUserId(req.user._id)
     if (!provider) {
       if (req.user.role === 'vendor') {
-        provider = new ServiceProvider({
-          userId: req.user._id,
-          name: req.user.name || req.user.email.split('@')[0],
+        provider = await Providers.create({
+          user_id: req.user._id,
+          name: req.user.name || String(req.user.email).split('@')[0],
           category: 'Photography',
           experience: '0',
-          companyName: '',
+          company_name: '',
           description: '',
-          profileImage: '',
-          location: { city: '', state: '' },
-          priceRange: 'Contact for pricing',
-          startingPrice: 0,
-          portfolioImages: [],
+          profile_image: req.user.avatar || '',
+          city: '',
+          state: '',
+          price_range: 'Contact for pricing',
+          starting_price: 0,
+          portfolio_images: [],
           gallery: []
         })
-        await provider.save()
-
-        // Link back to user model
-        req.user.providerProfile = provider._id
-        await req.user.save()
+        // Link back to user row
+        await Users.update(req.user._id, { provider_profile_id: provider.id }).catch(() => {})
       } else {
         return res.status(404).json({ error: 'Provider profile not found' })
       }
@@ -162,62 +181,54 @@ router.get('/me', authMiddleware, async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const { category, location, q, search, sort, page, limit, minPrice, maxPrice } = req.query
-    const filters = { isPublished: { $ne: false } }
-    const term = (q || search || '').trim()
+    const term = (q || search || '').trim().toLowerCase()
+    const loc = (location || '').trim().toLowerCase()
+
+    let list = await Providers.listPublished(1000)
 
     if (category && category !== 'All') {
       const cats = CATEGORY_ALIASES[category] || [category]
-      filters.category = cats.length === 1 ? cats[0] : { $in: cats }
+      list = list.filter((p) => cats.includes(p.category))
     }
-    if (location) {
-      filters.$and = filters.$and || []
-      filters.$and.push({
-        $or: [
-          { 'location.city': { $regex: location, $options: 'i' } },
-          { 'location.state': { $regex: location, $options: 'i' } },
-        ]
-      })
+    if (loc) {
+      list = list.filter((p) =>
+        (p.location?.city || '').toLowerCase().includes(loc) ||
+        (p.location?.state || '').toLowerCase().includes(loc)
+      )
     }
     if (term) {
-      const rx = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-      filters.$and = filters.$and || []
-      filters.$and.push({
-        $or: [
-          { name: rx },
-          { companyName: rx },
-          { description: rx },
-          { category: rx },
-          { 'location.city': rx },
-          { 'services.name': rx },
-        ]
-      })
+      list = list.filter((p) =>
+        (p.name || '').toLowerCase().includes(term) ||
+        (p.companyName || '').toLowerCase().includes(term) ||
+        (p.description || '').toLowerCase().includes(term) ||
+        (p.category || '').toLowerCase().includes(term) ||
+        (p.location?.city || '').toLowerCase().includes(term) ||
+        (p.services || []).some((s) => (s.name || '').toLowerCase().includes(term))
+      )
     }
-    if (minPrice !== undefined || maxPrice !== undefined) {
-      filters.startingPrice = {}
-      if (minPrice !== undefined && minPrice !== '') filters.startingPrice.$gte = Number(minPrice) || 0
-      if (maxPrice !== undefined && maxPrice !== '') filters.startingPrice.$lte = Number(maxPrice)
-      if (Object.keys(filters.startingPrice).length === 0) delete filters.startingPrice
+    if (minPrice !== undefined && minPrice !== '') {
+      const n = Number(minPrice) || 0
+      list = list.filter((p) => Number(p.startingPrice) >= n)
+    }
+    if (maxPrice !== undefined && maxPrice !== '') {
+      const n = Number(maxPrice)
+      if (Number.isFinite(n)) list = list.filter((p) => Number(p.startingPrice) <= n)
     }
 
-    let sortSpec = { 'ratings.average': -1, createdAt: -1 }
-    if (sort === 'newest') sortSpec = { createdAt: -1 }
-    else if (sort === 'rating') sortSpec = { 'ratings.average': -1, 'ratings.count': -1 }
-    else if (sort === 'price-low') sortSpec = { startingPrice: 1 }
-    else if (sort === 'price-high') sortSpec = { startingPrice: -1 }
+    if (sort === 'newest') list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    else if (sort === 'price-low') list.sort((a, b) => Number(a.startingPrice) - Number(b.startingPrice))
+    else if (sort === 'price-high') list.sort((a, b) => Number(b.startingPrice) - Number(a.startingPrice))
+    else list.sort((a, b) => (Number(b.ratings?.average) - Number(a.ratings?.average)) || (Number(b.ratings?.count) - Number(a.ratings?.count)))
 
     const usePaging = page !== undefined || limit !== undefined
     if (!usePaging) {
-      const providers = await ServiceProvider.find(filters).sort(sortSpec).limit(200)
-      return res.json(providers)
+      return res.json(list.slice(0, 200))
     }
 
     const pageNum = Math.max(1, parseInt(page, 10) || 1)
     const perPage = Math.min(48, Math.max(1, parseInt(limit, 10) || 12))
-    const total = await ServiceProvider.countDocuments(filters)
-    const vendors = await ServiceProvider.find(filters)
-      .sort(sortSpec)
-      .skip((pageNum - 1) * perPage)
-      .limit(perPage)
+    const total = list.length
+    const vendors = list.slice((pageNum - 1) * perPage, pageNum * perPage)
     res.json({ vendors, total, page: pageNum, pages: Math.max(1, Math.ceil(total / perPage)) })
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -227,7 +238,7 @@ router.get('/', async (req, res) => {
 // Get single provider by id (public detail page)
 router.get('/:id', async (req, res) => {
   try {
-    const provider = await ServiceProvider.findById(req.params.id)
+    const provider = await Providers.findById(req.params.id)
     if (!provider) {
       return res.status(404).json({ error: 'Provider not found' })
     }
@@ -261,7 +272,7 @@ const packageInput = z.object({
 // Update vendor profile
 router.put('/profile', authMiddleware, async (req, res) => {
   try {
-    // Allowlist → prevent mass-assignment of userId/bookings/ratings/_id
+    // Allowlist → prevent mass-assignment of user_id/ratings/_id
     const ALLOWED = ['name', 'companyName', 'category', 'experience', 'description', 'profileImage', 'coverImage', 'phone', 'contactEmail', 'location', 'socialLinks', 'priceRange', 'startingPrice', 'businessHours', 'availability', 'isPublished', 'portfolioImages', 'gallery', 'services', 'packages']
     const updateData = {}
     for (const key of ALLOWED) {
@@ -271,25 +282,28 @@ router.put('/profile', authMiddleware, async (req, res) => {
     if (updateData.category && !CATEGORIES.includes(updateData.category)) {
       return res.status(400).json({ error: 'Invalid category' })
     }
-    if (updateData.startingPrice !== undefined) {
-      const n = Number(updateData.startingPrice)
-      updateData.startingPrice = Number.isFinite(n) && n >= 0 ? n : 0
-    }
 
-    const provider = await ServiceProvider.findOneAndUpdate(
-      { userId: req.user._id },
-      updateData,
-      { new: true, runValidators: true }
-    )
-
+    // Full-array service/package replacement (validated) when provided
+    const { services, packages, ...rest } = updateData
+    const provider = await Providers.updateByUserId(req.user._id, rest)
     if (!provider) {
       return res.status(404).json({ error: 'Provider profile not found' })
     }
 
-    res.json(provider)
+    if (services !== undefined) {
+      const parsed = z.array(serviceInput).parse(services)
+      await Providers.replaceServices(provider.id, parsed)
+    }
+    if (packages !== undefined) {
+      const parsed = z.array(packageInput).parse(packages)
+      await Providers.replacePackages(provider.id, parsed)
+    }
+
+    const fresh = await Providers.findById(provider.id)
+    res.json(fresh)
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({ error: error.message })
+    if (error.name === 'ZodError') {
+      return res.status(400).json({ error: error.errors?.[0]?.message || 'Invalid profile data' })
     }
     res.status(500).json({ error: error.message })
   }
@@ -299,11 +313,17 @@ router.put('/profile', authMiddleware, async (req, res) => {
 router.post('/services', authMiddleware, async (req, res) => {
   try {
     const data = serviceInput.parse(req.body)
-    const provider = await ServiceProvider.findOne({ userId: req.user._id })
-    if (!provider) return res.status(404).json({ error: 'Provider profile not found' })
-    provider.services.push(data)
-    await provider.save()
-    res.status(201).json(provider)
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
+    const { data: row, error } = await getSupabase().from('vendor_services').insert({
+      provider_id: raw.id,
+      name: data.name,
+      description: data.description || '',
+      starting_price: data.startingPrice || 0,
+    }).select('*').single()
+    if (error) throw error
+    const fresh = await Providers.findById(raw.id)
+    res.status(201).json(fresh)
   } catch (error) {
     if (error.name === 'ZodError') return res.status(400).json({ error: error.errors?.[0]?.message || 'Invalid service' })
     res.status(500).json({ error: error.message })
@@ -313,13 +333,23 @@ router.post('/services', authMiddleware, async (req, res) => {
 router.put('/services/:serviceId', authMiddleware, async (req, res) => {
   try {
     const data = serviceInput.partial().parse(req.body)
-    const provider = await ServiceProvider.findOne({ userId: req.user._id })
-    if (!provider) return res.status(404).json({ error: 'Provider profile not found' })
-    const svc = provider.services.id(req.params.serviceId)
-    if (!svc) return res.status(404).json({ error: 'Service not found' })
-    Object.assign(svc, data)
-    await provider.save()
-    res.json(provider)
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
+    const patch = {}
+    if (data.name !== undefined) patch.name = data.name
+    if (data.description !== undefined) patch.description = data.description
+    if (data.startingPrice !== undefined) patch.starting_price = data.startingPrice
+    const { data: row, error } = await getSupabase()
+      .from('vendor_services')
+      .update(patch)
+      .eq('id', req.params.serviceId)
+      .eq('provider_id', raw.id)
+      .select('*')
+      .maybeSingle()
+    if (error) throw error
+    if (!row) return res.status(404).json({ error: 'Service not found' })
+    const fresh = await Providers.findById(raw.id)
+    res.json(fresh)
   } catch (error) {
     if (error.name === 'ZodError') return res.status(400).json({ error: 'Invalid service' })
     res.status(500).json({ error: error.message })
@@ -328,11 +358,16 @@ router.put('/services/:serviceId', authMiddleware, async (req, res) => {
 
 router.delete('/services/:serviceId', authMiddleware, async (req, res) => {
   try {
-    const provider = await ServiceProvider.findOne({ userId: req.user._id })
-    if (!provider) return res.status(404).json({ error: 'Provider profile not found' })
-    provider.services.pull(req.params.serviceId)
-    await provider.save()
-    res.json(provider)
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
+    const { error } = await getSupabase()
+      .from('vendor_services')
+      .delete()
+      .eq('id', req.params.serviceId)
+      .eq('provider_id', raw.id)
+    if (error) throw error
+    const fresh = await Providers.findById(raw.id)
+    res.json(fresh)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -342,11 +377,18 @@ router.delete('/services/:serviceId', authMiddleware, async (req, res) => {
 router.post('/packages', authMiddleware, async (req, res) => {
   try {
     const data = packageInput.parse(req.body)
-    const provider = await ServiceProvider.findOne({ userId: req.user._id })
-    if (!provider) return res.status(404).json({ error: 'Provider profile not found' })
-    provider.packages.push(data)
-    await provider.save()
-    res.status(201).json(provider)
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
+    const { error } = await getSupabase().from('vendor_packages').insert({
+      provider_id: raw.id,
+      name: data.name,
+      price: data.price,
+      description: data.description || '',
+      features: data.features || [],
+    })
+    if (error) throw error
+    const fresh = await Providers.findById(raw.id)
+    res.status(201).json(fresh)
   } catch (error) {
     if (error.name === 'ZodError') return res.status(400).json({ error: error.errors?.[0]?.message || 'Invalid package' })
     res.status(500).json({ error: error.message || 'Invalid package' })
@@ -356,13 +398,24 @@ router.post('/packages', authMiddleware, async (req, res) => {
 router.put('/packages/:packageId', authMiddleware, async (req, res) => {
   try {
     const data = packageInput.partial().parse(req.body)
-    const provider = await ServiceProvider.findOne({ userId: req.user._id })
-    if (!provider) return res.status(404).json({ error: 'Provider profile not found' })
-    const pkg = provider.packages.id(req.params.packageId)
-    if (!pkg) return res.status(404).json({ error: 'Package not found' })
-    Object.assign(pkg, data)
-    await provider.save()
-    res.json(provider)
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
+    const patch = {}
+    if (data.name !== undefined) patch.name = data.name
+    if (data.price !== undefined) patch.price = data.price
+    if (data.description !== undefined) patch.description = data.description
+    if (data.features !== undefined) patch.features = data.features
+    const { data: row, error } = await getSupabase()
+      .from('vendor_packages')
+      .update(patch)
+      .eq('id', req.params.packageId)
+      .eq('provider_id', raw.id)
+      .select('*')
+      .maybeSingle()
+    if (error) throw error
+    if (!row) return res.status(404).json({ error: 'Package not found' })
+    const fresh = await Providers.findById(raw.id)
+    res.json(fresh)
   } catch (error) {
     if (error.name === 'ZodError') return res.status(400).json({ error: 'Invalid package' })
     res.status(500).json({ error: error.message })
@@ -371,88 +424,71 @@ router.put('/packages/:packageId', authMiddleware, async (req, res) => {
 
 router.delete('/packages/:packageId', authMiddleware, async (req, res) => {
   try {
-    const provider = await ServiceProvider.findOne({ userId: req.user._id })
-    if (!provider) return res.status(404).json({ error: 'Provider profile not found' })
-    provider.packages.pull(req.params.packageId)
-    await provider.save()
-    res.json(provider)
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
+    const { error } = await getSupabase()
+      .from('vendor_packages')
+      .delete()
+      .eq('id', req.params.packageId)
+      .eq('provider_id', raw.id)
+    if (error) throw error
+    const fresh = await Providers.findById(raw.id)
+    res.json(fresh)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-// Upload profile image
+// Upload profile image (Supabase Storage)
 router.post('/profile-image', authMiddleware, upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' })
     }
 
-    // Upload to Cloudinary
-    const result = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        {
-          folder: 'festivlink/providers/profiles',
-          resource_type: 'image'
-        },
-        (error, result) => {
-          if (error) reject(error)
-          else resolve(result)
-        }
-      )
-      stream.end(req.file.buffer)
-    })
-
-    // Update provider profile image
-    const provider = await ServiceProvider.findOneAndUpdate(
-      { userId: req.user._id },
-      { profileImage: result.secure_url },
-      { new: true }
-    )
-
-    if (!provider) {
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) {
       return res.status(404).json({ error: 'Provider profile not found' })
     }
 
-    res.json({ url: result.secure_url, provider })
+    const url = await uploadImage(req.file.buffer, req.file, 'profile', raw.id)
+    if (raw.profile_image) await deleteImageIfOwned(raw.profile_image)
+
+    const { data, error } = await getSupabase()
+      .from('service_providers')
+      .update({ profile_image: url })
+      .eq('id', raw.id)
+      .select('*')
+      .single()
+    if (error) throw error
+
+    const provider = await Providers.findById(raw.id)
+    res.json({ url, provider })
   } catch (error) {
     console.error('Profile image upload error:', error)
     res.status(500).json({ error: error.message })
   }
 })
 
-// Upload cover image
+// Upload cover image (Supabase Storage)
 router.post('/cover-image', authMiddleware, upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' })
     }
 
-    const result = await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        {
-          folder: 'festivlink/providers/covers',
-          resource_type: 'image'
-        },
-        (error, result) => {
-          if (error) reject(error)
-          else resolve(result)
-        }
-      )
-      stream.end(req.file.buffer)
-    })
-
-    const provider = await ServiceProvider.findOneAndUpdate(
-      { userId: req.user._id },
-      { coverImage: result.secure_url },
-      { new: true }
-    )
-
-    if (!provider) {
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) {
       return res.status(404).json({ error: 'Provider profile not found' })
     }
 
-    res.json({ url: result.secure_url, provider })
+    const url = await uploadImage(req.file.buffer, req.file, 'cover', raw.id)
+    if (raw.cover_image) await deleteImageIfOwned(raw.cover_image)
+
+    await getSupabase().from('service_providers').update({ cover_image: url }).eq('id', raw.id)
+
+    const provider = await Providers.findById(raw.id)
+    res.json({ url, provider })
   } catch (error) {
     console.error('Cover image upload error:', error)
     res.status(500).json({ error: error.message })
@@ -467,16 +503,16 @@ router.delete('/portfolio', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Image URL is required' })
     }
 
-    const provider = await ServiceProvider.findOneAndUpdate(
-      { userId: req.user._id },
-      { $pull: { portfolioImages: imageUrl } },
-      { new: true }
-    )
-
-    if (!provider) {
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) {
       return res.status(404).json({ error: 'Provider profile not found' })
     }
 
+    const next = (raw.portfolio_images || []).filter((u) => u !== imageUrl)
+    await getSupabase().from('service_providers').update({ portfolio_images: next }).eq('id', raw.id)
+    await deleteImageIfOwned(imageUrl)
+
+    const provider = await Providers.findById(raw.id)
     res.json({ message: 'Image deleted successfully', provider })
   } catch (error) {
     res.status(500).json({ error: error.message })

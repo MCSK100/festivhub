@@ -1,7 +1,6 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-const mongoose = require('mongoose')
 const rateLimit = require('express-rate-limit')
 
 const providerRoutes = require('./routes/providers')
@@ -46,13 +45,15 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
-// MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => {
-    console.error('MongoDB connection error:', err)
-    process.exit(1)
-  })
+// Supabase (Postgres + Storage) — validated at boot, no Mongoose connection.
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY. See supabase/README.md.')
+  process.exit(1)
+}
+if (!process.env.JWT_SECRET) {
+  console.error('Missing JWT_SECRET. Set it in backend/.env.')
+  process.exit(1)
+}
 
 // Routes
 app.use('/api/providers', providerRoutes)
@@ -62,7 +63,7 @@ app.use('/api/enquiries', enquiryRoutes)
 app.use('/api/password', authLimiter, passwordRoutes)
 
 // Health
-app.get('/', (req, res) => res.json({ message: 'FestivLink Backend Running!' }))
+app.get('/', (req, res) => res.json({ message: 'FestivLink Backend Running!', db: 'supabase' }))
 
 // 404 handler (JSON, must be after routes)
 app.use((req, res) => res.status(404).json({ error: 'Route not found' }))

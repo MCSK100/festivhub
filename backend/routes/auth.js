@@ -1,50 +1,41 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
 const { OAuth2Client } = require('google-auth-library')
-const User = require('../models/User')
-const ServiceProvider = require('../models/ServiceProvider')
+const Users = require('../db/users')
+const Providers = require('../db/providers')
 const authMiddleware = require('../middleware/auth');
 const router = express.Router()
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 function issueToken(user) {
-  return jwt.sign({ id: user._id, purpose: 'auth' }, process.env.JWT_SECRET, { expiresIn: '30d' })
+  return jwt.sign({ id: user.id || user._id, purpose: 'auth' }, process.env.JWT_SECRET, { expiresIn: '30d' })
 }
 
-function publicUser(user) {
-  return {
-    id: user._id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    avatar: user.avatar || '',
-    authProvider: user.authProvider || 'local',
-    trialExpiration: user.trialExpiration
-  }
+function publicUser(row) {
+  return Users.mapUser(row)
 }
 
-async function ensureVendorProfile(user) {
+async function ensureVendorProfile(row) {
   try {
-    if (user.role !== 'vendor' || user.providerProfile) return
-    const provider = new ServiceProvider({
-      userId: user._id,
-      name: user.name || user.email.split('@')[0],
-      category: 'Photographer', // Default category
+    if (row.role !== 'vendor' || row.provider_profile_id) return
+    const provider = await Providers.create({
+      user_id: row.id,
+      name: row.name || String(row.email).split('@')[0],
+      category: 'Photography',
       experience: '0',
-      companyName: '',
+      company_name: '',
       description: '',
-      profileImage: user.avatar || '',
-      location: { city: '', state: '' },
-      priceRange: 'Contact for pricing',
-      portfolioImages: [],
+      profile_image: row.avatar || '',
+      city: '',
+      state: '',
+      price_range: 'Contact for pricing',
+      portfolio_images: [],
       gallery: []
     })
-    await provider.save()
-    user.providerProfile = provider._id
-    await user.save()
+    await Users.update(row.id, { provider_profile_id: provider.id })
   } catch (err) {
-    console.error('Vendor profile creation failed:', err)
+    console.error('Vendor profile creation failed:', err.message)
   }
 }
 
@@ -69,61 +60,26 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Invalid role' })
     }
 
-    // Check if user exists (case-insensitive)
-    let user = await User.findOne({ email })
-    if (user) {
+    // Check if user exists (case-insensitive — email column is citext)
+    const existing = await Users.findByEmail(email)
+    if (existing) {
       return res.status(400).json({ error: 'User already exists' })
     }
 
-    // Create user with 30-day trial
-    const trialExpiration = new Date()
-    trialExpiration.setDate(trialExpiration.getDate() + 30)
-
-    user = new User({
-      email,
-      password,
-      name: String(name || '').trim(),
-      role,
-      trialExpiration
-    })
-
-    await user.save()
+    const row = await Users.create({ email, password, name: String(name || '').trim(), role })
 
     if (role === 'vendor') {
-      try {
-        const provider = new ServiceProvider({
-          userId: user._id,
-          name: user.name || email.split('@')[0],
-          category: 'Photographer', // Default category
-          experience: '0',
-          companyName: '',
-          description: '',
-          profileImage: '',
-          location: { city: '', state: '' },
-          priceRange: 'Contact for pricing',
-          portfolioImages: [],
-          gallery: []
-        })
-        await provider.save()
-        user.providerProfile = provider._id
-        await user.save()
-      } catch (providerErr) {
-        // Roll back user if provider creation fails → avoid orphan
-        console.error('Vendor profile creation failed:', providerErr)
-      }
+      await ensureVendorProfile(row)
     }
 
-    // Generate JWT
-    const token = issueToken(user)
+    const fresh = await Users.findById(row.id)
+    const token = issueToken(fresh || row)
 
-    res.status(201).json({
-      token,
-      user: publicUser(user)
-    })
+    res.status(201).json({ token, user: publicUser(fresh || row) })
   } catch (err) {
     console.error(err)
-    if (err.name === 'ValidationError') {
-      return res.status(400).json({ error: err.message })
+    if (err?.code === '23505') {
+      return res.status(400).json({ error: 'User already exists' })
     }
     res.status(500).json({ error: 'Server error' })
   }
@@ -140,18 +96,15 @@ router.post('/login', async (req, res) => {
     email = String(email).toLowerCase().trim()
 
     // Find user
-    const user = await User.findOne({ email })
-    if (!user || !await user.comparePassword(password)) {
+    const row = await Users.findByEmail(email)
+    if (!row || !await Users.comparePassword(row, password)) {
       return res.status(401).json({ error: 'Invalid credentials' })
     }
 
     // Generate JWT
-    const token = issueToken(user)
+    const token = issueToken(row)
 
-    res.json({
-      token,
-      user: publicUser(user)
-    })
+    res.json({ token, user: publicUser(row) })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Server error' })
@@ -195,47 +148,37 @@ router.post('/google', async (req, res) => {
     const avatar = payload.picture || ''
 
     // 1. Existing Google-linked account
-    let user = await User.findOne({ googleId })
+    let row = await Users.findByGoogleId(googleId)
 
     // 2. Existing local account with same email → link it
-    if (!user) {
-      user = await User.findOne({ email })
-      if (user) {
+    if (!row) {
+      row = await Users.findByEmail(email)
+      if (row) {
         // Don't hijack: only link if local account has no googleId yet
-        if (user.googleId && user.googleId !== googleId) {
+        if (row.google_id && row.google_id !== googleId) {
           return res.status(409).json({ error: 'This email is already linked to another Google account' })
         }
-        user.googleId = googleId
-        if (!user.avatar && avatar) user.avatar = avatar
-        if (!user.name && name) user.name = name
-        if (user.authProvider === 'local' && !user.password) user.authProvider = 'google'
-        await user.save()
+        const patch = { google_id: googleId }
+        if (!row.avatar && avatar) patch.avatar = avatar
+        if (!row.name && name) patch.name = name
+        if (row.auth_provider === 'local' && !row.password_hash) patch.auth_provider = 'google'
+        row = await Users.update(row.id, patch)
       }
     }
 
-    // 3. Brand-new user → create (30-day trial via schema default)
-    if (!user) {
-      user = new User({
-        email,
-        name,
-        role,
-        googleId,
-        avatar,
-        authProvider: 'google'
-      })
-      await user.save()
+    // 3. Brand-new user → create
+    if (!row) {
+      row = await Users.create({ email, name, role, googleId, avatar, authProvider: 'google' })
     }
 
-    await ensureVendorProfile(user)
+    await ensureVendorProfile(row)
+    const fresh = await Users.findById(row.id)
 
-    const token = issueToken(user)
-    res.json({ token, user: publicUser(user) })
+    const token = issueToken(fresh || row)
+    res.json({ token, user: publicUser(fresh || row) })
   } catch (err) {
     console.error(err)
-    if (err.name === 'ValidationError') {
-      return res.status(400).json({ error: err.message })
-    }
-    if (err.code === 11000) {
+    if (err?.code === '23505') {
       return res.status(409).json({ error: 'An account with this email already exists' })
     }
     res.status(500).json({ error: 'Google sign-in failed' })
@@ -253,4 +196,3 @@ router.get('/me', authMiddleware, async (req, res) => {
 })
 
 module.exports = router
-

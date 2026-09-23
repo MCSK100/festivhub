@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
-const User = require('../models/User')
+const Users = require('../db/users')
 const authMiddleware = require('../middleware/auth')
 const nodemailer = require('nodemailer')
 
@@ -24,15 +24,15 @@ router.post('/forgot', async (req, res) => {
     }
     const normalized = String(email).toLowerCase().trim()
 
-    const user = await User.findOne({ email: normalized })
+    const row = await Users.findByEmail(normalized)
     // Always return generic success → prevent user enumeration
-    if (!user) {
+    if (!row) {
       return res.json({ message: 'If an account exists for this email, a reset link has been sent.' })
     }
 
     // Generate reset token with purpose claim (valid for 1 hour)
     const resetToken = jwt.sign(
-      { id: user._id, email: user.email, purpose: 'password-reset' },
+      { id: row.id, email: row.email, purpose: 'password-reset' },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     )
@@ -40,7 +40,7 @@ router.post('/forgot', async (req, res) => {
     // Send reset email
     const baseUrl = (process.env.FRONTEND_URL || process.env.CORS_ORIGIN || 'http://localhost:3000').split(',')[0].trim().replace(/\/$/, '')
     const resetUrl = `${baseUrl}/reset-password/${resetToken}`
-    
+
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -79,15 +79,14 @@ router.post('/reset', async (req, res) => {
     if (decoded.purpose !== 'password-reset') {
       return res.status(400).json({ error: 'Invalid reset token' })
     }
-    
-    const user = await User.findById(decoded.id)
-    if (!user) {
+
+    const row = await Users.findById(decoded.id)
+    if (!row) {
       return res.status(404).json({ error: 'User not found' })
     }
 
     // Update password
-    user.password = newPassword
-    await user.save()
+    await Users.setPassword(row.id, newPassword)
 
     res.json({ success: true, message: 'Password reset successfully' })
   } catch (error) {
@@ -113,17 +112,16 @@ router.post('/change', authMiddleware, async (req, res) => {
     if (String(newPassword).length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters' })
     }
-    const user = await User.findById(req.user._id)
+    const row = await Users.findById(req.user._id)
 
     // Verify old password
-    const isMatch = await user.comparePassword(oldPassword)
+    const isMatch = await Users.comparePassword(row, oldPassword)
     if (!isMatch) {
       return res.status(400).json({ error: 'Current password is incorrect' })
     }
 
     // Update password
-    user.password = newPassword
-    await user.save()
+    await Users.setPassword(row.id, newPassword)
 
     res.json({ success: true, message: 'Password changed successfully' })
   } catch (error) {
