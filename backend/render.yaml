@@ -3,12 +3,15 @@ services:
     name: festivlink-backend
     runtime: node
     plan: free
+    rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
         value: production
-      - key: MONGODB_URI
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: JWT_SECRET
         generateValue: true
@@ -16,11 +19,7 @@ services:
         sync: false
       - key: CORS_ORIGIN
         sync: false
-      - key: CLOUDINARY_CLOUD_NAME
-        sync: false
-      - key: CLOUDINARY_API_KEY
-        sync: false
-      - key: CLOUDINARY_API_SECRET
+      - key: GOOGLE_CLIENT_ID
         sync: false
       - key: EMAIL_USER
         sync: false

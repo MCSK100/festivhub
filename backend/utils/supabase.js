@@ -8,7 +8,8 @@ let client = null
 function getSupabase() {
   if (client) return client
   const url = process.env.SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  // Accepts the legacy service_role JWT or the new sb_secret_* key format.
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY
   if (!url || !key) {
     throw new Error(
       'Supabase is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in backend/.env (see supabase/README.md).'
