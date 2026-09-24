@@ -129,7 +129,7 @@ export default function Home() {
                 Live
               </span>
               <span className="text-[13px] font-semibold text-[#0b1311]/70">
-                850+ verified vendors booking for 2026 season
+                100+ verified vendors booking for 2026 season
               </span>
             </motion.div>
 
@@ -213,7 +213,7 @@ export default function Home() {
                     </span>
                     <span className="font-bold">4.9</span>
                   </div>
-                  <p className="mt-0.5 font-medium text-[#0b1311]/55">3,200+ verified reviews</p>
+                  <p className="mt-0.5 font-medium text-[#0b1311]/55">100+ verified reviews</p>
                 </div>
               </div>
               <div className="hidden h-11 w-px bg-[#0b1311]/10 sm:block" />

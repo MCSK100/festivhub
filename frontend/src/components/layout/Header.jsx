@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X, LayoutDashboard, LogOut, Sparkles, ArrowRight } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -10,10 +10,30 @@ const LINKS = [
   { to: '/#how-it-works', label: 'How It Works' },
 ]
 
+// NavLink can't distinguish hash anchors (they all share pathname "/"),
+// so active state is computed manually — only one item is ever active.
+function useActiveLink() {
+  const { pathname, hash } = useLocation()
+  return (to) => {
+    if (to === '/') return pathname === '/' && !hash
+    if (to === '/vendors')
+      return (
+        pathname === '/vendors' ||
+        pathname.startsWith('/vendors/') ||
+        pathname.startsWith('/category') ||
+        pathname.startsWith('/book')
+      )
+    if (to === '/#categories') return hash === '#categories'
+    if (to === '/#how-it-works') return hash === '#how-it-works'
+    return false
+  }
+}
+
 export default function Header() {
   const { user, logout, isVendor } = useAuth()
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const isActive = useActiveLink()
 
   const handleLogout = () => {
     logout()
@@ -39,21 +59,23 @@ export default function Header() {
         </Link>
 
         <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
-          {LINKS.map((l) => (
-            <NavLink
-              key={l.label}
-              to={l.to}
-              className={({ isActive }) =>
-                `rounded-full px-4 py-2 text-[14px] font-semibold transition-colors ${
-                  isActive
+          {LINKS.map((l) => {
+            const active = isActive(l.to)
+            return (
+              <Link
+                key={l.label}
+                to={l.to}
+                aria-current={active ? 'page' : undefined}
+                className={`rounded-full px-4 py-2 text-[14px] font-semibold transition-colors ${
+                  active
                     ? 'bg-[#1e4137]/10 text-[#1e4137]'
                     : 'text-[#0b1311]/60 hover:bg-black/5 hover:text-[#0b1311]'
-                }`
-              }
-            >
-              {l.label}
-            </NavLink>
-          ))}
+                }`}
+              >
+                {l.label}
+              </Link>
+            )
+          })}
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
