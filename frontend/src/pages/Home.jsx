@@ -67,7 +67,7 @@ export default function Home() {
 
   useEffect(() => {
     if (reduceMotion) return
-    const t = setInterval(() => setWordIndex((i) => (i + 1) % HERO_WORDS.length), 2200)
+    const t = setInterval(() => setWordIndex((i) => (i + 1) % HERO_WORDS.length), 5000)
     return () => clearInterval(t)
   }, [reduceMotion])
 
