@@ -122,9 +122,7 @@ export default function VendorLogin() {
               <div className="flex items-center gap-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#0b1311]/40">
                 <span className="h-px flex-1 bg-black/10" /> or continue with <span className="h-px flex-1 bg-black/10" />
               </div>
-              <div className="flex justify-center overflow-hidden rounded-full border border-black/10 bg-white py-1.5 shadow-sm">
-                <GoogleSignIn role="vendor" mode="signin" onError={(msg) => setError(msg)} />
-              </div>
+              <GoogleSignIn role="vendor" mode="signin" onError={(msg) => setError(msg)} />
               <p className="text-center text-sm text-[#0b1311]/60">
                 New vendor? <Link to="/vendor/register" className="font-bold text-[#1e4137] underline underline-offset-4">Create account</Link>
               </p>

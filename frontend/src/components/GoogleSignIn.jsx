@@ -71,9 +71,9 @@ const GoogleSignIn = ({ role = 'customer', mode = 'signin', onError }) => {
           window.google.accounts.id.renderButton(buttonRef.current, {
             theme: 'outline',
             size: 'large',
-            width: 320,
+            width: 400,
             text: mode === 'signup' ? 'signup_with' : 'signin_with',
-            shape: 'rectangular',
+            shape: 'pill',
           });
         }
         if (!cancelled) setStatus('ready');
@@ -100,13 +100,13 @@ const GoogleSignIn = ({ role = 'customer', mode = 'signin', onError }) => {
   return (
     <div className="w-full">
       {(status === 'loading' || status === 'verifying') && !error && (
-        <div className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-center text-sm text-gray-500 font-medium">
+        <div className="w-full max-w-[400px] mx-auto px-4 py-3 rounded-full border border-black/10 bg-white text-center text-sm text-gray-500 font-medium shadow-sm">
           {status === 'verifying' ? 'Verifying with Google…' : 'Loading Google sign-in…'}
         </div>
       )}
       <div
         ref={buttonRef}
-        className={`flex justify-center ${status === 'ready' ? '' : 'hidden'}`}
+        className={`mx-auto w-fit max-w-full overflow-hidden ${status === 'ready' ? '' : 'hidden'}`}
       />
       {error && (
         <p className="mt-2 text-sm text-red-600 text-center" role="alert">

@@ -159,9 +159,7 @@ export default function VendorRegister() {
               <div className="flex items-center gap-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#0b1311]/40">
                 <span className="h-px flex-1 bg-black/10" /> or continue with <span className="h-px flex-1 bg-black/10" />
               </div>
-              <div className="flex justify-center overflow-hidden rounded-full border border-black/10 bg-white py-1.5 shadow-sm">
-                <GoogleSignIn role="vendor" mode="signup" onError={(msg) => setError(msg)} />
-              </div>
+              <GoogleSignIn role="vendor" mode="signup" onError={(msg) => setError(msg)} />
               <p className="text-center text-xs leading-relaxed text-[#0b1311]/50">
                 By creating an account you agree to our{' '}
                 <Link to="/policy#terms" className="font-semibold text-[#1e4137] underline underline-offset-2">Terms</Link> and{' '}
