@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+    {
+      "source": "/((?!assets/|favicon.ico|icon.png|new-logo.png|fl-logo.png|fl-logo.svg|og-image.png|og-image.svg|robots.txt|sitemap.xml).*)",
+      "destination": "/index.html"
+    }
   ]
 }
