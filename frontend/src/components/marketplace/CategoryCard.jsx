@@ -16,9 +16,6 @@ export default function CategoryCard({ category }) {
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
-        <span className="absolute left-3 top-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-white/95 text-xl shadow backdrop-blur" aria-hidden>
-          {category.icon}
-        </span>
         <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-xl transition-all duration-300 group-hover:bg-white group-hover:text-[#0b1311]">
           <ArrowUpRight className="h-4 w-4" />
         </span>

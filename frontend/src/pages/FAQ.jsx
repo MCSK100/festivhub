@@ -1,108 +1,128 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Link } from 'react-router-dom'
+import { Plus, MessageCircleQuestion, ArrowRight } from 'lucide-react'
+import SEO from '../components/common/SEO'
 import StudioButton from '../components/ui/StudioButton'
 
-const faqs = [
+const FAQS = [
   {
-    q: 'Is it free to hire professionals?',
-    a: 'Completely free for customers. Browse unlimited portfolios, compare pricing, message vendors directly. Professionals pay success fees only on confirmed bookings.'
+    q: 'Do I need an account to book a vendor?',
+    a: 'No. Browsing vendors and sending a booking enquiry is completely free and needs no account. Only vendors sign in — to manage their listings, portfolio and incoming enquiries.',
+  },
+  {
+    q: 'How do I book a vendor?',
+    a: 'Find a vendor you like, open their profile and hit "Send Booking Request". Fill in your event date, location and details — the enquiry goes straight to the vendor, who contacts you directly to confirm.',
+  },
+  {
+    q: 'Are the vendors verified?',
+    a: 'Yes. Every vendor profile is reviewed before going live, and listings show real portfolios, ratings and reviews from past hosts so you can compare with confidence.',
+  },
+  {
+    q: 'Does FestivLink charge a brokerage or commission to hosts?',
+    a: 'No. Hosts browse and enquire for free. The price you see is the vendor\'s own pricing — there is no middleman markup added on top.',
   },
   {
     q: 'How do I join as a vendor?',
-    a: 'Click "Join as Professional" → Complete your profile → Upload portfolio → Set availability & rates → Start receiving qualified inquiries immediately.'
+    a: 'Click "Become a Vendor", create your account with email (or Google), complete your profile, upload a cover photo and portfolio, add your services and pricing — then you start receiving direct enquiries.',
   },
   {
-    q: 'Are payments secure?',
-    a: '100% secure. Industry-leading encryption, payments held in escrow, released only after your confirmation. Zero risk guaranteed.'
+    q: 'I forgot my password. How do I reset it?',
+    a: 'Go to the vendor login page and click "Forgot Password". You\'ll get a reset link by email that expires in 1 hour. If it doesn\'t arrive, check spam or request a fresh link.',
   },
   {
-    q: 'What cities are covered?',
-    a: '125+ cities worldwide. Major hubs like Mumbai, Delhi, NYC, London, Dubai + thousands of Tier 2/3 locations. Expanding daily.'
+    q: 'How do vendors receive enquiries?',
+    a: 'Enquiries land instantly in the vendor dashboard under Enquiries, with the host\'s event type, date, location and contact details. Vendors can accept, confirm or decline from there.',
   },
   {
-    q: 'Do you offer support?',
-    a: '24/7 priority support for all users. Dedicated account managers for premium professionals. Live chat, email, phone available.'
+    q: 'Which cities do you serve?',
+    a: 'Vendors are listed across India — including Coimbatore, Chennai, Bengaluru, Mumbai, Delhi, Hyderabad and more. Use the location search to find pros near your venue.',
   },
-  {
-    q: 'How fast are bookings?',
-    a: '95% of inquiries receive responses within 4 hours. Instant messaging + verified availability calendars ensure rapid coordination.'
-  }
 ]
 
-const FAQ = () => (
-  <motion.section 
-    initial={{ opacity: 0 }}
-    whileInView={{ opacity: 1 }}
-    viewport={{ once: true }}
-    className="pt-28 lg:pt-36 pb-24 lg:pb-32 bg-white min-h-screen"
-  >
-    <div className="max-w-5xl mx-auto px-8 lg:px-20">
-      {/* Header */}
-      <motion.div 
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-24 lg:mb-36"
+function Item({ faq, open, onToggle }) {
+  return (
+    <div className={`glass-ios overflow-hidden rounded-[24px] transition-all ${open ? 'ring-2 ring-[#1e4137]/20' : ''}`}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
       >
-        <h2 className="text-[clamp(32px,5.2vw,100px)] font-semibold leading-[1.1] text-[#1e4137] mb-8">
-          Questions?
-        </h2>
-        <p className="text-2xl lg:text-3xl xl:text-4xl font-light text-[#0b1311]/70 max-w-4xl mx-auto leading-[1.6] backdrop-blur-xl">
-          Everything you need to know before joining thousands of successful events
-        </p>
-      </motion.div>
-
-      {/* FAQ Items */}
-      <div className="space-y-8 lg:spac
-e-y-10">
-        {faqs.map((faq, index) => (
-          <motion.div 
-            key={index}
-            className="group bg-white rounded-[var(--jak-border-radius)] p-8 lg:p-10 border border-black/5 hover:border-[#1e4137]/40 hover:shadow-xl transition-all duration-500 overflow-hidden relative"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: index * 0.05 }}
-            whileHover={{ scale: 1.01 }}
+        <span className="text-[16px] font-bold tracking-tight">{faq.q}</span>
+        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${open ? 'rotate-45 bg-[#1e4137] text-white' : 'bg-[#0b1311]/6 text-[#0b1311]'}`}>
+          <Plus className="h-4 w-4" />
+        </span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
           >
-            {/* Glow Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1e4137]/[.07] to-[#bad6ff]/20 opacity-0 group-hover:opacity-100 blur-xl rounded-[var(--jak-border-radius)] transition-all duration-700" />
-            
-            {/* Question */}
-            <motion.h3 
-              className="text-xl lg:text-2xl font-semibold mb-4 text-gray-900 relative z-10"
-              whileHover={{ x: 8 }}
-            >
-              {faq.q}
-            </motion.h3>
-            
-            {/* Answer */}
-            <motion.p 
-              className="text-base lg:text-lg text-gray-600 leading-relaxed font-light relative z-10 max-w-4xl"
-              initial={{ height: 0 }}
-              animate={{ height: 'auto' }}
-            >
-              {faq.a}
-            </motion.p>
+            <p className="px-6 pb-6 text-[15px] leading-relaxed text-[#0b1311]/65">{faq.a}</p>
           </motion.div>
-        ))}
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+export default function FAQ() {
+  const [open, setOpen] = useState(0)
+  return (
+    <div className="relative overflow-hidden bg-[#fff7f0] text-[#0b1311]">
+      <SEO
+        title="Frequently Asked Questions"
+        description="How FestivLink works: booking vendors, verification, pricing, vendor sign-up and password help — answered."
+        path="/faq"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: FAQS.map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+        }}
+      />
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-40 -top-40 h-[480px] w-[480px] rounded-full bg-[#bad6ff]/35 blur-[120px]" />
+        <div className="absolute -right-48 top-40 h-[520px] w-[520px] rounded-full bg-[#f3d9c8]/55 blur-[130px]" />
       </div>
 
-      {/* CTA */}
-      <motion.div 
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-center mt-32 lg:mt-48"
-      >
-        <StudioButton to="/join">
-          Still Have Questions?
-        </StudioButton>
-        <p className="mt-12 text-xl lg:text-2xl text-[#0b1311]/50 font-light">
-          Our support team responds within 2 hours • 24/7
-        </p>
-      </motion.div>
-    </div>
-  </motion.section>
-)
+      <section className="relative mx-auto max-w-3xl px-4 pb-16 pt-28 sm:px-6 lg:pt-36">
+        <div className="text-center">
+          <p className="inline-flex items-center gap-2 rounded-full border border-[#1e4137]/12 bg-white/85 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#1e4137] shadow-sm backdrop-blur">
+            <MessageCircleQuestion className="h-3.5 w-3.5" /> Help center
+          </p>
+          <h1 className="mt-5 text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Questions, answered.</h1>
+          <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-[#0b1311]/60 sm:text-base">
+            Everything hosts and vendors ask us before their first booking.
+          </p>
+        </div>
 
-export default FAQ
+        <div className="mt-10 space-y-3">
+          {FAQS.map((f, i) => (
+            <Item key={f.q} faq={f} open={open === i} onToggle={() => setOpen(open === i ? -1 : i)} />
+          ))}
+        </div>
+
+        <div className="mt-10 flex flex-col items-center gap-4 text-center">
+          <StudioButton to="/vendors">
+            Browse vendors <ArrowRight className="h-4 w-4" />
+          </StudioButton>
+          <p className="text-sm text-[#0b1311]/55">
+            Still stuck? Write to <span className="font-bold text-[#0b1311]">hello@festivlink.com</span> — or{' '}
+            <Link to="/vendor/register" className="font-semibold text-[#1e4137] underline underline-offset-4">
+              join as a vendor
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+    </div>
+  )
+}

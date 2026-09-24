@@ -14,6 +14,9 @@ import Vendors from './pages/Vendors'
 import VendorProfilePage from './pages/VendorProfilePage'
 import CategoryPage from './pages/CategoryPage'
 import BookingPage from './pages/BookingPage'
+import About from './pages/About'
+import FAQ from './pages/FAQ'
+import Policy from './pages/Policy'
 
 // Vendor auth (only login in the product)
 import VendorLogin from './pages/vendor/VendorLogin'
@@ -97,6 +100,9 @@ function AppShell() {
         <Route path="/vendors/:vendorId" element={<VendorProfilePage />} />
         <Route path="/category/:category" element={<CategoryPage />} />
         <Route path="/book/:vendorId" element={<BookingPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/policy" element={<Policy />} /> />
 
         {/* Vendor auth */}
         <Route path="/vendor/login" element={<PublicOnly><VendorLogin /></PublicOnly>} />
@@ -132,8 +138,6 @@ function AppShell() {
         <Route path="/role-selection" element={<Navigate to="/vendor/register" replace />} />
         <Route path="/vendor-dashboard" element={<Navigate to="/vendor/dashboard" replace />} />
         <Route path="/customer-dashboard" element={<Navigate to="/" replace />} />
-        <Route path="/about" element={<Navigate to="/" replace />} />
-        <Route path="/faq" element={<Navigate to="/" replace />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

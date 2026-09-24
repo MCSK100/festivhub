@@ -49,8 +49,8 @@ export default function Footer() {
               {[
                 ['Home', '/'],
                 ['All vendors', '/vendors'],
-                ['Categories', '/#categories'],
-                ['How it works', '/#how-it-works'],
+                ['About us', '/about'],
+                ['FAQ', '/faq'],
               ].map(([label, to]) => (
                 <li key={label}>
                   <Link
@@ -101,7 +101,12 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} FestivLink. All rights reserved.</p>
-          <p className="font-medium">Made for celebrations across India ✨</p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link to="/about" className="transition-colors hover:text-white">About</Link>
+            <Link to="/faq" className="transition-colors hover:text-white">FAQ</Link>
+            <Link to="/policy#privacy" className="transition-colors hover:text-white">Privacy Policy</Link>
+            <Link to="/policy#terms" className="transition-colors hover:text-white">Terms</Link>
+          </div>
         </div>
       </div>
     </footer>

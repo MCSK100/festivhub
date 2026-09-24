@@ -34,6 +34,11 @@ export default function Header() {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const isActive = useActiveLink()
+  const { pathname } = useLocation()
+  // Auth pages stay focused: logo + account actions only, no marketplace menus.
+  const isAuthPage =
+    ['/vendor/login', '/vendor/register', '/forgot-password'].includes(pathname) ||
+    pathname.startsWith('/reset-password/')
 
   const handleLogout = () => {
     logout()
@@ -58,6 +63,7 @@ export default function Header() {
           </span>
         </Link>
 
+        {!isAuthPage && (
         <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
           {LINKS.map((l) => {
             const active = isActive(l.to)
@@ -77,6 +83,7 @@ export default function Header() {
             )
           })}
         </nav>
+        )}
 
         <div className="hidden items-center gap-2 md:flex">
           {user && isVendor ? (
@@ -132,20 +139,22 @@ export default function Header() {
           aria-label="Mobile navigation"
           className="mx-auto mt-2 max-w-7xl rounded-[28px] border border-white/60 bg-white/95 p-3 shadow-2xl backdrop-blur-2xl md:hidden"
         >
-          <ul className="flex flex-col gap-1">
-            {LINKS.map((l) => (
-              <li key={l.label}>
-                <Link
-                  to={l.to}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-2xl px-5 py-3.5 text-[15px] font-bold text-[#0b1311] transition-colors hover:bg-[#fff7f0]"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-2 grid gap-2 border-t border-black/5 pt-3">
+          {!isAuthPage && (
+            <ul className="flex flex-col gap-1">
+              {LINKS.map((l) => (
+                <li key={l.label}>
+                  <Link
+                    to={l.to}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-2xl px-5 py-3.5 text-[15px] font-bold text-[#0b1311] transition-colors hover:bg-[#fff7f0]"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className={`grid gap-2 ${isAuthPage ? '' : 'mt-2 border-t border-black/5 pt-3'}`}>
             {user && isVendor ? (
               <>
                 <Link

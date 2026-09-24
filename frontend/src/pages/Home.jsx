@@ -303,7 +303,7 @@ export default function Home() {
               <div className="absolute left-4 right-4 top-4 flex items-center justify-between gap-2">
                 <span className="glass-ios-dark inline-flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold text-white">
                   <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-                  2,400+ events booked this month
+                  100+ events booked this month
                 </span>
                 <span className="glass-ios hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold text-[#0b1311] sm:inline-flex">
                   <MapPin className="h-3.5 w-3.5 text-[#1e4137]" /> {current.location}
