@@ -287,21 +287,33 @@ body {
   background: rgba(250, 204, 21, 0.06);
 }
 
-/* Form Inputs - Light */
+/* Form Inputs - Light (default for auth/dashboard forms) */
 input, select, textarea {
-  background-color: #F9FAFB !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  color: #111827 !important;
+  background-color: #F9FAFB;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #111827;
 }
 
 input::placeholder, textarea::placeholder {
-  color: rgba(0, 0, 0, 0.35) !important;
+  color: rgba(0, 0, 0, 0.35);
 }
 
 input:focus, select:focus, textarea:focus {
-  border-color: #FACC15 !important;
-  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15) !important;
+  border-color: #1e4137;
+  box-shadow: 0 0 0 3px rgba(30, 65, 55, 0.14);
   outline: none;
+}
+
+/* Modern transparent search / filter inputs — opt out of the grey fill */
+form[role='search'] input,
+form[role='search'] select,
+label input.bg-transparent,
+label select.bg-transparent,
+input.bg-transparent,
+select.bg-transparent {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* Selection */
@@ -444,6 +456,20 @@ select:focus-visible,
 textarea:focus-visible {
   outline: 2px solid #1e4137;
   outline-offset: 2px;
+}
+
+/* Modern utilities */
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.bg-dots {
+  background-image: radial-gradient(circle at 1px 1px, rgba(11, 19, 17, 0.14) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+.text-balance {
+  text-wrap: balance;
 }
 
 @media (prefers-reduced-motion: reduce) {

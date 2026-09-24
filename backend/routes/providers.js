@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { z } = require('zod')
 const { getSupabase } = require('../utils/supabase')
-const { uploadImage, deleteImageIfOwned } = require('../utils/storage')
+const { uploadImage, deleteImageIfOwned, getVendorUsage, VENDOR_QUOTA_BYTES, MAX_PORTFOLIO_IMAGES } = require('../utils/storage')
 const Providers = require('../db/providers')
 const Users = require('../db/users')
 const authMiddleware = require('../middleware/auth')
@@ -31,12 +31,13 @@ const CATEGORIES = [
   'Lighting',
 ]
 
-// Multer configuration with file size limits
+// Multer configuration — accepts up to 8MB inputs because every image is
+// compressed to a tiny WebP (≤300KB) before it reaches Supabase Storage.
 const storage = multer.memoryStorage()
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 3 * 1024 * 1024, // 3MB limit
+    fileSize: 8 * 1024 * 1024, // 8MB input limit (stored size is ~10x smaller)
   },
   fileFilter: (req, file, cb) => {
     // Check file type
@@ -126,6 +127,19 @@ router.post('/:id/gallery', authMiddleware, upload.single('image'), async (req, 
       return res.status(403).json({ error: 'Not authorized for this provider' })
     }
 
+    const existing = raw.portfolio_images || []
+    if (existing.length >= MAX_PORTFOLIO_IMAGES) {
+      return res.status(400).json({ error: `Portfolio is full (max ${MAX_PORTFOLIO_IMAGES} images). Delete one to add another.` })
+    }
+
+    // Quota: worst-case new file is ~220KB after compression.
+    const usage = await getVendorUsage(raw.id).catch(() => null)
+    if (usage && usage.totalBytes + 250 * 1024 > VENDOR_QUOTA_BYTES) {
+      return res.status(413).json({
+        error: `Storage full (${(usage.totalBytes / 1048576).toFixed(2)}MB of ${(VENDOR_QUOTA_BYTES / 1048576).toFixed(0)}MB used). Delete an image to free space.`,
+      })
+    }
+
     const url = await uploadImage(req.file.buffer, req.file, 'portfolio', raw.id)
     const next = [...(raw.portfolio_images || []), url]
     const { data, error } = await getSupabase()
@@ -171,6 +185,23 @@ router.get('/me', authMiddleware, async (req, res) => {
       }
     }
     res.json(provider)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// Storage usage for the current vendor (drives the dashboard storage meter).
+router.get('/storage/usage', authMiddleware, async (req, res) => {
+  try {
+    const raw = await Providers.findRawByUserId(req.user._id)
+    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
+    const usage = await getVendorUsage(raw.id)
+    res.json({
+      ...usage,
+      quotaMB: VENDOR_QUOTA_BYTES / 1048576,
+      maxPortfolioImages: MAX_PORTFOLIO_IMAGES,
+      portfolioCount: (raw.portfolio_images || []).length,
+    })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -451,6 +482,14 @@ router.post('/profile-image', authMiddleware, upload.single('image'), async (req
       return res.status(404).json({ error: 'Provider profile not found' })
     }
 
+    // Quota only blocks brand-new images; replacements free their old file.
+    if (!raw.profile_image) {
+      const usage = await getVendorUsage(raw.id).catch(() => null)
+      if (usage && usage.totalBytes + 100 * 1024 > VENDOR_QUOTA_BYTES) {
+        return res.status(413).json({ error: 'Storage full. Delete a portfolio image to free space.' })
+      }
+    }
+
     const url = await uploadImage(req.file.buffer, req.file, 'profile', raw.id)
     if (raw.profile_image) await deleteImageIfOwned(raw.profile_image)
 
@@ -480,6 +519,13 @@ router.post('/cover-image', authMiddleware, upload.single('image'), async (req, 
     const raw = await Providers.findRawByUserId(req.user._id)
     if (!raw) {
       return res.status(404).json({ error: 'Provider profile not found' })
+    }
+
+    if (!raw.cover_image) {
+      const usage = await getVendorUsage(raw.id).catch(() => null)
+      if (usage && usage.totalBytes + 320 * 1024 > VENDOR_QUOTA_BYTES) {
+        return res.status(413).json({ error: 'Storage full. Delete a portfolio image to free space.' })
+      }
     }
 
     const url = await uploadImage(req.file.buffer, req.file, 'cover', raw.id)

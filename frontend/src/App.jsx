@@ -48,10 +48,15 @@ function PublicOnly({ children }) {
 function AppShell() {
   const location = useLocation()
   const isVendorArea = location.pathname.startsWith('/vendor/')
+  // Standalone vendor workspace (dashboard, profile, portfolio, …) brings its
+  // own sidebar — the public marketplace header is hidden there. Auth screens
+  // (/vendor/login, /vendor/register) keep the public header.
+  const isVendorWorkspace =
+    isVendorArea && !['/vendor/login', '/vendor/register'].includes(location.pathname)
 
   return (
     <div className="min-h-screen bg-[#fff7f0]">
-      <Header />
+      {!isVendorWorkspace && <Header />}
       <Routes>
         {/* Public marketplace */}
         <Route path="/" element={<Home />} />

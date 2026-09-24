@@ -12,6 +12,10 @@ const passwordRoutes = require('./routes/password')
 const app = express()
 const PORT = process.env.PORT || 5000
 
+// Behind Render/Vercel proxies — required for express-rate-limit to read
+// the client IP correctly instead of throwing ERR_ERL_UNEXPECTED_X_FORWARDED_FOR.
+app.set('trust proxy', 1)
+
 // Rate limiting for auth routes
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

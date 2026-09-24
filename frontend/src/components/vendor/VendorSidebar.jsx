@@ -79,10 +79,10 @@ export default function VendorSidebar({ vendorName, unread }) {
 
   return (
     <>
-      <aside className="fixed left-0 top-16 hidden h-[calc(100vh-4rem)] w-72 flex-col bg-[#1e4137] lg:flex">
+      <aside className="fixed left-0 top-0 hidden h-screen w-72 flex-col bg-[#1e4137] lg:flex">
         {list()}
       </aside>
-      <div className="sticky top-16 z-30 flex items-center justify-between border-b border-black/5 bg-white px-4 py-3 lg:hidden">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-black/5 bg-white px-4 py-3 lg:hidden">
         <p className="text-sm font-bold">Vendor Portal</p>
         <button
           type="button"

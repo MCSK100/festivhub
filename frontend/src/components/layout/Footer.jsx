@@ -1,56 +1,107 @@
 import { Link } from 'react-router-dom'
+import { Instagram, Facebook, Linkedin, MapPin, Mail, ArrowUpRight } from 'lucide-react'
 import { CATEGORY_NAMES } from '../../data/categories'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1e4137] text-[#fff7f0]">
-      <div aria-hidden className="h-8 rounded-b-[24px] bg-[#fff7f0]" />
-      <div className="mx-auto max-w-7xl px-6 pb-10 pt-12 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-4">
-            <p className="text-2xl font-black tracking-tight">FESTIVLINK</p>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">
-              Find photographers, caterers, decorators, makeup artists, venues and more. Browse local professionals and
-              send a booking request directly.
+    <footer className="relative bg-[#0f2a23] text-[#fff7f0]">
+      <div aria-hidden className="h-7 rounded-b-[28px] bg-[#fff7f0]" />
+      {/* glow */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-24 left-1/3 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
+        <div className="absolute -bottom-24 right-10 h-80 w-80 rounded-full bg-[#bad6ff]/10 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-6 pb-8 pt-14 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[1.2fr_0.7fr_0.8fr_1fr]">
+          <div>
+            <Link to="/" className="flex items-center gap-2.5">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#fff7f0] text-lg font-black text-[#1e4137]">
+                F
+              </span>
+              <span className="text-2xl font-black tracking-tight">FESTIVLINK</span>
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/65">
+              India's celebration marketplace — photographers, caterers, decorators,
+              DJs and venues, all verified and bookable in one search.
             </p>
+            <div className="mt-6 flex items-center gap-2.5">
+              {[
+                { icon: Instagram, label: 'Instagram' },
+                { icon: Facebook, label: 'Facebook' },
+                { icon: Linkedin, label: 'LinkedIn' },
+              ].map(({ icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  aria-label={label}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/8 text-white/80 transition-all hover:-translate-y-1 hover:bg-white hover:text-[#1e4137]"
+                >
+                  <Icon className="h-5 w-5" />
+                </a>
+              ))}
+            </div>
           </div>
-          <nav aria-label="Footer" className="md:col-span-2">
-            <p className="text-sm font-semibold uppercase tracking-wider text-white/50">Explore</p>
-            <ul className="mt-4 flex flex-col gap-3 text-sm">
-              <li><Link to="/" className="text-white/80 hover:text-white">Home</Link></li>
-              <li><Link to="/vendors" className="text-white/80 hover:text-white">Vendors</Link></li>
-              <li><Link to="/#categories" className="text-white/80 hover:text-white">Categories</Link></li>
-              <li><Link to="/#how-it-works" className="text-white/80 hover:text-white">How It Works</Link></li>
+
+          <nav aria-label="Footer explore">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Explore</p>
+            <ul className="mt-4 flex flex-col gap-1">
+              {[
+                ['Home', '/'],
+                ['All vendors', '/vendors'],
+                ['Categories', '/#categories'],
+                ['How it works', '/#how-it-works'],
+              ].map(([label, to]) => (
+                <li key={label}>
+                  <Link
+                    to={to}
+                    className="group inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium text-white/75 transition-colors hover:text-white"
+                  >
+                    {label}
+                    <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-all group-hover:opacity-100" />
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
-          <div className="md:col-span-3">
-            <p className="text-sm font-semibold uppercase tracking-wider text-white/50">Categories</p>
-            <ul className="mt-4 grid grid-cols-1 gap-3 text-sm">
+
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">Top categories</p>
+            <ul className="mt-4 flex flex-col gap-1">
               {CATEGORY_NAMES.slice(0, 6).map((c) => (
                 <li key={c}>
-                  <Link to={`/category/${encodeURIComponent(c)}`} className="text-white/80 hover:text-white">
+                  <Link
+                    to={`/category/${encodeURIComponent(c)}`}
+                    className="inline-block rounded-lg px-2 py-1.5 text-sm font-medium text-white/75 transition-colors hover:text-white"
+                  >
                     {c}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="md:col-span-3">
-            <p className="text-sm font-semibold uppercase tracking-wider text-white/50">For vendors</p>
-            <p className="mt-4 text-sm leading-relaxed text-white/70">
-              Showcase your services and connect with customers looking for vendors like you.
+
+          <div className="rounded-[26px] border border-white/10 bg-white/5 p-6 backdrop-blur">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#bad6ff]">For vendors</p>
+            <p className="mt-3 text-sm leading-relaxed text-white/70">
+              Get discovered by thousands of hosts planning weddings, corporate events and festivals.
             </p>
             <Link
               to="/vendor/register"
-              className="mt-5 inline-block rounded-full bg-[#fff7f0] px-6 py-3 text-sm font-semibold text-[#1e4137] transition-colors hover:bg-[#bad6ff]"
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#fff7f0] px-6 py-3 text-sm font-bold text-[#1e4137] transition-all hover:-translate-y-0.5 hover:bg-[#bad6ff]"
             >
-              List Your Business
+              List your business <ArrowUpRight className="h-4 w-4" />
             </Link>
+            <div className="mt-5 space-y-1.5 border-t border-white/10 pt-4 text-[13px] text-white/60">
+              <p className="flex items-center gap-2"><Mail className="h-3.5 w-3.5" /> hello@festivlink.com</p>
+              <p className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5" /> Coimbatore • Mumbai • Delhi</p>
+            </div>
           </div>
         </div>
-        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
+
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} FestivLink. All rights reserved.</p>
-          <p>hello@festivlink.com • Coimbatore, India</p>
+          <p className="font-medium">Made for celebrations across India ✨</p>
         </div>
       </div>
     </footer>

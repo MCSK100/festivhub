@@ -44,9 +44,9 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
     const file = event.target.files[0]
     if (!file) return
 
-    // Validate file size (3MB)
-    if (file.size > 3 * 1024 * 1024) {
-      error('File size must be less than 3MB')
+    // Validate file size (8MB input — auto-compressed before upload)
+    if (file.size > 8 * 1024 * 1024) {
+      error('File size must be less than 8MB')
       return
     }
 
@@ -197,7 +197,7 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
                 {profileImageLoading ? 'Uploading...' : 'Change Photo'}
               </button>
               <p className="text-xs text-[#0b1311]/50 mt-2">
-                Supported formats: JPG, PNG, WEBP. Max: 3MB.
+                Supported formats: JPG, PNG, WEBP. Auto-compressed on upload.
               </p>
             </div>
           </div>

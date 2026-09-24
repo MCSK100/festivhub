@@ -4,6 +4,7 @@
 
 -- Extensions ------------------------------------------------------------
 create extension if not exists "pgcrypto";
+create extension if not exists "citext";
 
 -- Users (vendors + legacy customer rows; customers need no login) -------
 create table if not exists public.users (

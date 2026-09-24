@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
+import { Store, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-react'
 import SEO from '../components/common/SEO'
 import { DirectorySearch } from '../components/marketplace/SearchBar'
 import VendorFilters from '../components/marketplace/VendorFilters'
@@ -84,24 +85,50 @@ export default function Vendors() {
   )
 
   return (
-    <div className="bg-[#fff7f0]">
+    <div className="relative overflow-hidden bg-[#fff7f0]">
       <SEO title="Find Event Vendors" description="Discover trusted event professionals near you. Search photographers, caterers, decorators and more." path="/vendors" />
-      <div className="mx-auto max-w-7xl px-4 pb-16 pt-24 sm:px-6 lg:px-8 lg:pt-28">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Find Event Vendors</h1>
-        <p className="mt-2 text-[15px] text-[#0b1311]/60">Discover trusted event professionals near you.</p>
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-gradient-to-b from-[#bad6ff]/30 via-white/60 to-transparent" />
 
-        <div className="mt-6 max-w-2xl">
-          <DirectorySearch value={query} onChange={setQuery} />
+      <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-24 sm:px-6 lg:px-8 lg:pt-32">
+        {/* breadcrumb + heading */}
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[13px] font-semibold text-[#0b1311]/50">
+          <Link to="/" className="transition-colors hover:text-[#1e4137]">Home</Link>
+          <span aria-hidden>/</span>
+          <span className="text-[#0b1311]">Vendors</span>
+        </nav>
+
+        <div className="mt-4 flex flex-wrap items-end justify-between gap-5">
+          <div className="max-w-2xl">
+            <p className="inline-flex items-center gap-2 rounded-full border border-[#1e4137]/12 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#1e4137] shadow-sm">
+              <Store className="h-3.5 w-3.5" /> Marketplace
+            </p>
+            <h1 className="mt-3 text-4xl font-bold tracking-[-0.02em] sm:text-5xl">Find your perfect vendor</h1>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-[#0b1311]/60">
+              {total > 0 ? (
+                <><span className="font-bold text-[#0b1311]">{total} verified pros</span> ready for your date — search, compare and book directly.</>
+              ) : (
+                'Discover trusted photographers, caterers, decorators and more near you.'
+              )}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-[13px] font-bold text-emerald-700">
+            <ShieldCheck className="h-4 w-4" /> All profiles verified
+          </div>
         </div>
-        <div className="mt-4">
-          <VendorFilters
-            category={category}
-            setCategory={setCategory}
-            location={location}
-            setLocation={setLocation}
-            sort={sort}
-            setSort={setSort}
-          />
+
+        {/* search + filters card */}
+        <div className="mt-8 rounded-[28px] border border-black/5 bg-white/70 p-4 shadow-[0_20px_60px_-28px_rgba(11,19,17,0.35)] backdrop-blur-xl sm:p-5">
+          <DirectorySearch value={query} onChange={setQuery} />
+          <div className="mt-4">
+            <VendorFilters
+              category={category}
+              setCategory={setCategory}
+              location={location}
+              setLocation={setLocation}
+              sort={sort}
+              setSort={setSort}
+            />
+          </div>
         </div>
 
         <div className="mt-8">
@@ -109,23 +136,25 @@ export default function Vendors() {
         </div>
 
         {pages > 1 && (
-          <nav aria-label="Vendor pages" className="mt-10 flex items-center justify-center gap-2">
+          <nav aria-label="Vendor pages" className="mt-10 flex items-center justify-center gap-3">
             <button
               type="button"
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="rounded-full border border-black/10 bg-white px-5 py-2 text-sm font-semibold disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-bold shadow-sm transition-all hover:border-[#1e4137] hover:text-[#1e4137] disabled:opacity-40 disabled:hover:border-black/10 disabled:hover:text-current"
             >
-              Prev
+              <ChevronLeft className="h-4 w-4" /> Prev
             </button>
-            <span className="text-sm font-medium text-[#0b1311]/60">Page {page} of {pages}</span>
+            <span className="rounded-full bg-[#0b1311] px-5 py-2.5 text-sm font-bold text-white">
+              {page} / {pages}
+            </span>
             <button
               type="button"
               disabled={page >= pages}
               onClick={() => setPage((p) => Math.min(pages, p + 1))}
-              className="rounded-full border border-black/10 bg-white px-5 py-2 text-sm font-semibold disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-bold shadow-sm transition-all hover:border-[#1e4137] hover:text-[#1e4137] disabled:opacity-40 disabled:hover:border-black/10 disabled:hover:text-current"
             >
-              Next
+              Next <ChevronRight className="h-4 w-4" />
             </button>
           </nav>
         )}
