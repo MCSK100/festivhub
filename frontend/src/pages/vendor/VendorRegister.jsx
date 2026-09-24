@@ -99,16 +99,7 @@ export default function VendorRegister() {
             <Link to="/" className="hidden w-fit lg:block" aria-label="FestivLink home">
               <img src="/new-logo.png" alt="FestivLink logo" className="h-12 w-auto" />
             </Link>
-            <div className="mt-6 flex items-center gap-2">
-              {STEPS.map((s, i) => (
-                <span key={s.n} className="flex items-center gap-2">
-                  <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-black ${i === 0 ? 'bg-[#1e4137] text-white' : 'bg-[#0b1311]/8 text-[#0b1311]/50'}`}>{s.n}</span>
-                  {i < STEPS.length - 1 && <span className="h-px w-6 bg-black/10 sm:w-10" />}
-                </span>
-              ))}
-              <span className="ml-1 text-xs font-bold text-[#0b1311]/50">Step 1 of 1 — it's quick</span>
-            </div>
-            <h1 className="mt-4 text-4xl font-black tracking-[-0.02em] sm:text-5xl">Create account</h1>
+            <h1 className="mt-6 text-4xl font-black tracking-[-0.02em] sm:text-5xl">Create account</h1>
             <p className="mt-3 text-[15px] leading-relaxed text-[#0b1311]/60">
               Free listing • Direct enquiries • Zero spam.
             </p>
