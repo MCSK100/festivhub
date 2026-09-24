@@ -23,7 +23,7 @@ const PRESETS = {
 
 // Total storage budget per vendor (bytes). Override with env.
 const VENDOR_QUOTA_BYTES =
-  Math.max(1, Number(process.env.VENDOR_STORAGE_QUOTA_MB) || 5) * 1024 * 1024
+  Math.max(1, Number(process.env.VENDOR_STORAGE_QUOTA_MB) || 2) * 1024 * 1024
 // Max portfolio images per vendor — caps worst-case usage even under quota.
 const MAX_PORTFOLIO_IMAGES = Number(process.env.VENDOR_MAX_PORTFOLIO_IMAGES) || 12
 
@@ -33,6 +33,21 @@ const MAX_PORTFOLIO_IMAGES = Number(process.env.VENDOR_MAX_PORTFOLIO_IMAGES) || 
  */
 async function compressImage(buffer, kind) {
   const preset = PRESETS[kind] || PRESETS.portfolio
+
+  // Validate: must be a real, readable image (rejects corrupt/renamed files).
+  let meta
+  try {
+    meta = await sharp(buffer, { failOn: 'none' }).metadata()
+  } catch {
+    throw new Error('Please upload a valid image file')
+  }
+  if (!meta || !meta.width || !meta.height) {
+    throw new Error('Please upload a valid image file')
+  }
+  if (meta.width < 50 || meta.height < 50) {
+    throw new Error('Image is too small (minimum 50×50px)')
+  }
+
   let quality = preset.quality
   let out = null
 

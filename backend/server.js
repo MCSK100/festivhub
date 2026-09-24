@@ -77,8 +77,11 @@ app.use((err, req, res, next) => {
   if (err && err.message === 'Not allowed by CORS') {
     return res.status(403).json({ error: 'CORS blocked: origin not allowed' })
   }
-  if (err && (err.code === 'LIMIT_FILE_SIZE' || err.message === 'Only image files are allowed')) {
-    return res.status(400).json({ error: err.message || 'File upload rejected (max 3MB, images only)' })
+  if (err && (err.code === 'LIMIT_FILE_SIZE' || /only .* image/i.test(err.message || ''))) {
+    const msg = err.code === 'LIMIT_FILE_SIZE'
+      ? 'Image must be smaller than 8MB'
+      : err.message
+    return res.status(400).json({ error: msg || 'File upload rejected (images only)' })
   }
   if (err && err.type === 'entity.parse.failed') {
     return res.status(400).json({ error: 'Invalid JSON body' })

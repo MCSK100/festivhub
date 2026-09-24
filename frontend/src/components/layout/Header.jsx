@@ -38,16 +38,16 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-1 rounded-full border border-black/5 bg-white/70 p-1.5 backdrop-blur lg:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
           {LINKS.map((l) => (
             <NavLink
               key={l.label}
               to={l.to}
               className={({ isActive }) =>
-                `rounded-full px-5 py-2.5 text-[14px] font-semibold transition-all ${
+                `rounded-full px-4 py-2 text-[14px] font-semibold transition-colors ${
                   isActive
-                    ? 'bg-[#0b1311] text-white shadow'
-                    : 'text-[#0b1311]/65 hover:bg-black/5 hover:text-[#0b1311]'
+                    ? 'bg-[#1e4137]/10 text-[#1e4137]'
+                    : 'text-[#0b1311]/60 hover:bg-black/5 hover:text-[#0b1311]'
                 }`
               }
             >

@@ -16,8 +16,7 @@ import { useVendor } from './VendorLayout'
 import api from '../../services/api'
 import { useToast } from '../../components/ui/Toast'
 import { CATEGORY_NAMES } from '../../data/categories'
-import { compressImageFile, formatKB } from '../../utils/image'
-import StorageMeter from '../../components/vendor/StorageMeter'
+import { compressImageFile } from '../../utils/image'
 import { profileCompletion } from '../../utils/format'
 
 const inputCls =
@@ -72,7 +71,6 @@ export default function VendorProfile() {
   const [form, setForm] = useState(null)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(null)
-  const [storageKey, setStorageKey] = useState(0)
   const coverRef = useRef(null)
   const avatarRef = useRef(null)
 
@@ -123,14 +121,7 @@ export default function VendorProfile() {
     if (!original) return
     setUploading(kind)
     try {
-      const { file, originalBytes, compressedBytes } = await compressImageFile(
-        original,
-        kind === 'cover' ? 'cover' : 'avatar'
-      )
-      if (file.size > 8 * 1024 * 1024) {
-        error('That image is too large even after compression.')
-        return
-      }
+      const { file } = await compressImageFile(original, kind === 'cover' ? 'cover' : 'avatar')
       const fd = new FormData()
       fd.append('image', file)
       const res = await api.post(
@@ -139,12 +130,7 @@ export default function VendorProfile() {
         { headers: { 'Content-Type': 'multipart/form-data' } }
       )
       setProfile(res.data.provider)
-      setStorageKey((k) => k + 1)
-      const saved =
-        originalBytes > compressedBytes
-          ? ` (${formatKB(originalBytes)} → ${formatKB(compressedBytes)})`
-          : ''
-      success(kind === 'cover' ? `Cover updated${saved}!` : `Photo updated${saved}!`)
+      success(kind === 'cover' ? 'Cover updated!' : 'Photo updated!')
     } catch (err) {
       error(err.response?.data?.error || err.message || 'Upload failed. Please try again.')
     } finally {
@@ -241,11 +227,8 @@ export default function VendorProfile() {
             className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2.5 text-[13px] font-bold text-[#0b1311] shadow-xl backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-white disabled:opacity-60"
           >
             {uploading === 'cover' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-            {uploading === 'cover' ? 'Compressing…' : profile?.coverImage ? 'Change cover' : 'Upload cover'}
+            {uploading === 'cover' ? 'Uploading…' : profile?.coverImage ? 'Change cover' : 'Upload cover'}
           </button>
-          <p className="absolute bottom-4 left-4 rounded-full bg-black/45 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur">
-            Auto-compressed • 1600px max
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-4 p-5 sm:p-6">
@@ -291,23 +274,20 @@ export default function VendorProfile() {
         </div>
       </div>
 
-      {/* visibility + storage */}
-      <div className="grid gap-5 lg:grid-cols-2">
-        <div className="space-y-3">
-          <Toggle
-            checked={form.isPublished}
-            onChange={(v) => set('isPublished', v)}
-            label="Publish profile"
-            hint="Visible to customers in the vendor directory"
-          />
-          <Toggle
-            checked={form.availability}
-            onChange={(v) => set('availability', v)}
-            label="Available for new bookings"
-            hint="Turn off when fully booked"
-          />
-        </div>
-        <StorageMeter refreshKey={storageKey} />
+      {/* visibility */}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Toggle
+          checked={form.isPublished}
+          onChange={(v) => set('isPublished', v)}
+          label="Publish profile"
+          hint="Visible to customers in the vendor directory"
+        />
+        <Toggle
+          checked={form.availability}
+          onChange={(v) => set('availability', v)}
+          label="Available for new bookings"
+          hint="Turn off when fully booked"
+        />
       </div>
 
       {/* 01 business */}

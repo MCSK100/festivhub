@@ -34,17 +34,23 @@ const CATEGORIES = [
 // Multer configuration — accepts up to 8MB inputs because every image is
 // compressed to a tiny WebP (≤300KB) before it reaches Supabase Storage.
 const storage = multer.memoryStorage()
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/avif']
+
 const upload = multer({
   storage: storage,
   limits: {
     fileSize: 8 * 1024 * 1024, // 8MB input limit (stored size is ~10x smaller)
+    files: 1,
   },
   fileFilter: (req, file, cb) => {
-    // Check file type
-    if (file.mimetype.startsWith('image/')) {
+    // Validate MIME type + extension match (blocks renamed non-images)
+    const ext = String(file.originalname || '').split('.').pop().toLowerCase()
+    const okMime = ALLOWED_IMAGE_TYPES.includes(file.mimetype)
+    const okExt = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'].includes(ext)
+    if (okMime && okExt) {
       cb(null, true)
     } else {
-      cb(new Error('Only image files are allowed'), false)
+      cb(new Error('Only JPG, PNG, WEBP, GIF or AVIF images are allowed'), false)
     }
   }
 })
@@ -136,7 +142,7 @@ router.post('/:id/gallery', authMiddleware, upload.single('image'), async (req, 
     const usage = await getVendorUsage(raw.id).catch(() => null)
     if (usage && usage.totalBytes + 250 * 1024 > VENDOR_QUOTA_BYTES) {
       return res.status(413).json({
-        error: `Storage full (${(usage.totalBytes / 1048576).toFixed(2)}MB of ${(VENDOR_QUOTA_BYTES / 1048576).toFixed(0)}MB used). Delete an image to free space.`,
+        error: 'Storage full. Delete a photo to free space.',
       })
     }
 
@@ -153,7 +159,8 @@ router.post('/:id/gallery', authMiddleware, upload.single('image'), async (req, 
     res.json({ url })
   } catch (error) {
     console.error('Upload error:', error)
-    res.status(500).json({ error: error.message })
+    const status = /valid image|too small|only jpg|storage full|portfolio is full/i.test(error.message || '') ? 400 : 500
+    res.status(status).json({ error: error.message })
   }
 })
 
@@ -289,22 +296,11 @@ const serviceInput = z.object({
   }),
 })
 
-const packageInput = z.object({
-  name: z.string().min(2).max(120),
-  price: z.union([z.string(), z.number()]).transform((v) => {
-    const n = Number(v)
-    if (!Number.isFinite(n) || n < 0) throw new Error('Invalid price')
-    return n
-  }),
-  description: z.string().max(1000).optional().default(''),
-  features: z.array(z.string().max(200)).max(20).optional().default([]),
-})
-
 // Update vendor profile
 router.put('/profile', authMiddleware, async (req, res) => {
   try {
     // Allowlist → prevent mass-assignment of user_id/ratings/_id
-    const ALLOWED = ['name', 'companyName', 'category', 'experience', 'description', 'profileImage', 'coverImage', 'phone', 'contactEmail', 'location', 'socialLinks', 'priceRange', 'startingPrice', 'businessHours', 'availability', 'isPublished', 'portfolioImages', 'gallery', 'services', 'packages']
+    const ALLOWED = ['name', 'companyName', 'category', 'experience', 'description', 'profileImage', 'coverImage', 'phone', 'contactEmail', 'location', 'socialLinks', 'priceRange', 'startingPrice', 'businessHours', 'availability', 'isPublished', 'portfolioImages', 'gallery', 'services']
     const updateData = {}
     for (const key of ALLOWED) {
       if (req.body[key] !== undefined) updateData[key] = req.body[key]
@@ -314,8 +310,8 @@ router.put('/profile', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Invalid category' })
     }
 
-    // Full-array service/package replacement (validated) when provided
-    const { services, packages, ...rest } = updateData
+    // Full-array service replacement (validated) when provided
+    const { services, ...rest } = updateData
     const provider = await Providers.updateByUserId(req.user._id, rest)
     if (!provider) {
       return res.status(404).json({ error: 'Provider profile not found' })
@@ -324,10 +320,6 @@ router.put('/profile', authMiddleware, async (req, res) => {
     if (services !== undefined) {
       const parsed = z.array(serviceInput).parse(services)
       await Providers.replaceServices(provider.id, parsed)
-    }
-    if (packages !== undefined) {
-      const parsed = z.array(packageInput).parse(packages)
-      await Providers.replacePackages(provider.id, parsed)
     }
 
     const fresh = await Providers.findById(provider.id)
@@ -405,71 +397,6 @@ router.delete('/services/:serviceId', authMiddleware, async (req, res) => {
 })
 
 // Packages CRUD (vendor-owned)
-router.post('/packages', authMiddleware, async (req, res) => {
-  try {
-    const data = packageInput.parse(req.body)
-    const raw = await Providers.findRawByUserId(req.user._id)
-    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
-    const { error } = await getSupabase().from('vendor_packages').insert({
-      provider_id: raw.id,
-      name: data.name,
-      price: data.price,
-      description: data.description || '',
-      features: data.features || [],
-    })
-    if (error) throw error
-    const fresh = await Providers.findById(raw.id)
-    res.status(201).json(fresh)
-  } catch (error) {
-    if (error.name === 'ZodError') return res.status(400).json({ error: error.errors?.[0]?.message || 'Invalid package' })
-    res.status(500).json({ error: error.message || 'Invalid package' })
-  }
-})
-
-router.put('/packages/:packageId', authMiddleware, async (req, res) => {
-  try {
-    const data = packageInput.partial().parse(req.body)
-    const raw = await Providers.findRawByUserId(req.user._id)
-    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
-    const patch = {}
-    if (data.name !== undefined) patch.name = data.name
-    if (data.price !== undefined) patch.price = data.price
-    if (data.description !== undefined) patch.description = data.description
-    if (data.features !== undefined) patch.features = data.features
-    const { data: row, error } = await getSupabase()
-      .from('vendor_packages')
-      .update(patch)
-      .eq('id', req.params.packageId)
-      .eq('provider_id', raw.id)
-      .select('*')
-      .maybeSingle()
-    if (error) throw error
-    if (!row) return res.status(404).json({ error: 'Package not found' })
-    const fresh = await Providers.findById(raw.id)
-    res.json(fresh)
-  } catch (error) {
-    if (error.name === 'ZodError') return res.status(400).json({ error: 'Invalid package' })
-    res.status(500).json({ error: error.message })
-  }
-})
-
-router.delete('/packages/:packageId', authMiddleware, async (req, res) => {
-  try {
-    const raw = await Providers.findRawByUserId(req.user._id)
-    if (!raw) return res.status(404).json({ error: 'Provider profile not found' })
-    const { error } = await getSupabase()
-      .from('vendor_packages')
-      .delete()
-      .eq('id', req.params.packageId)
-      .eq('provider_id', raw.id)
-    if (error) throw error
-    const fresh = await Providers.findById(raw.id)
-    res.json(fresh)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
-
 // Upload profile image (Supabase Storage)
 router.post('/profile-image', authMiddleware, upload.single('image'), async (req, res) => {
   try {
@@ -486,7 +413,7 @@ router.post('/profile-image', authMiddleware, upload.single('image'), async (req
     if (!raw.profile_image) {
       const usage = await getVendorUsage(raw.id).catch(() => null)
       if (usage && usage.totalBytes + 100 * 1024 > VENDOR_QUOTA_BYTES) {
-        return res.status(413).json({ error: 'Storage full. Delete a portfolio image to free space.' })
+        return res.status(413).json({ error: 'Storage full. Delete a photo to free space.' })
       }
     }
 
@@ -505,7 +432,8 @@ router.post('/profile-image', authMiddleware, upload.single('image'), async (req
     res.json({ url, provider })
   } catch (error) {
     console.error('Profile image upload error:', error)
-    res.status(500).json({ error: error.message })
+    const status = /valid image|too small|only jpg|storage full/i.test(error.message || '') ? 400 : 500
+    res.status(status).json({ error: error.message })
   }
 })
 
@@ -524,7 +452,7 @@ router.post('/cover-image', authMiddleware, upload.single('image'), async (req, 
     if (!raw.cover_image) {
       const usage = await getVendorUsage(raw.id).catch(() => null)
       if (usage && usage.totalBytes + 320 * 1024 > VENDOR_QUOTA_BYTES) {
-        return res.status(413).json({ error: 'Storage full. Delete a portfolio image to free space.' })
+        return res.status(413).json({ error: 'Storage full. Delete a photo to free space.' })
       }
     }
 
@@ -537,7 +465,8 @@ router.post('/cover-image', authMiddleware, upload.single('image'), async (req, 
     res.json({ url, provider })
   } catch (error) {
     console.error('Cover image upload error:', error)
-    res.status(500).json({ error: error.message })
+    const status = /valid image|too small|only jpg|storage full/i.test(error.message || '') ? 400 : 500
+    res.status(status).json({ error: error.message })
   }
 })
 

@@ -126,7 +126,7 @@ async function updateByUserId(userId, patch) {
   return mapped
 }
 
-// Full-replace services/packages arrays (used by PUT /profile when the
+// Full-replace services array (used by PUT /profile when the
 // vendor dashboard saves the whole form).
 async function replaceServices(providerId, services) {
   const db = getSupabase()
@@ -144,23 +144,6 @@ async function replaceServices(providerId, services) {
   }
 }
 
-async function replacePackages(providerId, packages) {
-  const db = getSupabase()
-  const { error: delErr } = await db.from('vendor_packages').delete().eq('provider_id', providerId)
-  if (delErr) throw delErr
-  if (packages?.length) {
-    const rows = packages.map((p) => ({
-      provider_id: providerId,
-      name: p.name,
-      price: Number(p.price) || 0,
-      description: p.description || '',
-      features: Array.isArray(p.features) ? p.features : [],
-    }))
-    const { error } = await db.from('vendor_packages').insert(rows)
-    if (error) throw error
-  }
-}
-
 module.exports = {
   findById,
   findByUserId,
@@ -170,5 +153,4 @@ module.exports = {
   toRow,
   updateByUserId,
   replaceServices,
-  replacePackages,
 }

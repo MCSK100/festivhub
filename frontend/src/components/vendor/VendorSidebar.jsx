@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, User, Images, Briefcase, Package, Inbox, CalendarCheck, Settings, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, User, Images, Briefcase, Inbox, CalendarCheck, Settings, LogOut, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -8,7 +8,6 @@ const ITEMS = [
   { to: '/vendor/profile', label: 'My Profile', icon: User },
   { to: '/vendor/portfolio', label: 'Portfolio', icon: Images },
   { to: '/vendor/services', label: 'Services', icon: Briefcase },
-  { to: '/vendor/packages', label: 'Packages', icon: Package },
   { to: '/vendor/bookings', label: 'Bookings', icon: CalendarCheck },
   { to: '/vendor/enquiries', label: 'Enquiries', icon: Inbox },
   { to: '/vendor/settings', label: 'Settings', icon: Settings },

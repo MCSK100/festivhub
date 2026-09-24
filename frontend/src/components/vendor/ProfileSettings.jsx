@@ -44,15 +44,15 @@ const ProfileSettings = ({ vendorProfile, onUpdate }) => {
     const file = event.target.files[0]
     if (!file) return
 
-    // Validate file size (8MB input — auto-compressed before upload)
-    if (file.size > 8 * 1024 * 1024) {
-      error('File size must be less than 8MB')
+    // Validate file type + size (same rules as everywhere else)
+    const ext = String(file.name || '').split('.').pop().toLowerCase()
+    const okType = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/avif'].includes(file.type)
+    if (!okType || !['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'].includes(ext)) {
+      error('Only JPG, PNG, WEBP, GIF or AVIF images are allowed')
       return
     }
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      error('Please select an image file')
+    if (file.size > 8 * 1024 * 1024) {
+      error('Image must be smaller than 8MB')
       return
     }
 

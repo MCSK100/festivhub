@@ -140,27 +140,10 @@ export default function VendorProfilePage() {
               <div className="mt-4"><PortfolioGallery images={images} name={name} /></div>
             </section>
 
-            {/* PACKAGES */}
-            <section className="mt-6 rounded-[20px] border border-black/5 bg-white p-6 shadow-sm" aria-labelledby="v-packages">
-              <h2 id="v-packages" className="text-lg font-bold">Packages & Pricing</h2>
-              {(vendor.packages || []).length === 0 ? (
-                <p className="mt-2 text-sm text-[#0b1311]/60">{startingPriceLabel(vendor)}. Contact the vendor for a custom quote.</p>
-              ) : (
-                <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {vendor.packages.map((p) => (
-                    <div key={p._id || p.name} className="rounded-2xl border border-[#1e4137]/15 bg-[#fff7f0] p-5">
-                      <p className="font-bold">{p.name}</p>
-                      <p className="mt-1 text-xl font-black text-[#1e4137]">{formatINR(p.price)}</p>
-                      {p.description && <p className="mt-2 text-sm text-[#0b1311]/65">{p.description}</p>}
-                      {(p.features || []).length > 0 && (
-                        <ul className="mt-3 space-y-1.5 text-sm text-[#0b1311]/70">
-                          {p.features.map((f, i) => <li key={i} className="flex gap-2"><span aria-hidden>•</span>{f}</li>)}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+            {/* PRICING */}
+            <section className="mt-6 rounded-[20px] border border-black/5 bg-white p-6 shadow-sm" aria-labelledby="v-pricing">
+              <h2 id="v-pricing" className="text-lg font-bold">Pricing</h2>
+              <p className="mt-2 text-sm text-[#0b1311]/60">{startingPriceLabel(vendor)}. Contact the vendor for a custom quote.</p>
             </section>
 
             {/* LOCATION */}

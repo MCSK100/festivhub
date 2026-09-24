@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search,
   ArrowRight,
@@ -13,6 +13,8 @@ import {
   ShieldCheck,
   Sparkles,
   Check,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 import SEO from '../components/common/SEO'
 import StudioButton from '../components/ui/StudioButton'
@@ -20,7 +22,7 @@ import { HomeSearch } from '../components/marketplace/SearchBar'
 import { CategoryGrid } from '../components/marketplace/CategoryCard'
 import VendorGrid from '../components/marketplace/VendorGrid'
 import api from '../services/api'
-import { normalizeVendors } from '../utils/format'
+import { normalizeVendors, vendorImage, vendorLocation, startingPriceLabel } from '../utils/format'
 
 const HERO_MAIN =
   'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop'
@@ -43,6 +45,42 @@ export default function Home() {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [slide, setSlide] = useState(0)
+  const [paused, setPaused] = useState(false)
+
+  // Hero carousel slides — real vendor photos when available, styled fallback otherwise.
+  const slides = useMemo(() => {
+    const fromVendors = (vendors || [])
+      .filter(Boolean)
+      .slice(0, 6)
+      .map((v) => ({
+        id: String(v._id),
+        src: vendorImage(v),
+        name: v.companyName || v.name || 'Featured vendor',
+        category: v.category || 'Events',
+        location: vendorLocation(v),
+        price: startingPriceLabel(v),
+        to: `/vendors/${v._id}`,
+      }))
+    if (fromVendors.length >= 2) return fromVendors
+    return [
+      { id: 'f1', src: HERO_MAIN, name: 'Signature weddings', category: 'Decoration', location: 'Coimbatore', price: 'Starting from ₹24,999', to: '/vendors' },
+      { id: 'f2', src: HERO_SECOND, name: 'Candid stories', category: 'Photography', location: 'Chennai', price: 'Starting from ₹14,999', to: '/vendors' },
+      { id: 'f3', src: HERO_THIRD, name: 'Live nights', category: 'DJ & Music', location: 'Bengaluru', price: 'Starting from ₹9,999', to: '/vendors' },
+    ]
+  }, [vendors])
+  const count = slides.length
+  const current = slides[slide % count]
+
+  useEffect(() => {
+    setSlide(0)
+  }, [count])
+
+  useEffect(() => {
+    if (paused || count < 2) return
+    const t = setInterval(() => setSlide((s) => (s + 1) % count), 4500)
+    return () => clearInterval(t)
+  }, [paused, count])
 
   useEffect(() => {
     let alive = true
@@ -103,12 +141,12 @@ export default function Home() {
             >
               Every vendor for your{' '}
               <span className="relative inline-block whitespace-nowrap font-serif italic text-[#1e4137]">
-                big day
+                big day,
                 <svg aria-hidden viewBox="0 0 220 14" className="absolute -bottom-2 left-0 w-full text-[#1e4137]/25" fill="none">
                   <path d="M3 10.5C60 3.5 160 3.5 217 10.5" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
                 </svg>
-              </span>
-              , in one search.
+              </span>{' '}
+              in one search.
             </motion.h1>
 
             <motion.p
@@ -202,15 +240,38 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.96, y: 28 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.18 }}
+              onMouseEnter={() => setPaused(true)}
+              onMouseLeave={() => setPaused(false)}
               className="relative overflow-hidden rounded-[32px] border-[6px] border-white bg-white shadow-[0_40px_90px_-24px_rgba(11,19,17,0.45)]"
             >
-              <img
-                src={HERO_MAIN}
-                alt="Luxury Indian wedding mandap with florals and lights"
-                className="aspect-[4/4.4] w-full object-cover sm:aspect-[5/5.2]"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0b1311]/55 via-[#0b1311]/5 to-transparent" />
+              {/* carousel image */}
+              <div className="relative aspect-[4/4.4] w-full overflow-hidden sm:aspect-[5/5.2]">
+                <AnimatePresence mode="popLayout">
+                  <motion.img
+                    key={current.id}
+                    src={current.src}
+                    alt={`${current.name} — ${current.category} in ${current.location}`}
+                    initial={{ opacity: 0, scale: 1.07 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.7, ease: 'easeOut' }}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="eager"
+                  />
+                </AnimatePresence>
+              </div>
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0b1311]/60 via-[#0b1311]/5 to-transparent" />
+
+              {/* autoplay progress */}
+              {count > 1 && !paused && (
+                <motion.div
+                  key={`progress-${slide}`}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 4.5, ease: 'linear' }}
+                  className="absolute left-0 top-0 h-1 w-full origin-left bg-white/80"
+                />
+              )}
 
               {/* top status pill */}
               <div className="absolute left-4 right-4 top-4 flex items-center justify-between gap-2">
@@ -219,32 +280,80 @@ export default function Home() {
                   2,400+ events booked this month
                 </span>
                 <span className="hidden items-center gap-1.5 rounded-full bg-white/95 px-4 py-2 text-[12px] font-bold text-[#0b1311] shadow sm:inline-flex">
-                  <MapPin className="h-3.5 w-3.5 text-[#1e4137]" /> Coimbatore
+                  <MapPin className="h-3.5 w-3.5 text-[#1e4137]" /> {current.location}
                 </span>
               </div>
 
-              {/* bottom info bar */}
+              {/* bottom info bar — live vendor per slide */}
               <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3">
-                <div className="rounded-2xl bg-white/95 p-4 shadow-xl backdrop-blur-xl">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#0b1311]/50">Starting from</p>
-                  <p className="mt-0.5 text-xl font-black text-[#0b1311]">
-                    ₹24,999 <span className="text-[13px] font-semibold text-[#0b1311]/50">/ event</span>
-                  </p>
-                  <div className="mt-2 flex gap-1.5">
-                    {['Photo', 'Decor', 'DJ'].map((t) => (
-                      <span key={t} className="rounded-full bg-[#1e4137]/8 px-2.5 py-1 text-[11px] font-bold text-[#1e4137]">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                <div className="min-w-0 flex-1 rounded-2xl bg-white/95 p-4 shadow-xl backdrop-blur-xl">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={current.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <p className="truncate text-[15px] font-black tracking-tight text-[#0b1311]">
+                        {current.name}
+                      </p>
+                      <p className="mt-0.5 truncate text-[12px] font-semibold text-[#0b1311]/55">
+                        {current.category} • {current.location}
+                      </p>
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <p className="truncate text-[13px] font-bold text-[#1e4137]">{current.price}</p>
+                        {count > 1 && (
+                          <div className="flex shrink-0 items-center gap-1.5" role="tablist" aria-label="Featured vendors">
+                            {slides.map((s, i) => (
+                              <button
+                                key={s.id}
+                                type="button"
+                                role="tab"
+                                aria-selected={i === slide % count}
+                                aria-label={`Show ${s.name}`}
+                                onClick={() => setSlide(i)}
+                                className={`h-1.5 rounded-full transition-all duration-300 ${
+                                  i === slide % count ? 'w-6 bg-[#1e4137]' : 'w-1.5 bg-[#0b1311]/20 hover:bg-[#0b1311]/40'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
-                <Link
-                  to="/vendors"
-                  className="group hidden h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white text-[#0b1311] shadow-xl transition-all hover:bg-[#1e4137] hover:text-white sm:flex"
-                  aria-label="Browse vendors"
-                >
-                  <ArrowUpRight className="h-6 w-6 transition-transform group-hover:rotate-45" />
-                </Link>
+                <div className="flex shrink-0 flex-col gap-2">
+                  {count > 1 && (
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setSlide((s) => (s - 1 + count) % count)}
+                        aria-label="Previous vendor"
+                        className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#0b1311] shadow-xl backdrop-blur transition-all hover:bg-[#1e4137] hover:text-white"
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSlide((s) => (s + 1) % count)}
+                        aria-label="Next vendor"
+                        className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#0b1311] shadow-xl backdrop-blur transition-all hover:bg-[#1e4137] hover:text-white"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                    </div>
+                  )}
+                  <Link
+                    to={current.to}
+                    className="group hidden h-11 items-center justify-center gap-1.5 rounded-full bg-[#1e4137] px-4 text-[12px] font-bold text-white shadow-xl transition-all hover:bg-[#142e27] sm:inline-flex"
+                    aria-label={`View ${current.name}`}
+                  >
+                    View profile
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                  </Link>
+                </div>
               </div>
             </motion.div>
 

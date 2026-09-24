@@ -40,10 +40,26 @@ function canvasToBlob(canvas, type, quality) {
  * @param {'avatar'|'cover'|'portfolio'} kind
  * @returns {Promise<{file: File, originalBytes: number, compressedBytes: number}>}
  */
-export async function compressImageFile(file, kind = 'portfolio') {
-  if (!file || !file.type.startsWith('image/')) {
-    throw new Error('Please select an image file')
+const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/avif']
+const ACCEPTED_EXTS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif']
+
+export function validateImageFile(file) {
+  if (!file) throw new Error('No file selected')
+  const ext = String(file.name || '').split('.').pop().toLowerCase()
+  if (!ACCEPTED_TYPES.includes(file.type) || !ACCEPTED_EXTS.includes(ext)) {
+    throw new Error('Only JPG, PNG, WEBP, GIF or AVIF images are allowed')
   }
+  if (file.size > 8 * 1024 * 1024) {
+    throw new Error('Image must be smaller than 8MB')
+  }
+  if (file.size === 0) {
+    throw new Error('That file is empty — please choose another image')
+  }
+  return true
+}
+
+export async function compressImageFile(file, kind = 'portfolio') {
+  validateImageFile(file)
   // Tiny files need no work.
   if (file.size <= 150 * 1024) {
     return { file, originalBytes: file.size, compressedBytes: file.size }

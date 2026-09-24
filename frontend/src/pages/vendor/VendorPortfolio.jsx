@@ -4,33 +4,26 @@ import { useVendor } from './VendorLayout'
 import api from '../../services/api'
 import { useToast } from '../../components/ui/Toast'
 import EmptyState from '../../components/common/EmptyState'
-import { compressImageFile, formatKB } from '../../utils/image'
-import StorageMeter from '../../components/vendor/StorageMeter'
+import { compressImageFile } from '../../utils/image'
 
 export default function VendorPortfolio() {
   const { profile, setProfile } = useVendor()
   const { success, error } = useToast()
   const [uploading, setUploading] = useState(false)
-  const [storageKey, setStorageKey] = useState(0)
   const fileRef = useRef(null)
 
   const upload = async (original) => {
     if (!original) return
     setUploading(true)
     try {
-      const { file, originalBytes, compressedBytes } = await compressImageFile(original, 'portfolio')
+      const { file } = await compressImageFile(original, 'portfolio')
       const fd = new FormData()
       fd.append('image', file)
       const res = await api.post(`/providers/${profile._id}/gallery`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       setProfile({ ...profile, portfolioImages: [...(profile.portfolioImages || []), res.data.url] })
-      setStorageKey((k) => k + 1)
-      success(
-        originalBytes > compressedBytes
-          ? `Uploaded (${formatKB(originalBytes)} → ${formatKB(compressedBytes)})!`
-          : 'Image uploaded!'
-      )
+      success('Photo uploaded!')
       if (fileRef.current) fileRef.current.value = ''
     } catch (err) {
       error(err.response?.data?.error || err.message || 'Upload failed. Please try again.')
@@ -43,10 +36,9 @@ export default function VendorPortfolio() {
     try {
       const res = await api.delete(`/providers/portfolio?imageUrl=${encodeURIComponent(url)}`)
       setProfile(res.data.provider)
-      setStorageKey((k) => k + 1)
-      success('Image deleted — space freed.')
+      success('Photo deleted.')
     } catch {
-      error('Failed to delete image.')
+      error('Failed to delete photo.')
     }
   }
 
@@ -68,8 +60,6 @@ export default function VendorPortfolio() {
         </div>
       </div>
 
-      <StorageMeter refreshKey={storageKey} />
-
       <div className="rounded-[24px] border border-black/5 bg-white p-5 shadow-sm sm:p-6">
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => upload(e.target.files[0])} />
         <button
@@ -81,8 +71,8 @@ export default function VendorPortfolio() {
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#1e4137] text-white shadow-lg shadow-[#1e4137]/25 transition-transform group-hover:scale-105">
             {uploading ? <Loader2 className="h-6 w-6 animate-spin" /> : <Upload className="h-6 w-6" />}
           </span>
-          <span className="mt-3 font-bold">{uploading ? 'Compressing & uploading…' : 'Drop your best shot here'}</span>
-          <span className="mt-1 text-[13px] text-[#0b1311]/55">JPG, PNG, WEBP • auto-compressed to ~200KB • max 12 photos</span>
+          <span className="mt-3 font-bold">{uploading ? 'Uploading…' : 'Drop your best shot here'}</span>
+          <span className="mt-1 text-[13px] text-[#0b1311]/55">JPG, PNG, WEBP or GIF • max 12 photos</span>
         </button>
       </div>
 

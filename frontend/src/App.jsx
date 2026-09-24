@@ -22,7 +22,6 @@ import VendorOverview from './pages/vendor/VendorOverview'
 import VendorProfile from './pages/vendor/VendorProfile'
 import VendorPortfolio from './pages/vendor/VendorPortfolio'
 import VendorServices from './pages/vendor/VendorServices'
-import VendorPackages from './pages/vendor/VendorPackages'
 import VendorBookings from './pages/vendor/VendorBookings'
 import VendorEnquiries from './pages/vendor/VendorEnquiries'
 import VendorSettings from './pages/vendor/VendorSettings'
@@ -82,7 +81,6 @@ function AppShell() {
           <Route path="profile" element={<VendorProfile />} />
           <Route path="portfolio" element={<VendorPortfolio />} />
           <Route path="services" element={<VendorServices />} />
-          <Route path="packages" element={<VendorPackages />} />
           <Route path="bookings" element={<VendorBookings />} />
           <Route path="enquiries" element={<VendorEnquiries />} />
           <Route path="settings" element={<VendorSettings />} />

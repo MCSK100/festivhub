@@ -57,7 +57,7 @@ export function profileCompletion(vendor) {
     !!((vendor.portfolioImages || []).length > 0),
     !!(vendor.location?.city),
     !!((vendor.services || []).length > 0 || vendor.priceRange),
-    !!((vendor.packages || []).length > 0 || Number(vendor.startingPrice) > 0),
+    !!(Number(vendor.startingPrice) > 0),
   ]
   return Math.round((checks.filter(Boolean).length / checks.length) * 100)
 }
