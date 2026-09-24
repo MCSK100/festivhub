@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import {
   Search,
   ArrowRight,
@@ -43,6 +43,8 @@ const THUMB_VIDEO = 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44
 const THUMB_FOOD = 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=200&auto=format&fit=crop'
 const THUMB_STAGE = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop'
 
+const HERO_WORDS = ['WEDDING', 'PARTY', 'EVENT', 'CELEBRATION', 'BIG DAY']
+
 const STEPS = [
   { n: '01', title: 'Discover', text: 'Search by service, city and budget — all verified profiles in one place.' },
   { n: '02', title: 'Compare', text: 'Portfolios, honest pricing, ratings and real reviews. No guesswork.' },
@@ -59,6 +61,15 @@ export default function Home() {
   const [error, setError] = useState(false)
   const [slide, setSlide] = useState(0)
   const [paused, setPaused] = useState(false)
+  const [wordIndex, setWordIndex] = useState(0)
+  const reduceMotion = useReducedMotion()
+  const heroWord = reduceMotion ? 'BIG DAY' : HERO_WORDS[wordIndex % HERO_WORDS.length]
+
+  useEffect(() => {
+    if (reduceMotion) return
+    const t = setInterval(() => setWordIndex((i) => (i + 1) % HERO_WORDS.length), 2200)
+    return () => clearInterval(t)
+  }, [reduceMotion])
 
   // Hero carousel slides — real vendor photos first, then one slide per
   // category with its own artwork. Deduped by image URL + unique keys, so a
@@ -136,6 +147,7 @@ export default function Home() {
     <div className="relative overflow-hidden bg-[#fff7f0] text-[#0b1311]">
       <SEO
         path="/"
+        description="Bring your celebration to life with the right vendors. Explore, compare, and connect with event professionals who match your style and needs."
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'WebSite',
@@ -184,16 +196,30 @@ export default function Home() {
               initial={{ opacity: 0, y: 26 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.08 }}
-              className="mt-6 max-w-2xl text-balance text-[2.65rem] font-bold leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-[4.4rem]"
+              className="mt-6 max-w-2xl text-balance text-[2.65rem] font-bold leading-[1.04] tracking-[-0.03em] sm:text-6xl lg:text-[4.4rem]"
             >
-              Every vendor for your{' '}
-              <span className="relative inline-block whitespace-nowrap font-serif italic text-[#1e4137]">
-                big day,
-                <svg aria-hidden viewBox="0 0 220 14" className="absolute -bottom-2 left-0 w-full text-[#1e4137]/25" fill="none">
-                  <path d="M3 10.5C60 3.5 160 3.5 217 10.5" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
-                </svg>
-              </span>{' '}
-              in one search.
+              Find the right vendors for your
+              <span className="block min-h-[1.15em] text-[#1e4137]">
+                <span className="relative inline-block overflow-hidden pb-3 align-bottom">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={heroWord}
+                      initial={{ y: '65%', opacity: 0, filter: 'blur(6px)' }}
+                      animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                      exit={{ y: '-65%', opacity: 0, filter: 'blur(6px)' }}
+                      transition={{ duration: 0.45, ease: 'easeOut' }}
+                      className="inline-block whitespace-nowrap font-black tracking-[-0.02em]"
+                    >
+                      {heroWord}
+                    </motion.span>
+                  </AnimatePresence>
+                  <svg aria-hidden viewBox="0 0 220 14" className="absolute -bottom-0 left-0 w-full text-[#1e4137]/25" fill="none" preserveAspectRatio="none">
+                    <path d="M3 10.5C60 3.5 160 3.5 217 10.5" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+                  </svg>
+                </span>{' '}
+                <span aria-hidden className="inline-block text-[#1e4137]">✦</span>
+                <span className="sr-only">.</span>
+              </span>
             </motion.h1>
 
             <motion.p
@@ -202,8 +228,8 @@ export default function Home() {
               transition={{ duration: 0.65, delay: 0.16 }}
               className="mt-5 max-w-xl text-[1.05rem] leading-[1.7] text-[#0b1311]/62 sm:text-lg"
             >
-              Photographers, caterers, decorators, DJs, makeup artists and venues —
-              compare real portfolios and pricing, then book directly. No middlemen, no spam.
+              Bring your celebration to life with the right vendors. Explore, compare,
+              and connect with event professionals who match your style and needs.
             </motion.p>
 
             <motion.div
