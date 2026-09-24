@@ -99,6 +99,8 @@ const ForgotPassword = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoComplete="email"
+                  maxLength={254}
                   className="w-full px-6 py-3.5 rounded-full bg-white border border-black/10 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] transition-all duration-300"
                   placeholder="your@email.com"
                 />

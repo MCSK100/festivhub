@@ -23,13 +23,31 @@ import { CategoryGrid } from '../components/marketplace/CategoryCard'
 import VendorGrid from '../components/marketplace/VendorGrid'
 import api from '../services/api'
 import { normalizeVendors, vendorImage, vendorLocation, startingPriceLabel } from '../utils/format'
+import { CATEGORIES } from '../data/categories'
 
 const HERO_MAIN =
-  'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop'
+  'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1800&auto=format&fit=crop'
 const HERO_SECOND =
-  'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop'
+  'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop'
 const HERO_THIRD =
-  'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=600&auto=format&fit=crop'
+  'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1200&auto=format&fit=crop'
+
+// Hi-res, category-related artwork for vendors that haven't uploaded photos yet.
+const categoryArtwork = (category) => {
+  const key = String(category || '').toLowerCase().trim()
+  const hit =
+    CATEGORIES.find((c) => c.name.toLowerCase() === key) ||
+    CATEGORIES.find((c) => {
+      const a = c.name.toLowerCase().split(' ')[0]
+      const b = key.split(' ')[0]
+      return (a && b && (key.includes(a) || c.name.toLowerCase().includes(b))) || c.name.toLowerCase().includes(key) || key.includes(c.name.toLowerCase())
+    })
+  const raw = hit?.image || HERO_MAIN
+  return raw.replace('w=600', 'w=1400')
+}
+
+const hasRealPhoto = (v) =>
+  Boolean(v.profileImage || v.coverImage || (v.portfolioImages || []).length || (v.gallery || []).length)
 
 const STEPS = [
   { n: '01', title: 'Discover', text: 'Search by service, city and budget — all verified profiles in one place.' },
@@ -48,20 +66,26 @@ export default function Home() {
   const [slide, setSlide] = useState(0)
   const [paused, setPaused] = useState(false)
 
-  // Hero carousel slides — real vendor photos when available, styled fallback otherwise.
+  // Hero carousel slides — real vendor photos first, distinct category artwork
+  // otherwise (never the same repeated fallback), deduped by image.
   const slides = useMemo(() => {
-    const fromVendors = (vendors || [])
-      .filter(Boolean)
-      .slice(0, 6)
-      .map((v) => ({
+    const seen = new Set()
+    const fromVendors = []
+    for (const v of vendors || []) {
+      if (!v || fromVendors.length >= 6) break
+      const src = hasRealPhoto(v) ? vendorImage(v) : categoryArtwork(v.category)
+      if (!src || seen.has(src)) continue
+      seen.add(src)
+      fromVendors.push({
         id: String(v._id),
-        src: vendorImage(v),
+        src,
         name: v.companyName || v.name || 'Featured vendor',
         category: v.category || 'Events',
         location: vendorLocation(v),
         price: startingPriceLabel(v),
         to: `/vendors/${v._id}`,
-      }))
+      })
+    }
     if (fromVendors.length >= 2) return fromVendors
     return [
       { id: 'f1', src: HERO_MAIN, name: 'Signature weddings', category: 'Decoration', location: 'Coimbatore', price: 'Starting from ₹24,999', to: '/vendors' },
@@ -101,7 +125,21 @@ export default function Home() {
 
   return (
     <div className="relative overflow-hidden bg-[#fff7f0] text-[#0b1311]">
-      <SEO path="/" />
+      <SEO
+        path="/"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'FestivLink',
+          url: 'https://festivlink.vercel.app/',
+          description: 'Marketplace connecting event hosts with verified vendors across India',
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: 'https://festivlink.vercel.app/vendors?q={search_term_string}',
+            'query-input': 'required name=search_term_string',
+          },
+        }}
+      />
 
       {/* ambient background */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -275,18 +313,18 @@ export default function Home() {
 
               {/* top status pill */}
               <div className="absolute left-4 right-4 top-4 flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-2 rounded-full bg-black/35 px-4 py-2 text-[12px] font-semibold text-white backdrop-blur-xl">
+                <span className="glass-ios-dark inline-flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold text-white">
                   <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
                   2,400+ events booked this month
                 </span>
-                <span className="hidden items-center gap-1.5 rounded-full bg-white/95 px-4 py-2 text-[12px] font-bold text-[#0b1311] shadow sm:inline-flex">
+                <span className="glass-ios hidden items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-bold text-[#0b1311] sm:inline-flex">
                   <MapPin className="h-3.5 w-3.5 text-[#1e4137]" /> {current.location}
                 </span>
               </div>
 
               {/* bottom info bar — live vendor per slide */}
               <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3">
-                <div className="min-w-0 flex-1 rounded-2xl bg-white/95 p-4 shadow-xl backdrop-blur-xl">
+                <div className="glass-ios min-w-0 flex-1 rounded-2xl p-4">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={current.id}
@@ -331,7 +369,7 @@ export default function Home() {
                         type="button"
                         onClick={() => setSlide((s) => (s - 1 + count) % count)}
                         aria-label="Previous vendor"
-                        className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#0b1311] shadow-xl backdrop-blur transition-all hover:bg-[#1e4137] hover:text-white"
+                        className="flex h-11 w-11 items-center justify-center rounded-full border border-white/70 bg-white/85 text-[#0b1311] shadow-xl backdrop-blur-xl transition-all hover:bg-[#1e4137] hover:text-white"
                       >
                         <ChevronLeft className="h-5 w-5" />
                       </button>
@@ -339,7 +377,7 @@ export default function Home() {
                         type="button"
                         onClick={() => setSlide((s) => (s + 1) % count)}
                         aria-label="Next vendor"
-                        className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#0b1311] shadow-xl backdrop-blur transition-all hover:bg-[#1e4137] hover:text-white"
+                        className="flex h-11 w-11 items-center justify-center rounded-full border border-white/70 bg-white/85 text-[#0b1311] shadow-xl backdrop-blur-xl transition-all hover:bg-[#1e4137] hover:text-white"
                       >
                         <ChevronRight className="h-5 w-5" />
                       </button>
@@ -362,7 +400,7 @@ export default function Home() {
               initial={{ opacity: 0, x: -24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="absolute -left-3 top-16 w-[240px] rounded-3xl border border-white/60 bg-white/90 p-4 shadow-[0_24px_60px_-16px_rgba(11,19,17,0.4)] backdrop-blur-2xl sm:-left-10"
+              className="glass-ios absolute -left-3 top-16 w-[240px] rounded-3xl p-4 sm:-left-10"
             >
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg shadow-emerald-500/30">
@@ -387,7 +425,7 @@ export default function Home() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -bottom-7 right-3 w-[220px] rounded-3xl border border-white/60 bg-white/95 p-4 shadow-[0_24px_60px_-16px_rgba(11,19,17,0.4)] backdrop-blur-2xl sm:right-6"
+              className="glass-ios absolute -bottom-7 right-3 w-[220px] rounded-3xl p-4 sm:right-6"
             >
               <div className="flex items-center gap-3">
                 <img
@@ -419,7 +457,7 @@ export default function Home() {
               className="absolute -right-2 top-1/2 hidden w-32 rotate-6 overflow-hidden rounded-3xl border-4 border-white shadow-2xl md:block lg:-right-8"
             >
               <img src={HERO_THIRD} alt="Concert lights" className="aspect-square w-full object-cover" loading="lazy" />
-              <p className="bg-white px-2.5 py-2 text-center text-[10px] font-bold uppercase tracking-wider text-[#0b1311]">
+              <p className="glass-ios px-2.5 py-2 text-center text-[10px] font-bold uppercase tracking-wider text-[#0b1311]">
                 Concerts • Live
               </p>
             </motion.div>

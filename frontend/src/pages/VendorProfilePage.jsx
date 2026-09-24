@@ -58,6 +58,30 @@ export default function VendorProfilePage() {
         description={(vendor.description || `${name} — ${vendor.category} on FestivLink.`).slice(0, 160)}
         path={`/vendors/${vendor._id}`}
         image={coverImage(vendor)}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'ProfessionalService',
+          name,
+          description: (vendor.description || `${name} — ${vendor.category} on FestivLink.`).slice(0, 300),
+          image: coverImage(vendor),
+          url: `https://festivlink.vercel.app/vendors/${vendor._id}`,
+          priceRange: startingPriceLabel(vendor),
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: vendor.location?.city || undefined,
+            addressRegion: vendor.location?.state || undefined,
+            addressCountry: 'IN',
+          },
+          ...(rating > 0
+            ? {
+                aggregateRating: {
+                  '@type': 'AggregateRating',
+                  ratingValue: rating.toFixed(1),
+                  reviewCount: Math.max(1, Number(vendor.ratings?.count) || 1),
+                },
+              }
+            : {}),
+        }}
       />
       <div className="mx-auto max-w-7xl px-4 pb-16 pt-20 sm:px-6 lg:px-8 lg:pt-24">
         <Link to="/vendors" className="text-sm font-semibold text-[#1e4137] underline underline-offset-4">← All vendors</Link>

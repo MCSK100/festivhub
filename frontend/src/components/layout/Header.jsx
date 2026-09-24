@@ -43,7 +43,7 @@ export default function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
-      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-3 rounded-full border border-white/60 bg-[#fff7f0]/80 py-2 pl-3 pr-2 shadow-[0_16px_44px_-18px_rgba(11,19,17,0.35)] backdrop-blur-2xl sm:pl-5 sm:pr-3">
+      <div className="glass-ios mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-3 rounded-full py-2 pl-3 pr-2 sm:pl-5 sm:pr-3">
         <Link to="/" className="group flex items-center gap-2.5" aria-label="FestivLink home">
           <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1e4137] text-lg font-black text-[#bad6ff] shadow-lg shadow-[#1e4137]/25 transition-transform group-hover:rotate-6">
             F

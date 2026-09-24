@@ -47,7 +47,7 @@ export default function VendorLogin() {
           {error && <p role="alert" className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"><AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />{error}</p>}
           <div>
             <label htmlFor="v-email" className="mb-2 block text-sm font-semibold">Email</label>
-            <input id="v-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" required autoComplete="email" className={input} />
+            <input id="v-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" required autoComplete="email" maxLength={254} className={input} />
           </div>
           <div>
             <div className="mb-2 flex items-center justify-between">
@@ -55,7 +55,7 @@ export default function VendorLogin() {
               <Link to="/forgot-password" className="text-sm font-medium text-[#1e4137] hover:underline">Forgot Password?</Link>
             </div>
             <div className="relative">
-              <input id="v-pass" type={show ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required autoComplete="current-password" className={input} />
+              <input id="v-pass" type={show ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required autoComplete="current-password" maxLength={72} className={input} />
               <button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#1e4137]">
                 {show ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>

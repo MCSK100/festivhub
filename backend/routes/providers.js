@@ -6,7 +6,11 @@ const { uploadImage, deleteImageIfOwned, getVendorUsage, VENDOR_QUOTA_BYTES, MAX
 const Providers = require('../db/providers')
 const Users = require('../db/users')
 const authMiddleware = require('../middleware/auth')
+const { writeLimiter } = require('../middleware/rateLimits')
 const multer = require('multer')
+
+// Throttle dashboard mutations; public reads stay unlimited.
+router.use(writeLimiter)
 
 // Canonical marketplace categories (kept in sync with supabase/schema docs).
 const CATEGORIES = [
@@ -289,12 +293,44 @@ router.get('/:id', async (req, res) => {
 const serviceInput = z.object({
   name: z.string().min(2).max(120),
   description: z.string().max(1000).optional().default(''),
-  startingPrice: z.union([z.string(), z.number()]).optional().transform((v) => {
+  startingPrice: z.union([z.string().max(20), z.number()]).optional().transform((v) => {
     if (v === undefined || v === '' || v === null) return 0
     const n = Number(v)
-    return Number.isFinite(n) && n >= 0 ? n : 0
+    if (!Number.isFinite(n) || n < 0) return 0
+    return Math.min(n, 100000000)
   }),
 })
+
+// Scalar profile fields — length-capped to prevent DB bloat via API.
+const profileUpdateSchema = z.object({
+  name: z.string().min(2).max(120).optional(),
+  companyName: z.string().max(120).optional(),
+  category: z.string().max(60).optional(),
+  experience: z.union([z.string().max(80), z.number()]).optional(),
+  description: z.string().max(2000).optional(),
+  profileImage: z.string().url().max(2048).or(z.string().length(0)).optional(),
+  coverImage: z.string().url().max(2048).or(z.string().length(0)).optional(),
+  phone: z.string().max(20).optional(),
+  contactEmail: z.string().max(254).optional(),
+  location: z.object({
+    city: z.string().max(80).optional(),
+    state: z.string().max(80).optional(),
+  }).passthrough().optional(),
+  socialLinks: z.object({
+    facebook: z.string().max(2048).optional(),
+    instagram: z.string().max(2048).optional(),
+    website: z.string().max(2048).optional(),
+    youtube: z.string().max(2048).optional(),
+  }).passthrough().optional(),
+  priceRange: z.string().max(60).optional(),
+  startingPrice: z.union([z.string(), z.number()]).optional(),
+  businessHours: z.string().max(120).optional(),
+  availability: z.boolean().optional(),
+  isPublished: z.boolean().optional(),
+  portfolioImages: z.array(z.string().url().max(2048)).max(12).optional(),
+  gallery: z.array(z.string().max(2048)).max(12).optional(),
+  services: z.array(serviceInput).optional(),
+}).passthrough()
 
 // Update vendor profile
 router.put('/profile', authMiddleware, async (req, res) => {
@@ -305,6 +341,10 @@ router.put('/profile', authMiddleware, async (req, res) => {
     for (const key of ALLOWED) {
       if (req.body[key] !== undefined) updateData[key] = req.body[key]
     }
+
+    // Length/format caps on every scalar field
+    const parsed = profileUpdateSchema.parse(updateData)
+    Object.assign(updateData, parsed)
 
     if (updateData.category && !CATEGORIES.includes(updateData.category)) {
       return res.status(400).json({ error: 'Invalid category' })

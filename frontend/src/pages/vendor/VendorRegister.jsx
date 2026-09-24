@@ -53,20 +53,20 @@ export default function VendorRegister() {
           {error && <p role="alert" className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"><AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />{error}</p>}
           <div>
             <label htmlFor="r-name" className="mb-2 block text-sm font-semibold">Business / Vendor Name</label>
-            <input id="r-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Lens Studio Photography" required autoComplete="organization" className={input} />
+            <input id="r-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Lens Studio Photography" required autoComplete="organization" maxLength={120} className={input} />
           </div>
           <div>
             <label htmlFor="r-email" className="mb-2 block text-sm font-semibold">Email</label>
-            <input id="r-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" required autoComplete="email" className={input} />
+            <input id="r-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" required autoComplete="email" maxLength={254} className={input} />
           </div>
           <div>
             <label htmlFor="r-phone" className="mb-2 block text-sm font-semibold">Phone</label>
-            <input id="r-phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 98765 43210" autoComplete="tel" inputMode="tel" className={input} />
+            <input id="r-phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 98765 43210" autoComplete="tel" inputMode="tel" maxLength={20} className={input} />
           </div>
           <div>
             <label htmlFor="r-pass" className="mb-2 block text-sm font-semibold">Password</label>
             <div className="relative">
-              <input id="r-pass" type={show ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Minimum 6 characters" required autoComplete="new-password" className={input} />
+              <input id="r-pass" type={show ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Minimum 6 characters" required autoComplete="new-password" maxLength={72} className={input} />
               <button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#1e4137]">
                 {show ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
@@ -74,7 +74,7 @@ export default function VendorRegister() {
           </div>
           <div>
             <label htmlFor="r-confirm" className="mb-2 block text-sm font-semibold">Confirm Password</label>
-            <input id="r-confirm" type={show ? 'text' : 'password'} value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Repeat your password" required autoComplete="new-password" className={input} />
+            <input id="r-confirm" type={show ? 'text' : 'password'} value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Repeat your password" required autoComplete="new-password" maxLength={72} className={input} />
             {confirm && password === confirm && <p className="mt-2 flex items-center gap-1 text-xs font-medium text-emerald-700"><Check className="h-4 w-4" /> Passwords match</p>}
           </div>
           <button type="submit" disabled={loading} className="w-full rounded-full bg-[#1e4137] px-6 py-3.5 text-sm font-bold text-[#bad6ff] transition-colors hover:bg-[#142e27] disabled:opacity-50">

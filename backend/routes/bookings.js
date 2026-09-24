@@ -6,15 +6,19 @@ const Users = require('../db/users');
 const { customerMini, vendorMini } = require('../db/map');
 const { getSupabase } = require('../utils/supabase');
 const authMiddleware = require('../middleware/auth');
+const { writeLimiter } = require('../middleware/rateLimits');
 const { z } = require('zod');
 
-// Validation schemas
+// Throttle mutations; reads stay unlimited.
+router.use(writeLimiter);
+
+// Validation schemas (length-capped to prevent DB bloat via API)
 const createBookingSchema = z.object({
-  vendorId: z.string().min(1, 'Vendor ID is required'),
-  serviceTitle: z.string().min(1, 'Service title is required'),
-  price: z.number().positive('Price must be positive'),
-  date: z.string().refine((date) => !isNaN(Date.parse(date)), 'Invalid date format'),
-  notes: z.string().optional()
+  vendorId: z.string().min(1, 'Vendor ID is required').max(80),
+  serviceTitle: z.string().min(1, 'Service title is required').max(120),
+  price: z.number().positive('Price must be positive').max(100000000, 'Price is unrealistically large'),
+  date: z.string().max(40).refine((date) => !isNaN(Date.parse(date)), 'Invalid date format'),
+  notes: z.string().max(2000).optional().default('')
 });
 
 const updateStatusSchema = z.object({

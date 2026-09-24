@@ -458,6 +458,28 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
+/* iPhone-style liquid glass — frosted translucent layers with specular edge */
+.glass-ios {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.46));
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 8px 32px rgba(11, 19, 17, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.glass-ios-dark {
+  background: linear-gradient(135deg, rgba(18, 28, 25, 0.55), rgba(18, 28, 25, 0.32));
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
 /* Modern utilities */
 .font-serif {
   font-family: 'Playfair Display', Georgia, serif;

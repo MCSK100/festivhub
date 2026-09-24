@@ -6,6 +6,7 @@ const Providers = require('../db/providers')
 const { getSupabase } = require('../utils/supabase')
 const { vendorMini } = require('../db/map')
 const authMiddleware = require('../middleware/auth')
+const { enquiryLimiter } = require('../middleware/rateLimits')
 
 const createEnquirySchema = z.object({
   vendorId: z.string().min(1, 'Vendor is required'),
@@ -28,8 +29,8 @@ const statusSchema = z.object({
   status: z.enum(['new', 'contacted', 'confirmed', 'completed', 'cancelled'])
 })
 
-// Public: customer sends a booking/enquiry request — NO auth.
-router.post('/', async (req, res) => {
+// Public: customer sends a booking/enquiry request — NO auth (rate-limited).
+router.post('/', enquiryLimiter, async (req, res) => {
   try {
     const data = createEnquirySchema.parse(req.body)
 

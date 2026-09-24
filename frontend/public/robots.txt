@@ -1,14 +1,10 @@
-# FestivLink Robots Configuration
+# FestivLink robots configuration
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /api/
-Disallow: /customer-dashboard/
-Disallow: /vendor-dashboard/
-Disallow: /private/
+Disallow: /vendor/
+Disallow: /book/
+Disallow: /reset-password/
 
-# Crawl delay to prevent server overload
 Crawl-delay: 1
 
-# Sitemap location
-Sitemap: https://festivlink.com/sitemap.xml
+Sitemap: https://festivlink.vercel.app/sitemap.xml

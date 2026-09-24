@@ -65,7 +65,7 @@ export function VendorLayout() {
   return (
     <VendorContext.Provider value={{ profile, setProfile, enquiries, setEnquiries, bookings, setBookings, refresh }}>
       <div className="min-h-screen bg-[#fff7f0]">
-        <SEO title="Vendor Dashboard" description="Manage your FestivLink vendor profile, enquiries and bookings." path="/vendor/dashboard" />
+        <SEO title="Vendor Dashboard" description="Manage your FestivLink vendor profile, enquiries and bookings." path="/vendor/dashboard" noindex />
         <VendorSidebar vendorName={profile?.companyName || profile?.name} unread={unread} />
         <main className="min-w-0 flex-1 lg:ml-72">
           <div className="mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">

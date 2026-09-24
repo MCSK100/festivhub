@@ -53,16 +53,16 @@ export default function BookingForm({ vendor, onSuccess }) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="bk-name" className="mb-1.5 block text-sm font-semibold text-[#0b1311]">Full Name *</label>
-          <input id="bk-name" value={form.fullName} onChange={(e) => set('fullName', e.target.value)} placeholder="Your name" required className={input} autoComplete="name" />
+          <input id="bk-name" value={form.fullName} onChange={(e) => set('fullName', e.target.value)} placeholder="Your name" required className={input} autoComplete="name" maxLength={120} />
         </div>
         <div>
           <label htmlFor="bk-phone" className="mb-1.5 block text-sm font-semibold text-[#0b1311]">Phone Number *</label>
-          <input id="bk-phone" value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+91 98765 43210" required className={input} autoComplete="tel" inputMode="tel" />
+          <input id="bk-phone" value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+91 98765 43210" required className={input} autoComplete="tel" inputMode="tel" maxLength={20} />
         </div>
       </div>
       <div>
         <label htmlFor="bk-email" className="mb-1.5 block text-sm font-semibold text-[#0b1311]">Email *</label>
-        <input id="bk-email" type="email" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@example.com" required className={input} autoComplete="email" />
+        <input id="bk-email" type="email" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@example.com" required className={input} autoComplete="email" maxLength={254} />
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
@@ -79,20 +79,20 @@ export default function BookingForm({ vendor, onSuccess }) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="bk-loc" className="mb-1.5 block text-sm font-semibold text-[#0b1311]">Event Location *</label>
-          <input id="bk-loc" value={form.eventLocation} onChange={(e) => set('eventLocation', e.target.value)} placeholder="Coimbatore" required className={input} />
+          <input id="bk-loc" value={form.eventLocation} onChange={(e) => set('eventLocation', e.target.value)} placeholder="Coimbatore" required className={input} maxLength={160} />
         </div>
         <div>
           <label htmlFor="bk-guests" className="mb-1.5 block text-sm font-semibold text-[#0b1311]">Number of Guests</label>
-          <input id="bk-guests" type="number" min="0" value={form.guests} onChange={(e) => set('guests', e.target.value)} placeholder="200" className={input} />
+          <input id="bk-guests" type="number" min="0" max="1000000" value={form.guests} onChange={(e) => set('guests', e.target.value)} placeholder="200" className={input} />
         </div>
       </div>
       <div>
         <label htmlFor="bk-budget" className="mb-1.5 block text-sm font-semibold text-[#0b1311]">Budget (optional)</label>
-        <input id="bk-budget" value={form.budget} onChange={(e) => set('budget', e.target.value)} placeholder="e.g. ₹50,000" className={input} />
+        <input id="bk-budget" value={form.budget} onChange={(e) => set('budget', e.target.value)} placeholder="e.g. ₹50,000" className={input} maxLength={60} />
       </div>
       <div>
         <label htmlFor="bk-msg" className="mb-1.5 block text-sm font-semibold text-[#0b1311]">Message</label>
-        <textarea id="bk-msg" value={form.message} onChange={(e) => set('message', e.target.value)} rows={4} placeholder="Tell the vendor about your event..." className={`${input} resize-none`} />
+        <textarea id="bk-msg" value={form.message} onChange={(e) => set('message', e.target.value)} rows={4} maxLength={2000} placeholder="Tell the vendor about your event..." className={`${input} resize-none`} />
       </div>
       <button
         type="submit"

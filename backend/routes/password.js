@@ -3,7 +3,12 @@ const router = express.Router()
 const jwt = require('jsonwebtoken')
 const Users = require('../db/users')
 const authMiddleware = require('../middleware/auth')
+const { forgotLimiter } = require('../middleware/rateLimits')
 const nodemailer = require('nodemailer')
+
+// bcrypt truncates at 72 bytes — longer passwords would silently weaken.
+// Cap everywhere a password is set.
+const MAX_PASSWORD_LEN = 72
 
 // Configure email service
 const transporter = nodemailer.createTransport({
@@ -16,7 +21,7 @@ const transporter = nodemailer.createTransport({
 
 // @route   POST /api/password/forgot
 // @desc    Request password reset
-router.post('/forgot', async (req, res) => {
+router.post('/forgot', forgotLimiter, async (req, res) => {
   try {
     const { email } = req.body
     if (!email) {
@@ -73,6 +78,9 @@ router.post('/reset', async (req, res) => {
     if (String(newPassword).length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters' })
     }
+    if (String(newPassword).length > MAX_PASSWORD_LEN) {
+      return res.status(400).json({ error: `Password must be at most ${MAX_PASSWORD_LEN} characters` })
+    }
 
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
@@ -111,6 +119,9 @@ router.post('/change', authMiddleware, async (req, res) => {
     }
     if (String(newPassword).length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters' })
+    }
+    if (String(newPassword).length > MAX_PASSWORD_LEN) {
+      return res.status(400).json({ error: `Password must be at most ${MAX_PASSWORD_LEN} characters` })
     }
     const row = await Users.findById(req.user._id)
 

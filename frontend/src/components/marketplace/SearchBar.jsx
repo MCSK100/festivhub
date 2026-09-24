@@ -31,7 +31,7 @@ export function HomeSearch() {
         onSubmit={submit}
         role="search"
         aria-label="Find vendors"
-        className="relative rounded-[28px] border border-white/60 bg-white/90 p-2 shadow-[0_24px_70px_-20px_rgba(11,19,17,0.35)] backdrop-blur-2xl sm:rounded-[32px] lg:p-2.5"
+        className="glass-ios relative rounded-[28px] p-2 sm:rounded-[32px] lg:p-2.5"
       >
         <div className="grid gap-2 lg:grid-cols-[1fr_auto_1fr_auto] lg:items-stretch lg:gap-0">
           {/* Service field */}

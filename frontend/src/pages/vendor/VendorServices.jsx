@@ -57,9 +57,9 @@ export default function VendorServices() {
       <form onSubmit={submit} className="rounded-[20px] border border-black/5 bg-white p-6 shadow-sm">
         <h2 className="font-bold">{editing ? 'Edit service' : 'Add a service'}</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <div className="sm:col-span-2"><label className="mb-1.5 block text-sm font-semibold" htmlFor="svc-name">Name *</label><input id="svc-name" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} placeholder="Wedding Photography" required className={input} /></div>
-          <div className="sm:col-span-2"><label className="mb-1.5 block text-sm font-semibold" htmlFor="svc-desc">Description</label><textarea id="svc-desc" value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} rows={3} className={`${input} resize-none`} placeholder="What is included..." /></div>
-          <div><label className="mb-1.5 block text-sm font-semibold" htmlFor="svc-price">Starting price (₹)</label><input id="svc-price" type="number" min="0" value={form.startingPrice} onChange={(e) => setForm((p) => ({ ...p, startingPrice: e.target.value }))} placeholder="15000" className={input} /></div>
+          <div className="sm:col-span-2"><label className="mb-1.5 block text-sm font-semibold" htmlFor="svc-name">Name *</label><input id="svc-name" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} placeholder="Wedding Photography" required maxLength={120} className={input} /></div>
+          <div className="sm:col-span-2"><label className="mb-1.5 block text-sm font-semibold" htmlFor="svc-desc">Description</label><textarea id="svc-desc" value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} rows={3} maxLength={1000} className={`${input} resize-none`} placeholder="What is included..." /></div>
+          <div><label className="mb-1.5 block text-sm font-semibold" htmlFor="svc-price">Starting price (₹)</label><input id="svc-price" type="number" min="0" max="100000000" value={form.startingPrice} onChange={(e) => setForm((p) => ({ ...p, startingPrice: e.target.value }))} placeholder="15000" className={input} /></div>
         </div>
         <div className="mt-4 flex gap-2">
           <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-full bg-[#1e4137] px-6 py-2.5 text-sm font-bold text-[#bad6ff] hover:bg-[#142e27] disabled:opacity-50">

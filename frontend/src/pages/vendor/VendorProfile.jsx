@@ -295,11 +295,11 @@ export default function VendorProfile() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCls} htmlFor="vp-name">Business name *</label>
-            <input id="vp-name" value={form.name} onChange={(e) => set('name', e.target.value)} required placeholder="FireFlash Events" className={inputCls} />
+            <input id="vp-name" value={form.name} onChange={(e) => set('name', e.target.value)} required maxLength={120} placeholder="FireFlash Events" className={inputCls} />
           </div>
           <div>
             <label className={labelCls} htmlFor="vp-company">Display name</label>
-            <input id="vp-company" value={form.companyName} onChange={(e) => set('companyName', e.target.value)} placeholder="Shown on cards" className={inputCls} />
+            <input id="vp-company" value={form.companyName} onChange={(e) => set('companyName', e.target.value)} placeholder="Shown on cards" maxLength={120} className={inputCls} />
           </div>
           <div>
             <label className={labelCls} htmlFor="vp-cat">Category *</label>
@@ -312,7 +312,7 @@ export default function VendorProfile() {
           </div>
           <div>
             <label className={labelCls} htmlFor="vp-exp">Experience</label>
-            <input id="vp-exp" value={form.experience} onChange={(e) => set('experience', e.target.value)} placeholder="e.g. 5+ years, 200+ events" className={inputCls} />
+            <input id="vp-exp" value={form.experience} onChange={(e) => set('experience', e.target.value)} placeholder="e.g. 5+ years, 200+ events" maxLength={80} className={inputCls} />
           </div>
           <div className="sm:col-span-2">
             <label className={labelCls} htmlFor="vp-desc">About your work</label>
@@ -321,11 +321,11 @@ export default function VendorProfile() {
           </div>
           <div>
             <label className={labelCls} htmlFor="vp-city">City</label>
-            <input id="vp-city" value={form.location.city} onChange={(e) => setForm((p) => ({ ...p, location: { ...p.location, city: e.target.value } }))} placeholder="Coimbatore" className={inputCls} />
+            <input id="vp-city" value={form.location.city} onChange={(e) => setForm((p) => ({ ...p, location: { ...p.location, city: e.target.value } }))} placeholder="Coimbatore" maxLength={80} className={inputCls} />
           </div>
           <div>
             <label className={labelCls} htmlFor="vp-state">State</label>
-            <input id="vp-state" value={form.location.state} onChange={(e) => setForm((p) => ({ ...p, location: { ...p.location, state: e.target.value } }))} placeholder="Tamil Nadu" className={inputCls} />
+            <input id="vp-state" value={form.location.state} onChange={(e) => setForm((p) => ({ ...p, location: { ...p.location, state: e.target.value } }))} placeholder="Tamil Nadu" maxLength={80} className={inputCls} />
           </div>
         </div>
       </Section>
@@ -339,11 +339,11 @@ export default function VendorProfile() {
           </div>
           <div>
             <label className={labelCls} htmlFor="vp-range">Price range label</label>
-            <input id="vp-range" value={form.priceRange} onChange={(e) => set('priceRange', e.target.value)} placeholder="₹15k – ₹50k" className={inputCls} />
+            <input id="vp-range" value={form.priceRange} onChange={(e) => set('priceRange', e.target.value)} placeholder="₹15k – ₹50k" maxLength={60} className={inputCls} />
           </div>
           <div className="sm:col-span-2">
             <label className={labelCls} htmlFor="vp-hours">Business hours</label>
-            <input id="vp-hours" value={form.businessHours} onChange={(e) => set('businessHours', e.target.value)} placeholder="Mon–Sat, 10am–7pm" className={inputCls} />
+            <input id="vp-hours" value={form.businessHours} onChange={(e) => set('businessHours', e.target.value)} placeholder="Mon–Sat, 10am–7pm" maxLength={120} className={inputCls} />
           </div>
         </div>
       </Section>
@@ -353,11 +353,11 @@ export default function VendorProfile() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCls} htmlFor="vp-phone">Phone</label>
-            <input id="vp-phone" value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+91 98765 43210" className={inputCls} inputMode="tel" />
+            <input id="vp-phone" value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+91 98765 43210" maxLength={20} className={inputCls} inputMode="tel" />
           </div>
           <div>
             <label className={labelCls} htmlFor="vp-cemail">Contact email</label>
-            <input id="vp-cemail" type="email" value={form.contactEmail} onChange={(e) => set('contactEmail', e.target.value)} placeholder="hello@business.com" className={inputCls} />
+            <input id="vp-cemail" type="email" value={form.contactEmail} onChange={(e) => set('contactEmail', e.target.value)} placeholder="hello@business.com" maxLength={254} className={inputCls} />
           </div>
         </div>
       </Section>
@@ -380,6 +380,7 @@ export default function VendorProfile() {
                 placeholder={ph}
                 className={inputCls}
                 inputMode="url"
+                maxLength={2048}
               />
             </div>
           ))}

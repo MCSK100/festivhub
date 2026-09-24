@@ -48,6 +48,10 @@ const ResetPassword = () => {
       error('Password must be at least 6 characters long')
       return false
     }
+    if (password.length > 72) {
+      error('Password must be at most 72 characters long')
+      return false
+    }
     if (password !== confirmPassword) {
       error('Passwords do not match')
       return false
@@ -159,6 +163,8 @@ const ResetPassword = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-6 py-3.5 rounded-full bg-white border border-black/10 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] transition-all duration-300"
                     placeholder="Enter new password"
+                    autoComplete="new-password"
+                    maxLength={72}
                   />
                   <button
                     type="button"
@@ -203,6 +209,8 @@ const ResetPassword = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="w-full px-6 py-3.5 rounded-full bg-white border border-black/10 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1e4137] transition-all duration-300"
                     placeholder="Confirm password"
+                    autoComplete="new-password"
+                    maxLength={72}
                   />
                   <button
                     type="button"

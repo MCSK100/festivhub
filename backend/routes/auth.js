@@ -56,6 +56,11 @@ router.post('/register', async (req, res) => {
     if (String(password).length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters' })
     }
+    // bcrypt truncates at 72 bytes — reject longer passwords instead of
+    // silently weakening them.
+    if (String(password).length > 72) {
+      return res.status(400).json({ error: 'Password must be at most 72 characters' })
+    }
     if (!['customer', 'vendor'].includes(role)) {
       return res.status(400).json({ error: 'Invalid role' })
     }
