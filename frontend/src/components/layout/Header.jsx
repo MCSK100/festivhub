@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Menu, X, LayoutDashboard, LogOut, Sparkles, ArrowRight } from 'lucide-react'
+import { Menu, X, LayoutDashboard, LogOut, ArrowRight } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 
 const LINKS = [
@@ -49,15 +49,12 @@ export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <div className="glass-ios mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-3 rounded-full py-2 pl-3 pr-2 sm:pl-5 sm:pr-3">
-        <Link to="/" className="group flex items-center gap-2.5" aria-label="FestivLink home">
+        <Link to="/" className="group flex items-center" aria-label="FestivLink home">
           <img
             src="/new-logo.png"
             alt="FestivLink logo"
-            className="h-10 w-auto transition-transform group-hover:scale-[1.02]"
+            className="h-14 w-auto transition-transform group-hover:scale-[1.02] sm:h-16"
           />
-          <span className="mt-0.5 hidden items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#0b1311]/45 sm:flex">
-            <Sparkles className="h-3 w-3 text-[#1e4137]" /> Celebrations, sorted
-          </span>
         </Link>
 
         {!isAuthPage && (
