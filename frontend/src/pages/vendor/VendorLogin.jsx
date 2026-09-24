@@ -86,8 +86,8 @@ export default function VendorLogin() {
 
         {/* Form card */}
         <div className="glass-ios mx-auto w-full max-w-md rounded-[32px] p-8 sm:p-10">
-          <Link to="/" className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#1e4137] text-xl font-black text-[#bad6ff] shadow-lg" aria-label="FestivLink home">
-            F
+          <Link to="/" className="mx-auto block w-fit" aria-label="FestivLink home">
+            <img src="/new-logo.png" alt="FestivLink logo" className="h-12 w-auto" />
           </Link>
           <h1 className="mt-4 text-center text-3xl font-black tracking-tight">Welcome back</h1>
           <p className="mt-2 text-center text-sm text-[#0b1311]/60">Sign in to manage your business.</p>

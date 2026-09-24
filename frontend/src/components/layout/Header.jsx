@@ -50,16 +50,13 @@ export default function Header() {
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <div className="glass-ios mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-3 rounded-full py-2 pl-3 pr-2 sm:pl-5 sm:pr-3">
         <Link to="/" className="group flex items-center gap-2.5" aria-label="FestivLink home">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1e4137] text-lg font-black text-[#bad6ff] shadow-lg shadow-[#1e4137]/25 transition-transform group-hover:rotate-6">
-            F
-          </span>
-          <span className="leading-none">
-            <span className="block text-[19px] font-black tracking-tight text-[#0b1311]">
-              FestivLink
-            </span>
-            <span className="mt-0.5 hidden items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#0b1311]/45 sm:flex">
-              <Sparkles className="h-3 w-3 text-[#1e4137]" /> Celebrations, sorted
-            </span>
+          <img
+            src="/new-logo.png"
+            alt="FestivLink logo"
+            className="h-10 w-auto transition-transform group-hover:scale-[1.02]"
+          />
+          <span className="mt-0.5 hidden items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#0b1311]/45 sm:flex">
+            <Sparkles className="h-3 w-3 text-[#1e4137]" /> Celebrations, sorted
           </span>
         </Link>
 
