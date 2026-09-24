@@ -84,14 +84,14 @@ function AppShell() {
   const location = useLocation()
   const isVendorArea = location.pathname.startsWith('/vendor/')
   // Standalone vendor workspace (dashboard, profile, portfolio, …) brings its
-  // own sidebar — the public marketplace header is hidden there. Auth screens
-  // (/vendor/login, /vendor/register) keep the public header.
-  const isVendorWorkspace =
-    isVendorArea && !['/vendor/login', '/vendor/register'].includes(location.pathname)
+  // own sidebar — the public marketplace header is hidden there, as well as
+  // on the sign-in / sign-up screens for a focused auth experience.
+  const isVendorWorkspace = isVendorArea
+  const isAuthPage = ['/vendor/login', '/vendor/register'].includes(location.pathname)
 
   return (
     <div className="min-h-screen bg-[#fff7f0]">
-      {!isVendorWorkspace && <Header />}
+      {!isVendorWorkspace && !isAuthPage && <Header />}
       <ScrollToHash />
       <Routes>
         {/* Public marketplace */}
