@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, AlertCircle, Check } from 'lucide-react'
 import SEO from '../../components/common/SEO'
+import GoogleSignIn from '../../components/GoogleSignIn'
 import { useAuth } from '../../contexts/AuthContext'
 import api from '../../services/api'
 
@@ -80,6 +81,10 @@ export default function VendorRegister() {
           <button type="submit" disabled={loading} className="w-full rounded-full bg-[#1e4137] px-6 py-3.5 text-sm font-bold text-[#bad6ff] transition-colors hover:bg-[#142e27] disabled:opacity-50">
             {loading ? 'Creating account...' : 'Create Vendor Account'}
           </button>
+          <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-[#0b1311]/40">
+            <span className="h-px flex-1 bg-black/10" /> or <span className="h-px flex-1 bg-black/10" />
+          </div>
+          <GoogleSignIn role="vendor" mode="signup" onError={(msg) => setError(msg)} />
           <p className="text-center text-sm text-[#0b1311]/60">
             Already a vendor? <Link to="/vendor/login" className="font-semibold text-[#1e4137] underline underline-offset-4">Login</Link>
           </p>

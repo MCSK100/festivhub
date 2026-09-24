@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import Header from './components/layout/Header'
@@ -44,6 +45,38 @@ function PublicOnly({ children }) {
   return children
 }
 
+// Handles "/#section" anchor links (Categories, How It Works): React Router
+// doesn't scroll to hashes on its own, so do it here on every navigation.
+function ScrollToHash() {
+  const { pathname, hash } = useLocation()
+  const prevPath = useRef(pathname)
+  useEffect(() => {
+    if (hash) {
+      // Retry briefly — images above the fold can shift layout on load.
+      let attempts = 0
+      const tryScroll = () => {
+        const el = document.querySelector(hash)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        } else if (attempts < 10) {
+          attempts += 1
+          setTimeout(tryScroll, 120)
+        }
+      }
+      // Let the new route render first.
+      const t = setTimeout(tryScroll, 60)
+      return () => clearTimeout(t)
+    }
+    if (pathname !== prevPath.current) {
+      prevPath.current = pathname
+      window.scrollTo(0, 0)
+    } else {
+      prevPath.current = pathname
+    }
+  }, [pathname, hash])
+  return null
+}
+
 function AppShell() {
   const location = useLocation()
   const isVendorArea = location.pathname.startsWith('/vendor/')
@@ -56,6 +89,7 @@ function AppShell() {
   return (
     <div className="min-h-screen bg-[#fff7f0]">
       {!isVendorWorkspace && <Header />}
+      <ScrollToHash />
       <Routes>
         {/* Public marketplace */}
         <Route path="/" element={<Home />} />

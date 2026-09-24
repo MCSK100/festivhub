@@ -117,7 +117,7 @@ export default function Vendors() {
         </div>
 
         {/* search + filters card */}
-        <div className="mt-8 rounded-[28px] border border-black/5 bg-white/70 p-4 shadow-[0_20px_60px_-28px_rgba(11,19,17,0.35)] backdrop-blur-xl sm:p-5">
+        <div className="glass-ios mt-8 rounded-[28px] p-4 sm:p-5">
           <DirectorySearch value={query} onChange={setQuery} />
           <div className="mt-4">
             <VendorFilters

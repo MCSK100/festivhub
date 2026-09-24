@@ -11,7 +11,7 @@ export default function VendorCard({ vendor }) {
   const count = Number(vendor.ratings?.count) || 0
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-[26px] border border-black/5 bg-white shadow-[0_8px_30px_-14px_rgba(11,19,17,0.25)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_28px_60px_-20px_rgba(11,19,17,0.35)]">
+    <article className="glass-ios group relative flex flex-col overflow-hidden rounded-[26px] transition-all duration-300 hover:-translate-y-1.5">
       <Link to={`/vendors/${vendor._id}`} className="relative block overflow-hidden" aria-label={`View ${name}`}>
         <div className="aspect-[4/3] overflow-hidden bg-[#0b1311]/5">
           <img

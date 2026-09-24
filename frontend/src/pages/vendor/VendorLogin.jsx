@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react'
 import SEO from '../../components/common/SEO'
+import GoogleSignIn from '../../components/GoogleSignIn'
 import { useAuth } from '../../contexts/AuthContext'
 
 export default function VendorLogin() {
@@ -64,6 +65,10 @@ export default function VendorLogin() {
           <button type="submit" disabled={loading} className="w-full rounded-full bg-[#1e4137] px-6 py-3.5 text-sm font-bold text-[#bad6ff] transition-colors hover:bg-[#142e27] disabled:opacity-50">
             {loading ? 'Signing in...' : 'Login'}
           </button>
+          <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-[#0b1311]/40">
+            <span className="h-px flex-1 bg-black/10" /> or <span className="h-px flex-1 bg-black/10" />
+          </div>
+          <GoogleSignIn role="vendor" mode="signin" onError={(msg) => setError(msg)} />
           <p className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
             <CheckCircle className="h-5 w-5 shrink-0" /> Customers never need an account — only vendors sign in here.
           </p>

@@ -58,7 +58,7 @@ const GoogleSignIn = ({ role = 'customer', mode = 'signin', onError }) => {
             const result = await loginWithGoogle(idToken, role);
             if (cancelled) return;
             if (result.success) {
-              const target = result.user?.role === 'vendor' ? '/vendor-dashboard' : '/customer-dashboard';
+              const target = result.user?.role === 'vendor' ? '/vendor/dashboard' : '/';
               navigate(target, { replace: true });
             } else {
               setError(result.error || 'Google sign-in failed');
@@ -91,15 +91,10 @@ const GoogleSignIn = ({ role = 'customer', mode = 'signin', onError }) => {
     };
   }, [role, mode, loginWithGoogle, navigate, onError]);
 
+  // Not configured → render nothing (no broken-looking box on live pages).
+  // Set VITE_GOOGLE_CLIENT_ID (frontend) + GOOGLE_CLIENT_ID (backend) to enable.
   if (status === 'unconfigured') {
-    return (
-      <div className="w-full px-4 py-3 rounded-full border border-dashed border-black/20 bg-[#fff7f0] text-center">
-        <p className="text-sm text-gray-500 font-medium">Continue with Google</p>
-        <p className="text-xs text-gray-400 mt-1">
-          Not configured — set VITE_GOOGLE_CLIENT_ID + GOOGLE_CLIENT_ID to enable.
-        </p>
-      </div>
-    );
+    return null;
   }
 
   return (

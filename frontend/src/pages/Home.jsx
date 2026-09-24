@@ -32,22 +32,16 @@ const HERO_SECOND =
 const HERO_THIRD =
   'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1200&auto=format&fit=crop'
 
-// Hi-res, category-related artwork for vendors that haven't uploaded photos yet.
-const categoryArtwork = (category) => {
-  const key = String(category || '').toLowerCase().trim()
-  const hit =
-    CATEGORIES.find((c) => c.name.toLowerCase() === key) ||
-    CATEGORIES.find((c) => {
-      const a = c.name.toLowerCase().split(' ')[0]
-      const b = key.split(' ')[0]
-      return (a && b && (key.includes(a) || c.name.toLowerCase().includes(b))) || c.name.toLowerCase().includes(key) || key.includes(c.name.toLowerCase())
-    })
-  const raw = hit?.image || HERO_MAIN
-  return raw.replace('w=600', 'w=1400')
-}
+// Hi-res version of a category's artwork.
+const hiRes = (url) => String(url || '').replace('w=600', 'w=1400')
 
 const hasRealPhoto = (v) =>
   Boolean(v.profileImage || v.coverImage || (v.portfolioImages || []).length || (v.gallery || []).length)
+
+// Small thumbs for the floating cards — distinct crafts, not carousel repeats.
+const THUMB_VIDEO = 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=200&auto=format&fit=crop'
+const THUMB_FOOD = 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=200&auto=format&fit=crop'
+const THUMB_STAGE = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop'
 
 const STEPS = [
   { n: '01', title: 'Discover', text: 'Search by service, city and budget — all verified profiles in one place.' },
@@ -66,31 +60,46 @@ export default function Home() {
   const [slide, setSlide] = useState(0)
   const [paused, setPaused] = useState(false)
 
-  // Hero carousel slides — real vendor photos first, distinct category artwork
-  // otherwise (never the same repeated fallback), deduped by image.
+  // Hero carousel slides — real vendor photos first, then one slide per
+  // category with its own artwork. Deduped by image URL + unique keys, so a
+  // repeated image can never appear twice in the rotation.
   const slides = useMemo(() => {
     const seen = new Set()
-    const fromVendors = []
-    for (const v of vendors || []) {
-      if (!v || fromVendors.length >= 6) break
-      const src = hasRealPhoto(v) ? vendorImage(v) : categoryArtwork(v.category)
-      if (!src || seen.has(src)) continue
+    const out = []
+    const push = (id, src, slide) => {
+      if (!src || seen.has(src)) return
       seen.add(src)
-      fromVendors.push({
-        id: String(v._id),
-        src,
+      out.push({ id, src, ...slide })
+    }
+    // 1. Real uploaded vendor photos (most trustworthy first).
+    for (const v of vendors || []) {
+      if (!v || out.length >= 6) break
+      if (!hasRealPhoto(v)) continue
+      push(`v-${v._id}`, vendorImage(v), {
         name: v.companyName || v.name || 'Featured vendor',
         category: v.category || 'Events',
         location: vendorLocation(v),
         price: startingPriceLabel(v),
+        cta: 'View profile',
         to: `/vendors/${v._id}`,
       })
     }
-    if (fromVendors.length >= 2) return fromVendors
+    // 2. Every category gets its own distinct artwork slide.
+    for (const c of CATEGORIES) {
+      push(`c-${c.name}`, hiRes(c.image), {
+        name: `${c.name} specialists`,
+        category: c.name,
+        location: 'Across India',
+        price: 'Compare real portfolios',
+        cta: 'Explore category',
+        to: `/category/${encodeURIComponent(c.name)}`,
+      })
+    }
+    if (out.length >= 2) return out
     return [
-      { id: 'f1', src: HERO_MAIN, name: 'Signature weddings', category: 'Decoration', location: 'Coimbatore', price: 'Starting from ₹24,999', to: '/vendors' },
-      { id: 'f2', src: HERO_SECOND, name: 'Candid stories', category: 'Photography', location: 'Chennai', price: 'Starting from ₹14,999', to: '/vendors' },
-      { id: 'f3', src: HERO_THIRD, name: 'Live nights', category: 'DJ & Music', location: 'Bengaluru', price: 'Starting from ₹9,999', to: '/vendors' },
+      { id: 'f1', src: HERO_MAIN, name: 'Signature weddings', category: 'Decoration', location: 'Coimbatore', price: 'Starting from ₹24,999', cta: 'View profile', to: '/vendors' },
+      { id: 'f2', src: HERO_SECOND, name: 'Candid stories', category: 'Photography', location: 'Chennai', price: 'Starting from ₹14,999', cta: 'View profile', to: '/vendors' },
+      { id: 'f3', src: HERO_THIRD, name: 'Live nights', category: 'DJ & Music', location: 'Bengaluru', price: 'Starting from ₹9,999', cta: 'View profile', to: '/vendors' },
     ]
   }, [vendors])
   const count = slides.length
@@ -222,37 +231,16 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.34 }}
               className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-4"
             >
-              <div className="flex items-center gap-3">
-                <div className="flex -space-x-2.5">
-                  {[
-                    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=100&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop',
-                  ].map((src) => (
-                    <img
-                      key={src}
-                      src={src}
-                      alt="Happy customer"
-                      loading="lazy"
-                      className="h-10 w-10 rounded-full border-[2.5px] border-[#fff7f0] object-cover shadow-sm"
-                    />
-                  ))}
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border-[2.5px] border-[#fff7f0] bg-[#1e4137] text-[11px] font-bold text-white">
-                    3k+
+              <div className="text-[13px] leading-tight">
+                <div className="flex items-center gap-1">
+                  <span className="flex">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                    ))}
                   </span>
+                  <span className="font-bold">4.9</span>
                 </div>
-                <div className="text-[13px] leading-tight">
-                  <div className="flex items-center gap-1">
-                    <span className="flex">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                      ))}
-                    </span>
-                    <span className="font-bold">4.9</span>
-                  </div>
-                  <p className="mt-0.5 font-medium text-[#0b1311]/55">100+ verified reviews</p>
-                </div>
+                <p className="mt-0.5 font-medium text-[#0b1311]/55">100+ verified reviews</p>
               </div>
               <div className="hidden h-11 w-px bg-[#0b1311]/10 sm:block" />
               <div className="flex items-center gap-5 text-[13px] font-semibold text-[#0b1311]/65">
@@ -342,21 +330,9 @@ export default function Home() {
                       <div className="mt-2 flex items-center justify-between gap-2">
                         <p className="truncate text-[13px] font-bold text-[#1e4137]">{current.price}</p>
                         {count > 1 && (
-                          <div className="flex shrink-0 items-center gap-1.5" role="tablist" aria-label="Featured vendors">
-                            {slides.map((s, i) => (
-                              <button
-                                key={s.id}
-                                type="button"
-                                role="tab"
-                                aria-selected={i === slide % count}
-                                aria-label={`Show ${s.name}`}
-                                onClick={() => setSlide(i)}
-                                className={`h-1.5 rounded-full transition-all duration-300 ${
-                                  i === slide % count ? 'w-6 bg-[#1e4137]' : 'w-1.5 bg-[#0b1311]/20 hover:bg-[#0b1311]/40'
-                                }`}
-                              />
-                            ))}
-                          </div>
+                          <span className="shrink-0 rounded-full bg-[#0b1311]/6 px-2.5 py-1 text-[11px] font-bold tabular-nums text-[#0b1311]/60">
+                            {(slide % count) + 1} / {count}
+                          </span>
                         )}
                       </div>
                     </motion.div>
@@ -385,10 +361,10 @@ export default function Home() {
                   )}
                   <Link
                     to={current.to}
-                    className="group hidden h-11 items-center justify-center gap-1.5 rounded-full bg-[#1e4137] px-4 text-[12px] font-bold text-white shadow-xl transition-all hover:bg-[#142e27] sm:inline-flex"
-                    aria-label={`View ${current.name}`}
+                    className="group hidden h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#1e4137] px-4 text-[12px] font-bold text-white shadow-xl transition-all hover:bg-[#142e27] sm:inline-flex"
+                    aria-label={`${current.cta || 'View'} — ${current.name}`}
                   >
-                    View profile
+                    {current.cta || 'View profile'}
                     <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
                   </Link>
                 </div>
@@ -415,8 +391,8 @@ export default function Home() {
                 <div className="h-1.5 w-4/5 rounded-full bg-gradient-to-r from-emerald-500 to-[#1e4137]" />
               </div>
               <div className="mt-3 flex items-center gap-2">
-                <img src={HERO_SECOND} alt="" className="h-9 w-9 rounded-full border-2 border-white object-cover" />
-                <img src={HERO_THIRD} alt="" className="h-9 w-9 rounded-full border-2 border-white object-cover" />
+                <img src={THUMB_VIDEO} alt="" loading="lazy" className="h-9 w-9 rounded-full border-2 border-white object-cover" />
+                <img src={THUMB_FOOD} alt="" loading="lazy" className="h-9 w-9 rounded-full border-2 border-white object-cover" />
                 <span className="text-[11px] font-semibold text-[#0b1311]/60">Photo + Decor locked</span>
               </div>
             </motion.div>
@@ -456,7 +432,7 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.65 }}
               className="absolute -right-2 top-1/2 hidden w-32 rotate-6 overflow-hidden rounded-3xl border-4 border-white shadow-2xl md:block lg:-right-8"
             >
-              <img src={HERO_THIRD} alt="Concert lights" className="aspect-square w-full object-cover" loading="lazy" />
+              <img src={THUMB_STAGE} alt="DJ and stage lights" className="aspect-square w-full object-cover" loading="lazy" />
               <p className="glass-ios px-2.5 py-2 text-center text-[10px] font-bold uppercase tracking-wider text-[#0b1311]">
                 Concerts • Live
               </p>
@@ -470,7 +446,7 @@ export default function Home() {
         </motion.div>
 
         {/* marquee */}
-        <div className="relative mt-10 flex items-center gap-4 overflow-hidden rounded-full border border-[#0b1311]/8 bg-white/70 px-6 py-3.5 shadow-sm backdrop-blur">
+        <div className="glass-ios relative mt-10 flex items-center gap-4 overflow-hidden rounded-full px-6 py-3.5">
           <span className="hidden shrink-0 items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.14em] text-[#1e4137] sm:inline-flex">
             <Sparkles className="h-4 w-4" /> Hosts book us for
           </span>
@@ -495,7 +471,7 @@ export default function Home() {
 
       {/* ============ CATEGORIES ============ */}
       <section id="categories" className="relative mx-auto max-w-7xl scroll-mt-24 px-4 py-14 sm:px-6 lg:px-8">
-        <div className="overflow-hidden rounded-[32px] border border-black/5 bg-white p-6 shadow-[0_20px_60px_-30px_rgba(11,19,17,0.3)] sm:p-10">
+        <div className="glass-ios overflow-hidden rounded-[32px] p-6 sm:p-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="inline-flex items-center gap-2 rounded-full bg-[#1e4137]/8 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#1e4137]">
@@ -555,7 +531,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="group relative overflow-hidden rounded-[26px] border border-black/5 bg-[#fff7f0] p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-20px_rgba(30,65,55,0.4)]"
+                className="glass-ios group relative overflow-hidden rounded-[26px] p-6 transition-all duration-300 hover:-translate-y-1.5"
               >
                 <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[#1e4137]/6 transition-transform duration-300 group-hover:scale-150" />
                 <p className="bg-gradient-to-br from-[#1e4137] to-[#1e4137]/40 bg-clip-text text-4xl font-black text-transparent">
